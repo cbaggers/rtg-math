@@ -12,6 +12,12 @@
 ;; the base-* packages are meant to be 'used' so that
 ;; there is no need to write the package name.
 
+
+
+;; {TODO}
+;; Man, there is a whole lot of stupid mistakes around this code
+;; I know I was a lisp newbie but..jesus. Gotta clean it all up.
+
 (in-package :cl-game-math.base-maths)
 
 (defconstant +float-threshold+ 1.0e-6)
