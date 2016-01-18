@@ -12,9 +12,9 @@
   (let ((len (length matrix)))
     (cond
       ((= len 9)
-       (null (mismatch matrix (m3:identity-matrix3))))
+       (null (mismatch matrix (m3:identity))))
       ((= len 16)
-       (null (mismatch matrix (m4:identity-matrix4)))))))
+       (null (mismatch matrix (m4:identity)))))))
 
 
 ;;----------------------------------------------------------------

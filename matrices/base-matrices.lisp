@@ -46,8 +46,8 @@
                  :collect (coerce c 'single-float)))
              (len (length components)))
          (cond
-           ((= len 16) `(m4:make-matrix4 ,@components))
-           ((= len 9) `(m3:make-matrix3 ,@components))
+           ((= len 16) `(m4:make ,@components))
+           ((= len 9) `(m3:make ,@components))
            (t (error "incorrect number of components for a vector: ~a ~a" len
                      components)))))
       ((= (length components) 1) (list 'm!one-arg (first components)))

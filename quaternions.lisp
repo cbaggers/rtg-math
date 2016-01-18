@@ -16,7 +16,7 @@
 (defun float-greater-than-zero (x)
   (> x 1.0s0))
 
-;----------------------------------------------------------------
+					;----------------------------------------------------------------
 
 (defun w (quat)
   "Returns the w component of the quaternion"
@@ -136,7 +136,7 @@
 
 (defun make-quat-from-axies (x-axies y-axies z-axies)
   (make-quat-from-rotation-matrix3
-   (m3:make-matrix3
+   (m3:make
     (aref x-axies 0) (aref y-axies 1) (aref z-axies 2)
     (aref x-axies 0) (aref y-axies 1) (aref z-axies 2)
     (aref x-axies 0) (aref y-axies 1) (aref z-axies 2))))
@@ -255,7 +255,7 @@
             (xx (* x x2))  (xy (* x y2))  (xz (* x z2))
             (yy (* y y2))  (yz (* y z2))
             (zz (* z z2)))
-        (m3:make-matrix3
+        (m3:make
          (- 1.0 (+ yy zz)) (- xy wz)         (+ xz wy)
          (+ xy wz)         (- 1.0 (+ xx zz)) (- yz wx)
          (- xz wy)         (+ yz wx)         (- 1.0 (+ xx yy)))))))
@@ -267,7 +267,7 @@
             (xx (* x x2))  (xy (* x y2))  (xz (* x z2))
             (yy (* y y2))  (yz (* y z2))
             (zz (* z z2)))
-        (m4:make-matrix4
+        (m4:make
          (- 1.0 (+ yy zz)) (- xy wz) (+ xz wy) 0.0
          (+ xy wz) (- 1.0 (+ xx zz)) (- yz wx) 0.0
          (- xz wy) (+ yz wx) (- 1.0 (+ xx yy)) 0.0

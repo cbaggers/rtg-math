@@ -103,8 +103,8 @@
   (:use :cl)
   (:nicknames :m3)
   (:shadow :eql)
-  (:export :melm :identity-matrix3 :zero-matrix3
-           :make-matrix3 :make-from-rows :get-rows
+  (:export :melm :identity :zero-matrix3
+           :make :! :make-from-rows :get-rows
            :get-row :make-from-columns :get-columns
            :get-column :determinate-cramer :inverse
            :mzerop :identityp :transpose :adjoint
@@ -123,8 +123,8 @@
   (:use :cl)
   (:nicknames :m4)
   (:shadow :eql)
-  (:export :melm :identity-matrix4 :zero-matrix4
-           :2dclipspace-to-imagespace-matrix4 :make-matrix4
+  (:export :melm :identity :zero-matrix4
+           :2dclipspace-to-imagespace-matrix4 :make :!
            :mzerop :identityp :minor :adjoint
            :determinant :affine-inverse :transpose
            :translation :rotation-from-matrix3

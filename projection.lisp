@@ -10,7 +10,7 @@
          (right (* range aspect-ratio))
          (bottom (- range))
          (top range))
-    (m4:make-matrix4
+    (m4:make
      (/ (* near 2) (- right left)) 0.0 0.0 0.0
      0.0 (/ (* near 2) (- top bottom)) 0.0 0.0
      0.0 0.0 (- (/ (+ far near) (- far near))) -1.0
@@ -23,7 +23,7 @@
         (bottom (- (/ frame-height 2.0)))
         (near near )
         (far far ))
-    (m4:make-matrix4
+    (m4:make
      (/ 2 (- right left)) 0.0 0.0 (- (/ (+ right left) (- left right)))
      0.0 (/ 2 (- top bottom)) 0.0 (- (/ (+ top bottom) (- bottom top)))
      0.0 0.0 (- (/ (- far near))) (- (/ (+ far near) (- far near)))
