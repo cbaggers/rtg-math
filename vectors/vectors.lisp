@@ -64,7 +64,7 @@
   (labels ((group (source n)
 	     "This takes a  flat list and emit a list of lists, each n long
               containing the elements of the original list"
-	     (if (zerop n) (error "zero length"))
+	     (if (= 0 n) (error "zero length"))
 	     (labels ((rec (source acc)
 			(let ((rest (nthcdr n source)))
 			  (if (consp rest)
