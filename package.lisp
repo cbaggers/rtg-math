@@ -102,7 +102,7 @@
 (defpackage :cl-game-math.matrix3
   (:use :cl)
   (:nicknames :m3)
-  (:shadow :eql)
+  (:shadow :eql :identity)
   (:export :melm :identity :zero-matrix3
            :make :! :make-from-rows :get-rows
            :get-row :make-from-columns :get-columns
@@ -122,7 +122,7 @@
 (defpackage :cl-game-math.matrix4
   (:use :cl)
   (:nicknames :m4)
-  (:shadow :eql)
+  (:shadow :eql :identity)
   (:export :melm :identity :zero-matrix4
            :2dclipspace-to-imagespace-matrix4 :make :!
            :mzerop :identityp :minor :adjoint
