@@ -3,6 +3,17 @@
 (defpackage #:cl-game-math
   (:use #:cl))
 
+(defpackage #:cl-game-math.types
+  (:use #:cl)
+  (:export :mat3 :mat4
+	   :vec2 :vec3 :vec4
+	   :ivec2 :ivec3 :ivec4
+	   :uvec2 :uvec3 :uvec4
+	   :ivec2 :ivec3 :ivec4
+	   :uvec2 :uvec3 :uvec4
+	   :int8-vec2 :int8-vec3 :int8-vec4
+	   :uint8-vec2 :uint8-vec3 :uint8-vec4))
+
 (defpackage :cl-game-math.base-maths
   (:use :cl)
   (:export :clamp
