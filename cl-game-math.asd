@@ -7,6 +7,7 @@
   :serial t
   :depends-on (#:alexandria)
   :components ((:file "package")
+	       (:file "deftypes")
 	       (:file "base-maths")
                (:file "maths")
                (:file "vectors/base-vectors")

@@ -30,7 +30,8 @@
            :c-sqrt
            :c-inv-sqrt
            :degrees
-           :radians))
+           :radians
+	   :case=))
 
 (defpackage :cl-game-math.maths
   (:use :cl)
@@ -97,6 +98,7 @@
 (defpackage :cl-game-math.vectors
   (:use :cl)
   (:nicknames :v)
+  (:import-from :cl-game-math.base-maths :case=)
   (:export :v :make-vector :zerop :unitp := :+ :/= :1+ :1- :- :*
            :/ :length :length-squared :distance :distance-squared
            :dot :absolute-dot :perp-dot :normalize :cross :eql
@@ -158,6 +160,7 @@
 (defpackage :cl-game-math.matrices
   (:use :cl)
   (:nicknames :m)
+  (:import-from :cl-game-math.base-maths :case=)
   (:export :zerop :unitp :+ :eql := :/= :1+ :1- :- :*
            :identityp :elt :elm :get-rows :get-row
            :get-columns :get-column :determinant

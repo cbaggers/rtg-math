@@ -250,7 +250,7 @@
 
 
 (defun to-string (mat)
-  (case (length mat)
+  (case= (length mat)
     (9 (format nil "(m! ~a ~a ~a ~%     ~a ~a ~a ~%     ~a ~a ~a)~%"
                (m3:melm mat 0 0) (m3:melm mat 0 1) (m3:melm mat 0 2)
                (m3:melm mat 1 0) (m3:melm mat 1 1) (m3:melm mat 1 2)
