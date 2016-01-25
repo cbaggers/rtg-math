@@ -11,10 +11,10 @@
          (bottom (- range))
          (top range))
     (m4:make
-     (/ (* near 2) (- right left)) 0.0 0.0 0.0
-     0.0 (/ (* near 2) (- top bottom)) 0.0 0.0
-     0.0 0.0 (- (/ (+ far near) (- far near))) -1.0
-     0.0 0.0 (/ (* 2.0 far near) (- near far)) 0.0)))
+     (/ (* near 2) (- right left))   0.0                            0.0                                0.0
+     0.0                             (/ (* near 2) (- top bottom))  0.0                                0.0
+     0.0                             0.0                            (/ (- (+ far near)) (- far near)) -1.0
+     0.0                             0.0                            (/ (* 2.0 far near) (- near far))  0.0)))
 
 (defun orthographic (frame-width frame-height near far)
   (let ((left (- (/ frame-width 2.0)))

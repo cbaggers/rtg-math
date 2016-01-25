@@ -773,4 +773,5 @@
 (defun print-m4 (m4)
   (apply #'format t
 	 "~%(m! ~s ~s ~s ~s~%    ~s ~s ~s ~s~%    ~s ~s ~s ~s~%    ~s ~s ~s ~s)"
-	 (concatenate 'list (transpose m4))))
+	 (concatenate 'list (transpose m4)))
+  m4)

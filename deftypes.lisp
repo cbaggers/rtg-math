@@ -39,3 +39,6 @@
   '(simple-array single-float (9)))
 (deftype mat4 ()
   '(simple-array single-float (16)))
+
+(deftype quaternion ()
+  '(simple-array single-float (4)))
