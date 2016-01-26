@@ -1,9 +1,9 @@
 ;;;; cl-game-math.asd
 
 (asdf:defsystem #:cl-game-math
-  :description "Describe cl-game-math here"
-  :author "Your Name <your.name@example.com>"
-  :license "Specify license here"
+  :description "A selection of the math routines most commonly needed for making games in lisp"
+  :author "Chris Bagley <techsnuffle@gmail.com>"
+  :license "BSD 2 Clause"
   :serial t
   :depends-on (#:alexandria)
   :components ((:file "package")
