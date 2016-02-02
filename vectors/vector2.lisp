@@ -1,35 +1,4 @@
-;; This software is Copyright (c) 2012 Chris Bagley
-;; (techsnuffle<at>gmail<dot>com)
-;; Chris Bagley grants you the rights to
-;; distribute and use this software as governed
-;; by the terms of the Lisp Lesser GNU Public License
-;; (http://opensource.franz.com/preamble.html),
-;; known as the LLGPL.
-
-;; This package is for all the vector2 math functions
-;; There will be a generic function-set to make this as easy
-;; as possible for people writing the games but this will
-;; be in a seperate package (prehaps the base-maths one)
-
 (in-package :rtg-math.vector2)
-
-
-;;; [TODO] make destructive versions aswell
-;;; looking at some existing code the desctructive versions
-;;; end up being comparitively fast to C.
-;;; see http://stackoverflow.com/questions/8356494/efficient-vector-operations-of-linear-algebra-in-common-lisp-especially-sbcl for more details
-
-;;; Also see http://nklein.com/2009/06/speedy-matrix-multiplication-in-lisp-again/ for a nice guide to declaim and its effects.
-
-;;; Annoyingly as everything else is reliant on the speed of the
-;;; vector math I have to make this bit fast, this seems to mean
-;;; hardcoding for set structures sizes. I hope I'm wrong and I
-;;; can use loops and have lisp be clever enough to optomize it
-;;; but for now I'm not counting on it
-;;; Also we will be making use of declaim for inlining and also
-;;; for forcing float type on everything.
-
-;;; vector2 operations
 
 ;;----------------------------------------------------------------
 
