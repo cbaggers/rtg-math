@@ -3,9 +3,9 @@
 ;;----------------------------------------------------------------
 
 (declaim (inline make-vector2)
-         (ftype (function ((single-float)
-                           (single-float))
-                          (simple-array single-float (2)))
+         (ftype (function (single-float
+                           single-float)
+                          vec2)
                 make-vector2))
 (defun make-vector2 (x y)
   "This takes 2 floats and give back a vector2, this is just an
@@ -14,48 +14,46 @@
    you hand it floats."
   (declare (single-float x y))
   (let (( vec (make-array 2 :element-type `single-float)))
-    (setf (aref vec 0) x
-          (aref vec 1) y)
+    (setf (svref vec 0) x
+          (svref vec 1) y)
     vec))
 
 ;;----------------------------------------------------------------
 
 ;;[TODO] What is faster (cl:* x x) or (expt x 2) ?
 (declaim (inline zerop)
-         (ftype (function ((simple-array single-float (2)))
+         (ftype (function (vec2)
                           (boolean)) zerop))
 (defun zerop (vector-a)
   "Checks if the length of the vector is zero. As this is a
    floating point number it checks to see if the length is
    below a threshold set in the base-maths package"
-  (declare ((simple-array single-float (2)) vector-a))
-  (= 0f0 (cl:+ (EXPT (AREF VECTOR-A 0) 2) (EXPT (AREF VECTOR-A 1) 2))))
+  (declare (vec2 vector-a))
+  (cl:= 0f0 (cl:+ (EXPT (SVREF VECTOR-A 0) 2) (EXPT (SVREF VECTOR-A 1) 2))))
 
 ;;----------------------------------------------------------------
 
 (declaim (inline unitp)
-         (ftype (function ((simple-array single-float (2)))
+         (ftype (function (vec2)
                           (boolean)) unitp))
 (defun unitp (vector-a)
   "Checks if the vector is of unit length. As this is a
    floating point number it checks to see if the length is
    within the range of 1 + or - and threshold set in base-maths"
-  (declare ((simple-array single-float (2)) vector-a))
-  (= 0f0 (cl:- 1.0 (cl:+ (EXPT (AREF VECTOR-A 0) 2) (EXPT (AREF VECTOR-A 1) 2)))))
+  (declare (vec2 vector-a))
+  (cl:= 0f0 (cl:- 1.0 (cl:+ (EXPT (SVREF VECTOR-A 0) 2) (EXPT (SVREF VECTOR-A 1) 2)))))
 ;;----------------------------------------------------------------
 
-;; Would be interesting to see if checking that the arrays
-;; are not 'eql' first would speed this up
-(declaim (inline eql)
-         (ftype (function ((simple-array single-float (2))
-                           (simple-array single-float (2)))
-                          (boolean)) eql))
-(defun eql (vector-a vector-b)
+(declaim (inline =)
+         (ftype (function (vec2
+                           vec2)
+                          (boolean)) =))
+(defun = (vector-a vector-b)
   "Returns either t if the two vectors are equal.
    Otherwise it returns nil."
-  (declare ((simple-array single-float (2)) vector-a vector-b))
-  (AND (cl:= (AREF VECTOR-A 0) (AREF VECTOR-B 0))
-       (cl:= (AREF VECTOR-A 1) (AREF VECTOR-B 1))))
+  (declare (vec2 vector-a vector-b))
+  (AND (cl:= (SVREF VECTOR-A 0) (SVREF VECTOR-B 0))
+       (cl:= (SVREF VECTOR-A 1) (SVREF VECTOR-B 1))))
 
 ;;----------------------------------------------------------------
 
@@ -68,14 +66,14 @@
 ;;----------------------------------------------------------------
 
 (declaim (inline %+)
-         (ftype (function ((simple-array single-float (2))
-                           (simple-array single-float (2)))
-                          (simple-array single-float (2))) %+))
+         (ftype (function (vec2
+                           vec2)
+                          vec2) %+))
 (defun %+ (vector-a vector-b)
   "Add two vectors and return a new vector containing the result"
-  (declare ((simple-array single-float (2)) vector-a vector-b))
-  (MAKE-VECTOR2 (cl:+ (AREF VECTOR-A 0) (AREF VECTOR-B 0))
-                (cl:+ (AREF VECTOR-A 1) (AREF VECTOR-B 1))))
+  (declare (vec2 vector-a vector-b))
+  (MAKE-VECTOR2 (cl:+ (SVREF VECTOR-A 0) (SVREF VECTOR-B 0))
+                (cl:+ (SVREF VECTOR-A 1) (SVREF VECTOR-B 1))))
 
 ;;----------------------------------------------------------------
 
@@ -88,89 +86,89 @@
 ;;----------------------------------------------------------------
 
 (declaim (inline %-)
-         (ftype (function ((simple-array single-float (2))
-                           (simple-array single-float (2)))
-                          (simple-array single-float (2))) %-))
+         (ftype (function (vec2
+                           vec2)
+                          vec2) %-))
 (defun %- (vector-a vector-b)
   "Subtract two vectors and return a new vector containing
    the result"
-  (declare ((simple-array single-float (2)) vector-a vector-b))
-  (MAKE-VECTOR2 (cl:- (AREF VECTOR-A 0) (AREF VECTOR-B 0))
-                (cl:- (AREF VECTOR-A 1) (AREF VECTOR-B 1))))
+  (declare (vec2 vector-a vector-b))
+  (MAKE-VECTOR2 (cl:- (SVREF VECTOR-A 0) (SVREF VECTOR-B 0))
+                (cl:- (SVREF VECTOR-A 1) (SVREF VECTOR-B 1))))
 
 ;;----------------------------------------------------------------
 
 (declaim (inline *)
-         (ftype (function ((simple-array single-float (2))
-                           (single-float))
-                          (simple-array single-float (2))) *))
+         (ftype (function (vec2
+                           single-float)
+                          vec2) *))
 (defun * (vector-a a)
   "Multiply vector by scalar"
-  (declare ((simple-array single-float (2)) vector-a)
-           ((single-float) a))
-  (MAKE-VECTOR2 (cl:* (AREF VECTOR-A 0) A) (cl:* (AREF VECTOR-A 1) A)))
+  (declare (vec2 vector-a)
+           (single-float a))
+  (MAKE-VECTOR2 (cl:* (SVREF VECTOR-A 0) A) (cl:* (SVREF VECTOR-A 1) A)))
 
 ;;----------------------------------------------------------------
 
 (declaim (inline *vec)
-         (ftype (function ((simple-array single-float (2))
-                           (simple-array single-float (2)))
-                          (simple-array single-float (2)))
+         (ftype (function (vec2
+                           vec2)
+                          vec2)
                 *vec))
 (defun *vec (vector-a vector-b)
   "Multiplies components, is not dot product, not sure what
    i'll need this for yet but hey!"
-  (declare ((simple-array single-float (2)) vector-a vector-b))
-  (MAKE-VECTOR2 (cl:* (AREF VECTOR-A 0) (AREF VECTOR-B 0))
-                (cl:* (AREF VECTOR-A 1) (AREF VECTOR-B 1))))
+  (declare (vec2 vector-a vector-b))
+  (MAKE-VECTOR2 (cl:* (SVREF VECTOR-A 0) (SVREF VECTOR-B 0))
+                (cl:* (SVREF VECTOR-A 1) (SVREF VECTOR-B 1))))
 
 ;;----------------------------------------------------------------
 
 (declaim (inline /)
-         (ftype (function ((simple-array single-float (2))
-                           (single-float))
-                          (simple-array single-float (2))) /))
+         (ftype (function (vec2
+                           single-float)
+                          vec2) /))
 (defun / (vector-a a)
   "divide vector by scalar and return result as new vector"
-  (declare ((simple-array single-float (2)) vector-a)
-           ((single-float) a))
+  (declare (vec2 vector-a)
+           (single-float a))
   (let ((b (cl:/ 1 a)))
-    (MAKE-VECTOR2 (cl:* (AREF VECTOR-A 0) B) (cl:* (AREF VECTOR-A 1) B))))
+    (MAKE-VECTOR2 (cl:* (SVREF VECTOR-A 0) B) (cl:* (SVREF VECTOR-A 1) B))))
 
 ;;----------------------------------------------------------------
 
 (declaim (inline /vec)
-         (ftype (function ((simple-array single-float (2))
-                           (simple-array single-float (2)))
-                          (simple-array single-float (2)))
+         (ftype (function (vec2
+                           vec2)
+                          vec2)
                 /vec))
 (defun /vec (vector-a vector-b)
   "Divides components, not sure what, i'll need this for
    yet but hey!"
-  (declare ((simple-array single-float (2)) vector-a vector-b))
-  (MAKE-VECTOR2 (cl:/ (AREF VECTOR-A 0) (AREF VECTOR-B 0))
-                (cl:/ (AREF VECTOR-A 1) (AREF VECTOR-B 1))))
+  (declare (vec2 vector-a vector-b))
+  (MAKE-VECTOR2 (cl:/ (SVREF VECTOR-A 0) (SVREF VECTOR-B 0))
+                (cl:/ (SVREF VECTOR-A 1) (SVREF VECTOR-B 1))))
 
 ;;----------------------------------------------------------------
 
 (declaim (inline negate)
-         (ftype (function ((simple-array single-float (2)))
-                          (simple-array single-float (2)))
+         (ftype (function (vec2)
+                          vec2)
                 negate))
 (defun negate (vector-a)
   "Return a vector that is the negative of the vector passed in"
-  (declare ((simple-array single-float (2)) vector-a))
-  (MAKE-VECTOR2 (cl:- (AREF VECTOR-A 0)) (- (AREF VECTOR-A 1))))
+  (declare (vec2 vector-a))
+  (MAKE-VECTOR2 (cl:- (SVREF VECTOR-A 0)) (- (SVREF VECTOR-A 1))))
 
 ;;----------------------------------------------------------------
 
 (declaim (inline face-foreward)
-         (ftype (function ((simple-array single-float (2))
-                           (simple-array single-float (2)))
-                          (simple-array single-float (2)))
+         (ftype (function (vec2
+                           vec2)
+                          vec2)
                 face-foreward))
 (defun face-foreward (vector-a vector-b)
-  (declare ((simple-array single-float (2)) vector-a vector-b))
+  (declare (vec2 vector-a vector-b))
   (if (> (print (dot vector-a vector-b)) 0)
       vector-a
       (negate vector-a)))
@@ -178,151 +176,151 @@
 ;;----------------------------------------------------------------
 
 (declaim (inline length-squared)
-         (ftype (function ((simple-array single-float (2)))
-                          (single-float)) length-squared))
+         (ftype (function (vec2)
+                          single-float) length-squared))
 (defun length-squared (vector-a)
   "Return the squared length of the vector. A regular length
    is the square root of this value. The sqrt function is slow
    so if all thats needs doing is to compare lengths then always
    use the length squared function"
-  (declare ((simple-array single-float (2)) vector-a))
-  (let ((x (v-x vector-a))
-        (y (v-y vector-a)))
+  (declare (vec2 vector-a))
+  (let ((x (x vector-a))
+        (y (y vector-a)))
     (cl:+ (cl:* x x) (cl:* y y))))
 
 ;;----------------------------------------------------------------
 
 (declaim (inline length)
-         (ftype (function ((simple-array single-float (2)))
-                          (single-float)) length))
+         (ftype (function (vec2)
+                          single-float) length))
 (defun length (vector-a)
   "Returns the length of a vector
    If you only need to compare relative lengths then definately
    stick to length-squared as the sqrt is a slow operation."
-  (declare ((simple-array single-float (2)) vector-a))
+  (declare (vec2 vector-a))
   (sqrt (length-squared vector-a)))
 
 ;;----------------------------------------------------------------
 
 (declaim (inline distance-squared)
-         (ftype (function ((simple-array single-float (2))
-                           (simple-array single-float (2)))
-                          (single-float))
+         (ftype (function (vec2
+                           vec2)
+                          single-float)
                 distance-squared))
 (defun distance-squared (vector-a vector-b)
   "finds the squared distance between 2 points defined by vectors
    vector-a & vector-b"
-  (declare ((simple-array single-float (2)) vector-a vector-b))
+  (declare (vec2 vector-a vector-b))
   (length-squared (- vector-b vector-a)))
 
 ;;----------------------------------------------------------------
 
 (declaim (inline distance)
-         (ftype (function ((simple-array single-float (2))
-                           (simple-array single-float (2)))
-                          (single-float))
+         (ftype (function (vec2
+                           vec2)
+                          single-float)
                 distance))
 (defun distance (vector-a vector-b)
   "Return the distance between 2 points defined by vectors
    vector-a & vector-b. If comparing distances, use
    c-distance-squared as it desnt require a sqrt and thus is
    faster."
-  (declare ((simple-array single-float (2)) vector-a vector-b))
+  (declare (vec2 vector-a vector-b))
   (sqrt (distance-squared vector-a vector-b)))
 
 ;;----------------------------------------------------------------
 
 (declaim (inline dot)
-         (ftype (function ((simple-array single-float (2))
-                           (simple-array single-float (2)))
-                          (single-float))
+         (ftype (function (vec2
+                           vec2)
+                          single-float)
                 dot))
 (defun dot (vector-a vector-b)
   "Return the dot product of the vector-a and vector-b."
-  (declare ((simple-array single-float (2)) vector-a vector-b))
-  (cl:+ (cl:* (AREF VECTOR-A 0) (AREF VECTOR-B 0))
-        (cl:* (AREF VECTOR-A 1) (AREF VECTOR-B 1))))
+  (declare (vec2 vector-a vector-b))
+  (cl:+ (cl:* (SVREF VECTOR-A 0) (SVREF VECTOR-B 0))
+        (cl:* (SVREF VECTOR-A 1) (SVREF VECTOR-B 1))))
 
 ;;----------------------------------------------------------------
 
 (declaim (inline absolute-dot)
-         (ftype (function ((simple-array single-float (2))
-                           (simple-array single-float (2)))
-                          (single-float))
+         (ftype (function (vec2
+                           vec2)
+                          single-float)
                 absolute-dot))
 (defun absolute-dot (vector-a vector-b)
   "Return the absolute dot product of the vector-a and vector-b."
-  (declare ((simple-array single-float (2)) vector-a vector-b))
-  (cl:+ (ABS (cl:* (AREF VECTOR-A 0) (AREF VECTOR-B 0)))
-        (ABS (cl:* (AREF VECTOR-A 1) (AREF VECTOR-B 1)))))
+  (declare (vec2 vector-a vector-b))
+  (cl:+ (ABS (cl:* (SVREF VECTOR-A 0) (SVREF VECTOR-B 0)))
+        (ABS (cl:* (SVREF VECTOR-A 1) (SVREF VECTOR-B 1)))))
 
 ;;----------------------------------------------------------------
 
 ;; [TODO] shouldnt this return a zero vector in event of zero
 ;; length? does it matter?
 (declaim (inline normalize)
-         (ftype (function ((simple-array single-float (2)))
-                          (simple-array single-float (2)))
+         (ftype (function (vec2)
+                          vec2)
                 normalize))
 (defun normalize (vector-a)
   "This normalizes the vector, it makes sure a zero length
    vector won't throw an error."
-  (declare ((simple-array single-float (2)) vector-a))
+  (declare (vec2 vector-a))
   (let ((len (length-squared vector-a)))
-    (if (= 0f0 len)
+    (if (cl:= 0f0 len)
         vector-a
         (* vector-a (inv-sqrt len)))))
 
 ;;----------------------------------------------------------------
 
 (declaim (inline perp-dot)
-         (ftype (function ((simple-array single-float (2))
-                           (simple-array single-float (2)))
+         (ftype (function (vec2
+                           vec2)
                           float)
                 perp-dot))
 (defun perp-dot (vec-a vec-b)
-  (declare ((simple-array single-float (2)) vec-a vec-b))
-  (cl:- (cl:* (v-x vec-a) (v-y vec-b)) (cl:* (v-y vec-a) (v-x vec-b))))
+  (declare (vec2 vec-a vec-b))
+  (cl:- (cl:* (x vec-a) (y vec-b)) (cl:* (y vec-a) (x vec-b))))
 
 ;;----------------------------------------------------------------
 
 (declaim (inline cross)
-         (ftype (function ((simple-array single-float (3))
-                           (simple-array single-float (3)))
+         (ftype (function (vec3
+                           vec3)
                           float)
                 cross))
 (defun cross (vec-a vec-b)
   "Calculates the 2 dimensional cross-product of 2 vectors,
    which results in a single floating point value which is
    2 times the area of the triangle."
-  (declare ((simple-array single-float (3)) vec-a vec-b))
-  (cl:- (cl:* (v-x vec-a) (v-y vec-b)) (cl:* (v-y vec-a) (v-x vec-b))))
+  (declare (vec3 vec-a vec-b))
+  (cl:- (cl:* (x vec-a) (y vec-b)) (cl:* (y vec-a) (x vec-b))))
 
 ;;----------------------------------------------------------------
 
 (declaim (inline lerp)
-         (ftype (function ((simple-array single-float (2))
-                           (simple-array single-float (2))
-                           (single-float))
-                          (simple-array single-float (2)))
+         (ftype (function (vec2
+                           vec2
+                           single-float)
+                          vec2)
                 lerp))
 (defun lerp (vector-a vector-b ammount)
-  (declare ((simple-array single-float (2)) vector-a vector-b))
+  (declare (vec2 vector-a vector-b))
   (%+ vector-a (* (%- vector-b vector-a) ammount)))
 
 ;;----------------------------------------------------------------
 
 (declaim (inline bezier)
-         (ftype (function ((simple-array single-float (2))
-                           (simple-array single-float (2))
-                           (simple-array single-float (2))
-                           (simple-array single-float (2))
-                           (single-float))
-                          (simple-array single-float (2)))
+         (ftype (function (vec2
+                           vec2
+                           vec2
+                           vec2
+                           single-float)
+                          vec2)
                 bezier))
 (defun bezier (a1 a2 b1 b2 ammount)
-  (declare ((simple-array single-float (2)) a1 a2 b1 b2)
-           ((single-float) ammount))
+  (declare (vec2 a1 a2 b1 b2)
+           (single-float ammount))
   (lerp (lerp a1 a2 ammount)
         (lerp b1 b2 ammount)
         ammount))
@@ -330,8 +328,8 @@
 ;;----------------------------------------------------------------
 
 (defun spline (x knots)
-  (make-vector2 (rtg-math.maths:spline x (mapcar #'v-x knots))
-                (rtg-math.maths:spline x (mapcar #'v-y knots))))
+  (make-vector2 (rtg-math.maths:spline x (mapcar #'x knots))
+                (rtg-math.maths:spline x (mapcar #'y knots))))
 
 ;;----------------------------------------------------------------
 

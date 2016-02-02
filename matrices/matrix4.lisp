@@ -3,8 +3,8 @@
 ;;----------------------------------------------------------------
 
 (declaim (inline melm)
-	 (ftype (function ((simple-array single-float (16)) (integer 0 4) (integer 0 4))
-			  (single-float))
+	 (ftype (function (mat4 (integer 0 4) (integer 0 4))
+			  single-float)
 		melm))
 (defun melm (mat-a row col)
   "Provides access to data in the matrix by row
@@ -12,9 +12,9 @@
    column major order, but this abstraction means we only have
    to think in row major order which is how most mathematical
    texts and online tutorials choose to show matrices"
-  (declare ((simple-array single-float (16)) mat-a)
+  (declare (mat4 mat-a)
            ((integer 0 4) row col))
-  (aref mat-a (+ row (* col 4))))
+  (svref mat-a (+ row (* col 4))))
 
 (defun (setf melm) (value mat-a row col)
   "Provides access to data in the matrix by row
@@ -22,10 +22,10 @@
    column major order, but this abstraction means we only have
    to think in row major order which is how most mathematical
    texts and online tutorials choose to show matrices"
-  (declare ((simple-array single-float (16)) mat-a)
+  (declare (mat4 mat-a)
            ((integer 0 4) row col)
            (single-float value))
-  (setf (aref mat-a (+ row (* col 4))) value))
+  (setf (svref mat-a (+ row (* col 4))) value))
 
 (define-compiler-macro melm (mat-a row col)
   "Provide access to data in the matrix by row
@@ -34,16 +34,16 @@
    to think in row major order which is how most mathematical
    texts and online tutorials choose to show matrices"
   (cond ((and (numberp row) (numberp col))
-         `(aref ,mat-a ,(+ row (* col 4))))
+         `(svref ,mat-a ,(+ row (* col 4))))
         ((numberp col)
-         `(aref ,mat-a (+ ,row ,(* col 4))))
-        (t `(aref ,mat-a (+ ,row (* ,col 4))))))
+         `(svref ,mat-a (+ ,row ,(* col 4))))
+        (t `(svref ,mat-a (+ ,row (* ,col 4))))))
 
 ;;----------------------------------------------------------------
 
 (declaim (inline identity)
 	 (ftype (function ()
-			  (simple-array single-float (16)))
+			  mat4)
 		identity))
 (defun identity ()
   "Return a 4x4 identity matrix"
@@ -67,7 +67,7 @@
                        single-float single-float single-float single-float
                        single-float single-float single-float single-float
                        single-float single-float single-float single-float)
-         (simple-array single-float (16)))
+         mat4)
         make))
 (defun make (a b c d e f g h i j k l m n o p)
   "Make a 4x4 matrix. Data must be provided in row major order"
@@ -101,7 +101,7 @@
                        single-float single-float single-float single-float
                        single-float single-float single-float single-float
                        single-float single-float single-float single-float)
-         (simple-array single-float (16)))
+         mat4)
         !))
 (defun ! (a b c d e f g h i j k l m n o p)
   "! a 4x4 matrix. Data must be provided in row major order"
@@ -130,8 +130,8 @@
 (declaim
  (inline to-matrix3)
  (ftype (function
-         ((simple-array single-float (16)))
-         (simple-array single-float (9)))
+         (mat4)
+         mat3)
         to-matrix3))
 (defun to-matrix3 (mat4)
   (m3:make (melm mat4 0 0) (melm mat4 0 1) (melm mat4 0 2)
@@ -140,13 +140,13 @@
 
 ;;----------------------------------------------------------------
 
-(defun make-from-rows (row-1 row-2 row-3 row-4)
+(defun from-rows (row-1 row-2 row-3 row-4)
   "Make a 4x4 matrix using the data in the 4 vector4s provided
    to populate the rows"
-  (make (v-x row-1) (v-y row-1) (v-z row-1) (v-w row-1)
-	(v-x row-2) (v-y row-2)	(v-z row-2) (v-w row-2)
-	(v-x row-3) (v-y row-3) (v-z row-3) (v-w row-3)
-	(v-x row-4) (v-y row-4) (v-z row-4) (v-w row-4)))
+  (make (x row-1) (y row-1) (z row-1) (w row-1)
+	(x row-2) (y row-2)	(z row-2) (w row-2)
+	(x row-3) (y row-3) (z row-3) (w row-3)
+	(x row-4) (y row-4) (z row-4) (w row-4)))
 
 ;;----------------------------------------------------------------
 
@@ -181,25 +181,25 @@
 
 ;;----------------------------------------------------------------
 
-(defun make-from-columns (col-1 col-2 col-3 col-4)
+(defun from-columns (col-1 col-2 col-3 col-4)
   "Make a 4x4 matrix using the data in the 4 vector4s provided
    to populate the columns"
-  (make (v-x col-1)
-	(v-x col-2)
-	(v-x col-3)
-	(v-x col-4)
-	(v-y col-1)
-	(v-y col-2)
-	(v-y col-3)
-	(v-y col-4)
-	(v-z col-1)
-	(v-z col-2)
-	(v-z col-3)
-	(v-z col-4)
-	(v-w col-1)
-	(v-w col-2)
-	(v-w col-3)
-	(v-w col-4)))
+  (make (x col-1)
+	(x col-2)
+	(x col-3)
+	(x col-4)
+	(y col-1)
+	(y col-2)
+	(y col-3)
+	(y col-4)
+	(z col-1)
+	(z col-2)
+	(z col-3)
+	(z col-4)
+	(w col-1)
+	(w col-2)
+	(w col-3)
+	(w col-4)))
 
 ;;----------------------------------------------------------------
 
@@ -237,7 +237,7 @@
   "Returns 't' if this is a zero matrix (as contents of the
    matrix are floats the values have an error bound as defined
    in base-maths"
-  (loop :for i :below 16 :always (= 0f0 (aref mat-a i))))
+  (loop :for i :below 16 :always (cl:= 0f0 (svref mat-a i))))
 
 ;;----------------------------------------------------------------
 
@@ -246,29 +246,29 @@
   "Returns 't' if this is an identity matrix (as contents of the
    matrix are floats the values have an error bound as defined
    in base-maths"
-  (and (= 0f0 (- (melm mat-a 0 0) 1.0))
-       (= 0f0 (- (melm mat-a 1 1) 1.0))
-       (= 0f0 (- (melm mat-a 2 2) 1.0))
-       (= 0f0 (- (melm mat-a 3 3) 1.0))
-       (= 0f0 (melm mat-a 0 1))
-       (= 0f0 (melm mat-a 0 2))
-       (= 0f0 (melm mat-a 0 3))
-       (= 0f0 (melm mat-a 1 0))
-       (= 0f0 (melm mat-a 1 2))
-       (= 0f0 (melm mat-a 1 3))
-       (= 0f0 (melm mat-a 2 0))
-       (= 0f0 (melm mat-a 2 1))
-       (= 0f0 (melm mat-a 2 3))
-       (= 0f0 (melm mat-a 3 0))
-       (= 0f0 (melm mat-a 3 1))
-       (= 0f0 (melm mat-a 3 2))))
+  (and (cl:= 0f0 (- (melm mat-a 0 0) 1.0))
+       (cl:= 0f0 (- (melm mat-a 1 1) 1.0))
+       (cl:= 0f0 (- (melm mat-a 2 2) 1.0))
+       (cl:= 0f0 (- (melm mat-a 3 3) 1.0))
+       (cl:= 0f0 (melm mat-a 0 1))
+       (cl:= 0f0 (melm mat-a 0 2))
+       (cl:= 0f0 (melm mat-a 0 3))
+       (cl:= 0f0 (melm mat-a 1 0))
+       (cl:= 0f0 (melm mat-a 1 2))
+       (cl:= 0f0 (melm mat-a 1 3))
+       (cl:= 0f0 (melm mat-a 2 0))
+       (cl:= 0f0 (melm mat-a 2 1))
+       (cl:= 0f0 (melm mat-a 2 3))
+       (cl:= 0f0 (melm mat-a 3 0))
+       (cl:= 0f0 (melm mat-a 3 1))
+       (cl:= 0f0 (melm mat-a 3 2))))
 
 ;;----------------------------------------------------------------
 
-(defun eql (mat-a mat-b)
+(defun = (mat-a mat-b)
   "Returns t if all elements of both matrices provided are
    equal"
-  (loop :for i :below 16 :always (= (aref mat-a i) (aref mat-b i))))
+  (loop :for i :below 16 :always (= (svref mat-a i) (svref mat-b i))))
 
 ;;----------------------------------------------------------------
 
@@ -338,12 +338,12 @@
 ;;this one is from 'Essential Maths'
 (declaim
  (inline affine-inverse)
- (ftype (function ((simple-array single-float (16)))
-                  (simple-array single-float (16)))
+ (ftype (function (mat4)
+                  mat4)
         affine-inverse))
 (defun affine-inverse (mat-a)
   "Returns the affine inverse of the matrix"
-  (declare ((simple-array single-float (16)) mat-a))
+  (declare (mat4 mat-a))
   ;;calculate upper left 3x3 matrix determinant
   (let* ((cofac-0 (- (* (melm mat-a 1 1) (melm mat-a 2 2))
                      (* (melm mat-a 2 1) (melm mat-a 1 2))))
@@ -357,7 +357,7 @@
                  (* (melm mat-a 0 1) cofac-4)
                  (* (melm mat-a 0 2) cofac-8))))
     (if
-     (= 0f0 det)
+     (cl:= 0f0 det)
      (error "Matrix4 Inverse: Singular Matrix")
      (let*
          ((inv-det (/ 1.0 det))
@@ -409,9 +409,9 @@
   "Takes a vector3 and returns a matrix4 which will translate
    by the specified amount"
   (make
-   1.0  0.0  0.0  (v-x vec3-a)
-   0.0  1.0  0.0  (v-y vec3-a)
-   0.0  0.0  1.0  (v-z vec3-a)
+   1.0  0.0  0.0  (x vec3-a)
+   0.0  1.0  0.0  (y vec3-a)
+   0.0  0.0  1.0  (z vec3-a)
    0.0  0.0  0.0  1.0))
 
 ;;----------------------------------------------------------------
@@ -436,7 +436,7 @@
 (defun rotation-from-euler (vec3-a)
   "This is an unrolled contatenation of rotation matrices x
    y & z. The arguments in the originl were in reverse order"
-  (let ((x (v-x vec3-a)) (y (v-y vec3-a)) (z (v-z vec3-a)))
+  (let ((x (x vec3-a)) (y (y vec3-a)) (z (z vec3-a)))
     (let ((sx (sin x)) (cx (cos x))
           (sy (sin y)) (cy (cos y))
           (sz (sin z)) (cz (cos z)))
@@ -461,16 +461,16 @@
 (defun rotation-from-axis-angle (axis3 angle)
   "Returns a matrix which will rotate a point about the axis
    specified by the angle provided"
-  (cond ((v3:eql axis3 (v3:make-vector3 1f0 0f0 0f0)) (rotation-x angle))
-        ((v3:eql axis3 (v3:make-vector3 0f0 1f0 0f0)) (rotation-y angle))
-        ((v3:eql axis3 (v3:make-vector3 0f0 0f0 1f0)) (rotation-z angle))
+  (cond ((v3:= axis3 (v3:make-vector3 1f0 0f0 0f0)) (rotation-x angle))
+        ((v3:= axis3 (v3:make-vector3 0f0 1f0 0f0)) (rotation-y angle))
+        ((v3:= axis3 (v3:make-vector3 0f0 0f0 1f0)) (rotation-z angle))
         (t
          (let ((c (cos angle))
                (s (sin angle))
                (g (- 1f0 (cos angle))))
-           (let* ((x (v-x axis3))
-                  (y (v-y axis3))
-                  (z (v-z axis3))
+           (let* ((x (x axis3))
+                  (y (y axis3))
+                  (z (z axis3))
                   (gxx (* g x x)) (gxy (* g x y)) (gxz (* g x z))
                   (gyy (* g y y)) (gyz (* g y z)) (gzz (* g z z)))
              (m4:make
@@ -484,9 +484,9 @@
 (defun scale (scale-vec3)
   "Returns a matrix which will scale by the amounts specified"
   (make
-   (v-x scale-vec3)  0.0               0.0               0.0
-   0.0               (v-y scale-vec3)  0.0               0.0
-   0.0               0.0               (v-z scale-vec3)  0.0
+   (x scale-vec3)  0.0               0.0               0.0
+   0.0               (y scale-vec3)  0.0               0.0
+   0.0               0.0               (z scale-vec3)  0.0
    0.0               0.0               0.0               1.0))
 
 ;;----------------------------------------------------------------
@@ -535,7 +535,7 @@
    is returned as vector3"
   (let* ((sy (melm mat-a 0 2))
          (cy (sqrt (- 1.0 (* sy sy)))))
-    (if (= 0f0 cy)
+    (if (cl:= 0f0 cy)
         (let ((sz 0.0)
               (cz 1.0)
               (sx (melm mat-a 2 1))
@@ -567,8 +567,8 @@
                      (melm mat-a 2 2)))
          (cos-theta (* 0.5 (- trace-a 1.0)))
          (angle (acos cos-theta)))
-    (cond ((= 0f0 angle) (values (make-vector3 1f0 0f0 0f0) angle))
-          ((= 0f0 (- rtg-math.base-maths:+pi+ angle))
+    (cond ((cl:= 0f0 angle) (values (make-vector3 1f0 0f0 0f0) angle))
+          ((cl:= 0f0 (- rtg-math.base-maths:+pi+ angle))
            (values
             (v3:normalize
              (make-vector3 (- (melm mat-a 2 1) (melm mat-a 1 2))
@@ -591,8 +591,8 @@
                       (recip (/ 1.0 s)))
                  (values (make-vector3
                           (* 0.5 s)
-                          (* recip (aref mat-a (+ i (* 4 j))))
-                          (* recip (aref mat-a (+ k (* 4 i)))))
+                          (* recip (svref mat-a (+ i (* 4 j))))
+                          (* recip (svref mat-a (+ k (* 4 i)))))
                          angle)))))))
 
 
@@ -603,7 +603,7 @@
    a new matrix"
   (let ((r (zero-matrix4)))
     (loop :for i :below 16
-       :do (setf (aref r i) (+ (aref mat-a i) (aref mat-b i))))
+       :do (setf (svref r i) (+ (svref mat-a i) (svref mat-b i))))
     r))
 
 ;;----------------------------------------------------------------
@@ -613,7 +613,7 @@
    as a new matrix"
   (let ((r (zero-matrix4)))
     (loop :for i :below 16
-       :do (setf (aref r i) (- (aref mat-a i) (aref mat-b i))))
+       :do (setf (svref r i) (- (svref mat-a i) (svref mat-b i))))
     r))
 
 ;;----------------------------------------------------------------
@@ -621,7 +621,7 @@
 (defun negate (mat-a)
   "Negates the components of the matrix"
   (let ((r (zero-matrix4)))
-    (loop :for i :below 16 :do (setf (aref r i) (- (aref mat-a i))))
+    (loop :for i :below 16 :do (setf (svref r i) (- (svref mat-a i))))
     r))
 
 ;;----------------------------------------------------------------
@@ -631,41 +631,41 @@
    provided"
   (let ((result (zero-matrix4)))
     (loop :for i :below 16
-       :do (setf (aref result i) (* scalar (aref mat-a i))))
+       :do (setf (svref result i) (* scalar (svref mat-a i))))
     result))
 
 ;;----------------------------------------------------------------
 
 (defun mcol*vec4 (mat-a vec)
   (make-vector4
-   (+ (* (v-x vec) (melm mat-a 0 0)) (* (v-y vec) (melm mat-a 0 1))
-      (* (v-z vec) (melm mat-a 0 2)) (* (v-w vec) (melm mat-a 0 3)))
+   (+ (* (x vec) (melm mat-a 0 0)) (* (y vec) (melm mat-a 0 1))
+      (* (z vec) (melm mat-a 0 2)) (* (w vec) (melm mat-a 0 3)))
 
-   (+ (* (v-x vec) (melm mat-a 1 0)) (* (v-y vec) (melm mat-a 1 1))
-      (* (v-z vec) (melm mat-a 1 2)) (* (v-w vec) (melm mat-a 1 3)))
+   (+ (* (x vec) (melm mat-a 1 0)) (* (y vec) (melm mat-a 1 1))
+      (* (z vec) (melm mat-a 1 2)) (* (w vec) (melm mat-a 1 3)))
 
-   (+ (* (v-x vec) (melm mat-a 2 0)) (* (v-y vec) (melm mat-a 2 1))
-      (* (v-z vec) (melm mat-a 2 2)) (* (v-w vec) (melm mat-a 2 3)))
+   (+ (* (x vec) (melm mat-a 2 0)) (* (y vec) (melm mat-a 2 1))
+      (* (z vec) (melm mat-a 2 2)) (* (w vec) (melm mat-a 2 3)))
 
-   (+ (* (v-x vec) (melm mat-a 3 0)) (* (v-y vec) (melm mat-a 3 1))
-      (* (v-z vec) (melm mat-a 3 2)) (* (v-w vec) (melm mat-a 3 3)))
+   (+ (* (x vec) (melm mat-a 3 0)) (* (y vec) (melm mat-a 3 1))
+      (* (z vec) (melm mat-a 3 2)) (* (w vec) (melm mat-a 3 3)))
    ))
 
 ;;----------------------------------------------------------------
 
 (defun mrow*vec4 (vec mat-a)
   (make-vector4
-   (+ (* (v-x vec) (melm mat-a 0 0)) (* (v-y vec) (melm mat-a 1 0))
-      (* (v-z vec) (melm mat-a 2 0)) (* (v-w vec) (melm mat-a 3 0)))
+   (+ (* (x vec) (melm mat-a 0 0)) (* (y vec) (melm mat-a 1 0))
+      (* (z vec) (melm mat-a 2 0)) (* (w vec) (melm mat-a 3 0)))
 
-   (+ (* (v-x vec) (melm mat-a 0 1)) (* (v-y vec) (melm mat-a 1 1))
-      (* (v-z vec) (melm mat-a 2 1)) (* (v-w vec) (melm mat-a 3 1)))
+   (+ (* (x vec) (melm mat-a 0 1)) (* (y vec) (melm mat-a 1 1))
+      (* (z vec) (melm mat-a 2 1)) (* (w vec) (melm mat-a 3 1)))
 
-   (+ (* (v-x vec) (melm mat-a 0 2)) (* (v-y vec) (melm mat-a 1 2))
-      (* (v-z vec) (melm mat-a 2 2)) (* (v-w vec) (melm mat-a 3 2)))
+   (+ (* (x vec) (melm mat-a 0 2)) (* (y vec) (melm mat-a 1 2))
+      (* (z vec) (melm mat-a 2 2)) (* (w vec) (melm mat-a 3 2)))
 
-   (+ (* (v-x vec) (melm mat-a 0 3)) (* (v-y vec) (melm mat-a 1 3))
-      (* (v-z vec) (melm mat-a 2 3)) (* (v-w vec) (melm mat-a 3 3)))
+   (+ (* (x vec) (melm mat-a 0 3)) (* (y vec) (melm mat-a 1 3))
+      (* (z vec) (melm mat-a 2 3)) (* (w vec) (melm mat-a 3 3)))
    ))
 
 ;;----------------------------------------------------------------
@@ -742,17 +742,17 @@
 
 (defun transform (mat-a vec)
   "Returns the transform of a matrix"
-  (make-vector3 (+ (* (melm mat-a 0 0) (v-x vec))
-                   (* (melm mat-a 0 1) (v-y vec))
-                   (* (melm mat-a 0 2) (v-z vec))
+  (make-vector3 (+ (* (melm mat-a 0 0) (x vec))
+                   (* (melm mat-a 0 1) (y vec))
+                   (* (melm mat-a 0 2) (z vec))
                    (melm mat-a 0 3))
-                (+ (* (melm mat-a 1 0) (v-x vec))
-                   (* (melm mat-a 1 1) (v-y vec))
-                   (* (melm mat-a 1 2) (v-z vec))
+                (+ (* (melm mat-a 1 0) (x vec))
+                   (* (melm mat-a 1 1) (y vec))
+                   (* (melm mat-a 1 2) (z vec))
                    (melm mat-a 1 3))
-                (+ (* (melm mat-a 2 0) (v-x vec))
-                   (* (melm mat-a 2 1) (v-y vec))
-                   (* (melm mat-a 2 2) (v-z vec))
+                (+ (* (melm mat-a 2 0) (x vec))
+                   (* (melm mat-a 2 1) (y vec))
+                   (* (melm mat-a 2 2) (z vec))
                    (melm mat-a 2 3))))
 
 ;;----------------------------------------------------------------

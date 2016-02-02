@@ -46,31 +46,33 @@
 (def-v! v!short (unsigned-byte 16))
 (def-v! v!ushort (signed-byte 16))
 
-;----------------------------------------------------------------
+;;----------------------------------------------------------------
 
-;; {TODO} inline these
-(defun v-x (vec)
+;; {TODO} compiler macro these
+(defun x (vec)
   "Returns the x component of the vector"
-  (aref vec 0))
-(defun v-y (vec)
+  (svref vec 0))
+(defun y (vec)
   "Returns the y component of the vector"
-  (aref vec 1))
-(defun v-z (vec)
+  (svref vec 1))
+(defun z (vec)
   "Returns the z component of the vector"
-  (aref vec 2))
-(defun v-w (vec)
+  (svref vec 2))
+(defun w (vec)
   "Returns the w component of the vector"
-  (aref vec 3))
+  (svref vec 3))
 
-(defun (setf v-x) (value vec)
+(defun (setf x) (value vec)
   "Sets the x component of the vector"
-  (setf (aref vec 0) (float value)))
-(defun (setf v-y) (value vec)
+  (setf (svref vec 0) (float value)))
+(defun (setf y) (value vec)
   "Sets the y component of the vector"
-  (setf (aref vec 1) (float value)))
-(defun (setf v-z) (value vec)
+  (setf (svref vec 1) (float value)))
+(defun (setf z) (value vec)
   "Sets the z component of the vector"
-  (setf (aref vec 2) (float value)))
-(defun (setf v-w) (value vec)
+  (setf (svref vec 2) (float value)))
+(defun (setf w) (value vec)
   "Sets the w component of the vector"
-  (setf (aref vec 3) (float value)))
+  (setf (svref vec 3) (float value)))
+
+;;----------------------------------------------------------------

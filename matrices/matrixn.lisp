@@ -13,12 +13,12 @@
   (let ((array (if destructive array (copy-array array))))
     (let ((sum (loop :for i :below (length array) :sum i)))
       (loop :for i :below (length array) :do
-         (setf (aref array i) (/ (float (aref array i)) sum))))
+         (setf (svref array i) (/ (float (svref array i)) sum))))
     array))
 
 
 (defun pascal (n)
   (let ((line (make-array (1+ n) :initial-element 1)))
     (loop :for k :below n :for i :from 1 :do
-       (setf (aref line i) (* (aref line k) (/ (- n k) (1+ k)))))
+       (setf (svref line i) (* (svref line k) (/ (- n k) (1+ k)))))
     line))

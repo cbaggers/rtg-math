@@ -1,53 +1,54 @@
 (in-package #:rtg-math.quaternions)
 
-(defun float-greater-than-zero (x)
-  (> x 1.0s0))
+(float-greater-than-zero (x)
+			 (> x 1.0s0))
 
 ;;----------------------------------------------------------------
 
 (defun w (quat)
   "Returns the w component of the quaternion"
-  (aref quat 0))
+  (svref quat 0))
 
 (defun x (quat)
   "Returns the x component of the quaternion"
-  (aref quat 1))
+  (svref quat 1))
 
 (defun y (quat)
   "Returns the y component of the quaternion"
-  (aref quat 2))
+  (svref quat 2))
 
 (defun z (quat)
   "Returns the z component of the quaternion"
-  (aref quat 3))
+  (svref quat 3))
 
 ;;----------------------------------------------------------------;;
 
-(defun zero-quat ()
-  (make-quat 0.0 0.0 0.0 0.0))
+(defun 0! ()
+  (q! 0.0 0.0 0.0 0.0))
 
-(defun zero-quatp (quat)
+(defun 0-p (quat)
   (let ((w (w quat)) (x (x quat)) (y (y quat)) (z (z quat)))
-    (= 0f0 (+ (* w w) (* x x) (* y y) (* z z)))))
+    (cl:= 0f0 (+ (* w w) (* x x) (* y y) (* z z)))))
 
-(defun unit-quatp (quat)
+(defun unitp (quat)
   (let ((w (w quat)) (x (x quat)) (y (y quat)) (z (z quat)))
-    (= 0f0 (- 1.0 (* w w) (* x x) (* y y) (* z z)))))
+    (cl:= 0f0 (- 1.0 (* w w) (* x x) (* y y) (* z z)))))
 
-(defun identity-quat ()
-  (make-quat 1.0 0.0 0.0 0.0))
+(defun identity ()
+  (q! 1.0 0.0 0.0 0.0))
 
 (defun identity-p (quat)
-  (and (= 0f0 (- 1.0 (w quat)))
-       (= 0f0 (x quat))
-       (= 0f0 (y quat))
-       (= 0f0 (z quat))))
+  (and (cl:= 0f0 (- 1.0 (w quat)))
+       (cl:= 0f0 (x quat))
+       (cl:= 0f0 (y quat))
+       (cl:= 0f0 (z quat))))
 
-;;[TODO] base quaternions? what about q:* like v:*
 (declaim (inline q!)
-         (ftype (function ((single-float) (single-float)
-                           (single-float) (single-float))
-                          (simple-array single-float (4)))
+         (ftype (function (single-float
+                           single-float
+                           single-float
+                           single-float)
+                          quaternion)
                 q!))
 (defun q! (w x y z)
   "This takes 4 floats and give back a vector4, this is just an
@@ -55,98 +56,80 @@
    For speed reasons it will not accept integers so make sure
    you hand it floats."
   (declare (single-float x y z w))
-  (make-quat w x y z))
-
-(declaim (inline make-quat)
-         (ftype (function ((single-float)
-                           (single-float)
-                           (single-float)
-                           (single-float))
-                          (simple-array single-float (4)))
-                make-quat))
-(defun make-quat (w x y z)
-  "This takes 4 floats and give back a vector4, this is just an
-   array but it specifies the array type and populates it.
-   For speed reasons it will not accept integers so make sure
-   you hand it floats."
-  (declare (single-float x y z w))
   (let ((q (make-array 4 :element-type `single-float)))
-    (setf (aref q 0) w
-          (aref q 1) x
-          (aref q 2) y
-          (aref q 3) z)
+    (setf (svref q 0) w
+          (svref q 1) x
+          (svref q 2) y
+          (svref q 3) z)
     q))
 
-(defun make-quat-from-vec3 (vec3)
-  (make-quat 0.0 (aref vec3 0) (aref vec3 1) (aref vec3 2)))
-
-(defun make-quat-from-rotation-matrix3 (mat3)
+(defun from-matrix3 (mat3)
   (let ((trace (m3:mtrace mat3)))
     (if (> trace 0.0)
         (let* ((s (sqrt (+ 1.0 trace)))
                (recip (/ 0.5 s)))
-          (make-quat (* s 0.5)
-                     (* (- (m3:melm mat3 2 1) (m3:melm mat3 1 2)) recip)
-                     (* (- (m3:melm mat3 0 2) (m3:melm mat3 2 0)) recip)
-                     (* (- (m3:melm mat3 1 0) (m3:melm mat3 0 1)) recip)))
+          (q! (* s 0.5)
+	      (* (- (m3:melm mat3 2 1) (m3:melm mat3 1 2)) recip)
+	      (* (- (m3:melm mat3 0 2) (m3:melm mat3 2 0)) recip)
+	      (* (- (m3:melm mat3 1 0) (m3:melm mat3 0 1)) recip)))
         (let* ((i (if (> (m3:melm mat3 1 1) (m3:melm mat3 0 0)) 1 0))
                (i (if (> (m3:melm mat3 2 2) (m3:melm mat3 i i)) 2 i))
                (j (mod (+ 1 i) 3))
                (k (mod (+ 1 j) 3))
                (s (sqrt (+ (- (m3:melm mat3 i i)
-                                (m3:melm mat3 j j)
-                                (m3:melm mat3 k k))
-                             1.0)))
+			      (m3:melm mat3 j j)
+			      (m3:melm mat3 k k))
+			   1.0)))
                (recip (/ 0.5 s))
-               (quat (make-quat (* (- (m3:melm mat3 k j)
-                                      (m3:melm mat3 j k))
-                                   recip) 0.0 0.0 0.0)))
-          (setf (aref quat i) (* s 0.5)
-                (aref quat j) (* (+ (m3:melm mat3 j i) (m3:melm mat3 i j))
+               (quat (q! (* (- (m3:melm mat3 k j)
+			       (m3:melm mat3 j k))
+			    recip) 0.0 0.0 0.0)))
+          (setf (svref quat i) (* s 0.5)
+                (svref quat j) (* (+ (m3:melm mat3 j i) (m3:melm mat3 i j))
                                  recip)
-                (aref quat k) (* (+ (m3:melm mat3 k i) (m3:melm mat3 i k))
+                (svref quat k) (* (+ (m3:melm mat3 k i) (m3:melm mat3 i k))
                                  recip))
           quat))))
 
-(defun make-quat-from-axis-angle (axis-vec3 angle)
+(defun from-axis-angle (axis-vec3 angle)
   (let ((length (v3:length-squared axis-vec3)))
-    (if (= 0f0 length)
-        (identity-quat)
+    (if (cl:= 0f0 length)
+        (identity)
         (let* ((half-angle (/ angle 2.0))
                (sin-half-angle (sin half-angle))
                (cos-half-angle (cos half-angle))
                (scale-factor (/ sin-half-angle (sqrt length))))
           (v4:make-vector4 cos-half-angle
-                           (* scale-factor (aref axis-vec3 0))
-                           (* scale-factor (aref axis-vec3 1))
-                           (* scale-factor (aref axis-vec3 2)))))))
+                           (* scale-factor (svref axis-vec3 0))
+                           (* scale-factor (svref axis-vec3 1))
+                           (* scale-factor (svref axis-vec3 2)))))))
 
-(defun make-quat-from-axies (x-axies y-axies z-axies)
-  (make-quat-from-rotation-matrix3
+(defun from-axies (x-axies y-axies z-axies)
+  (from-matrix3
    (m3:make
-    (aref x-axies 0) (aref y-axies 1) (aref z-axies 2)
-    (aref x-axies 0) (aref y-axies 1) (aref z-axies 2)
-    (aref x-axies 0) (aref y-axies 1) (aref z-axies 2))))
+    (svref x-axies 0) (svref y-axies 1) (svref z-axies 2)
+    (svref x-axies 0) (svref y-axies 1) (svref z-axies 2)
+    (svref x-axies 0) (svref y-axies 1) (svref z-axies 2))))
 
-(defun make-quat-from-look-at (from3 to3)
+(defun from-look-at (from3 to3)
   (let* ((dir (v3:- from3 to3))
          (n-dir (v3:normalize dir))
          (right (v3:make-vector3 (v:z n-dir) 0.0 (- (v:x n-dir))))
          (n-right (v3:normalize right))
          (up (v3:cross n-dir n-right)))
-    (q:make-quat-from-axies n-right up n-dir)))
+    (q:from-axies n-right up n-dir)))
 
-(defun make-quat-from-fixed-angles (x-rot y-rot z-rot)
+(defun from-fixed-angles (x-rot y-rot z-rot)
   (let ((x-rot (/ x-rot 2.0))
         (y-rot (/ y-rot 2.0))
         (z-rot (/ z-rot 2.0)))
     (let ((cos-x (cos x-rot)) (sin-x (sin x-rot))
           (cos-y (cos y-rot)) (sin-y (sin y-rot))
           (cos-z (cos z-rot)) (sin-z (sin z-rot)))
-      (make-quat (- (* cos-x cos-y cos-z) (* sin-x sin-y sin-z))
-                 (- (* sin-x cos-y cos-z) (* cos-x sin-y sin-z))
-                 (- (* cos-x sin-y cos-z) (* sin-x cos-y sin-z))
-                 (- (* cos-x cos-y sin-z) (* sin-x sin-y cos-x))))))
+      (q! (- (* cos-x cos-y cos-z) (* sin-x sin-y sin-z))
+	  (- (* sin-x cos-y cos-z) (* cos-x sin-y sin-z))
+	  (- (* cos-x sin-y cos-z) (* sin-x cos-y sin-z))
+	  (- (* cos-x cos-y sin-z) (* sin-x sin-y cos-x))))))
 
 (defun magnitude (quat)
   (let ((w (w quat)) (x (x quat)) (y (y quat)) (z (z quat)))
@@ -156,22 +139,22 @@
   (let ((w (w quat)) (x (x quat)) (y (y quat)) (z (z quat)))
     (+ (* w w) (* x x) (* y y) (* z z))))
 
-(defun quat-eql (q1 q2)
-  (and (= 0f0 (- (w q2) (w q1))) (= 0f0 (- (x q2) (x q1)))
-       (= 0f0 (- (y q2) (y q1))) (= 0f0 (- (z q2) (z q1)))))
+(defun = (q1 q2)
+  (and (cl:= 0f0 (- (w q2) (w q1))) (cl:= 0f0 (- (x q2) (x q1)))
+       (cl:= 0f0 (- (y q2) (y q1))) (cl:= 0f0 (- (z q2) (z q1)))))
 
 ;;[TODO] This seems wrong!...but book says it's right
-(defun quat-!eql (q1 q2)
-  (not (or (= 0f0 (- (w q2) (w q1))) (= 0f0 (- (x q2) (x q1)))
-           (= 0f0 (- (y q2) (y q1))) (= 0f0 (- (z q2) (z q1))))))
+(defun /= (q1 q2)
+  (not (or (cl:= 0f0 (- (w q2) (w q1))) (cl:= 0f0 (- (x q2) (x q1)))
+           (cl:= 0f0 (- (y q2) (y q1))) (cl:= 0f0 (- (z q2) (z q1))))))
 
 (defun copy (quat)
-  (make-quat (w quat) (x quat) (y quat) (z quat)))
+  (q! (w quat) (x quat) (y quat) (z quat)))
 
 (defun get-axis-angle (quat)
   (list
    (let ((length (sqrt (- 1.0 (* (w quat) (w quat))))))
-     (if (= 0f0 length)
+     (if (cl:= 0f0 length)
          (v3:make-vector3 0.0 0.0 0.0)
          (let ((length (/ 1.0 length)))
            (v3:make-vector3 (* length (x quat))
@@ -181,61 +164,55 @@
 
 (defun normalize (quat)
   (let ((length-squared (v4:dot quat quat)))
-    (if (= 0f0 length-squared)
-        (zero-quat)
+    (if (cl:= 0f0 length-squared)
+        (q0)
         (let ((factor (inv-sqrt length-squared)))
-          (make-quat (* (w quat) factor)
-                     (* (x quat) factor)
-                     (* (y quat) factor)
-                     (* (z quat) factor))))))
+          (q! (* (w quat) factor)
+	      (* (x quat) factor)
+	      (* (y quat) factor)
+	      (* (z quat) factor))))))
 
 (defun qconjugate (quat)
-  (make-quat (w quat) (- (x quat)) (- (y quat)) (- (z quat))))
+  (q! (w quat) (- (x quat)) (- (y quat)) (- (z quat))))
 
 (defun inverse (quat)
   (let ((norm (norm quat)))
-    (if (= 0f0 norm)
-        (identity-quat)
+    (if (cl:= 0f0 norm)
+        (identity)
         (let ((norm-recip (/ 1.0 norm)))
-          (make-quat (* norm-recip (w quat))
-                     (- (* norm-recip (x quat)))
-                     (- (* norm-recip (y quat)))
-                     (- (* norm-recip (z quat))))))))
+          (q! (* norm-recip (w quat))
+	      (- (* norm-recip (x quat)))
+	      (- (* norm-recip (y quat)))
+	      (- (* norm-recip (z quat))))))))
 
-(defun q+1 (quat-a quat-b)
-  (v4:+ quat-a quat-b))
-
-(defun q+ (&rest quats)
+(defun + (&rest quats)
   (apply #'v4:+ quats))
 
-(defun q-1 (quat-a quat-b)
-  (v4:- quat-a quat-b))
-
-(defun q- (&rest quats)
+(defun - (&rest quats)
   (apply #'v4:- quats))
 
-(defun q* (quat-a scalar)
+(defun *s (quat-a scalar)
   (v4:* quat-a scalar))
 
-(defun q*quat (quat-a quat-b)
-  (make-quat (- (* (w quat-a) (w quat-b))
-                (* (x quat-a) (x quat-b))
-                (* (y quat-a) (y quat-b))
-                (* (z quat-a) (z quat-b)))
-             (- (+ (* (w quat-a) (x quat-b))
-                   (* (x quat-a) (w quat-b))
-                   (* (y quat-a) (z quat-b)))
-                (* (z quat-a) (y quat-b)))
-             (- (+ (* (w quat-a) (y quat-b))
-                   (* (y quat-a) (w quat-b))
-                   (* (z quat-a) (x quat-b)))
-                (* (x quat-a) (z quat-b)))
-             (- (+ (* (w quat-a) (z quat-b))
-                   (* (z quat-a) (w quat-b))
-                   (* (x quat-a) (y quat-b)))
-                (* (y quat-a) (x quat-b)))))
+(defun * (quat-a quat-b)
+  (q! (- (* (w quat-a) (w quat-b))
+	 (* (x quat-a) (x quat-b))
+	 (* (y quat-a) (y quat-b))
+	 (* (z quat-a) (z quat-b)))
+      (- (+ (* (w quat-a) (x quat-b))
+	    (* (x quat-a) (w quat-b))
+	    (* (y quat-a) (z quat-b)))
+	 (* (z quat-a) (y quat-b)))
+      (- (+ (* (w quat-a) (y quat-b))
+	    (* (y quat-a) (w quat-b))
+	    (* (z quat-a) (x quat-b)))
+	 (* (x quat-a) (z quat-b)))
+      (- (+ (* (w quat-a) (z quat-b))
+	    (* (z quat-a) (w quat-b))
+	    (* (x quat-a) (y quat-b)))
+	 (* (y quat-a) (x quat-b)))))
 
-(defun to-matrix3 (quat)
+(defun to-mat3 (quat)
   (let ((w (w quat)) (x (x quat)) (y (y quat)) (z (z quat)))
     (let ((x2 (+ x x)) (y2 (+ y y)) (z2 (+ z z)))
       (let ((wx (* w x2))  (wy (* w y2))  (wz (* w z2))
@@ -247,7 +224,7 @@
          (+ xy wz)         (- 1.0 (+ xx zz)) (- yz wx)
          (- xz wy)         (+ yz wx)         (- 1.0 (+ xx yy)))))))
 
-(defun to-matrix4 (quat)
+(defun to-mat4 (quat)
   (let ((w (w quat))  (x (x quat))  (y (y quat))  (z (z quat)))
     (let ((x2 (+ x x)) (y2 (+ y y)) (z2 (+ z z)))
       (let ((wx (* w x2))  (wy (* w y2))  (wz (* w z2))
@@ -266,26 +243,26 @@
 ;; [TODO] Look into assets (this should be a unit quaternion
 (defun rotate (vec3 quat)
   "Rotate vec3 by quaternion. Assumes quaternion is normalized."
-  (let* ((v-mult (* 2.0 (+ (* (x quat) (aref vec3 0))
-                           (* (y quat) (aref vec3 1))
-                           (* (z quat) (aref vec3 2)))))
+  (let* ((v-mult (* 2.0 (+ (* (x quat) (svref vec3 0))
+                           (* (y quat) (svref vec3 1))
+                           (* (z quat) (svref vec3 2)))))
          (cross-mult (* 2.0 (w quat)))
          (p-mult (- (* cross-mult (w quat)) 1.0)))
-    (v3:make-vector3 (+ (* p-mult (aref vec3 0))
+    (v3:make-vector3 (+ (* p-mult (svref vec3 0))
                         (* v-mult (x quat))
                         (* cross-mult
-                           (- (* (y quat) (aref vec3 2))
-                              (* (z quat) (aref vec3 1)))))
-                     (+ (* p-mult (aref vec3 1))
+                           (- (* (y quat) (svref vec3 2))
+                              (* (z quat) (svref vec3 1)))))
+                     (+ (* p-mult (svref vec3 1))
                         (* v-mult (y quat))
                         (* cross-mult
-                           (- (* (z quat) (aref vec3 0))
-                              (* (x quat) (aref vec3 2)))))
-                     (+ (* p-mult (aref vec3 2))
+                           (- (* (z quat) (svref vec3 0))
+                              (* (x quat) (svref vec3 2)))))
+                     (+ (* p-mult (svref vec3 2))
                         (* v-mult (z quat))
                         (* cross-mult
-                           (- (* (x quat) (aref vec3 1))
-                              (* (y quat) (aref vec3 0))))))))
+                           (- (* (x quat) (svref vec3 1))
+                              (* (y quat) (svref vec3 0))))))))
 
 ;; [TODO] Could be faster (see q+1 area)
 (defun lerp (start-quat end-quat pos)

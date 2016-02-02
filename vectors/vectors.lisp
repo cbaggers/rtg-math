@@ -13,7 +13,7 @@
                (cl:make-array
                 ,len :element-type 'single-float :initial-contents
                 (list ,@(loop :for char :across name
-                           :collect `(aref ,arr ,(or (position char '(#\X #\Y #\Z #\W))
+                           :collect `(svref ,arr ,(or (position char '(#\X #\Y #\Z #\W))
                                                      (error "Vectors: swizzle: Pattern component was not X, Y, Z or W: ~a" char)))))))))
       form))
 
@@ -24,8 +24,8 @@
     (if (or (> len 4) (< len 2))
         (error "Vectors: swizzle: Cepl vectors cannot have a length less that 2 or greater than 4")
         (loop :for char :across name :for i :from 0 :do
-           (setf (aref result i)
-                 (aref vec (or (position char '(#\X #\Y #\Z #\W))
+           (setf (svref result i)
+                 (svref vec (or (position char '(#\X #\Y #\Z #\W))
                                (error "Vectors: swizzle: Pattern component was not X, Y, Z or W: ~a" char))))))
     result))
 
@@ -42,7 +42,7 @@
   (let ((e (gensym "expression")))
     `(let ((,e ,expression))
        (let ,(loop :for v :in var-list :for i :from 0 :collect
-		`(,v (aref ,e ,i)))
+		`(,v (svref ,e ,i)))
 	 ,@body))))
 
 (defmacro dvec* (var-list-expression-pairs &body body)
@@ -113,33 +113,27 @@
 
 ;;----------------------------------------------------------------
 
-(defun eql (vec-a vec-b)
-  (let ((vec-a (floatify vec-a))
-        (vec-b (floatify vec-b)))
-    (case= (cl:length vec-a)
-      (2 (v2:eql vec-a vec-b))
-      (3 (v3:eql vec-a vec-b))
-      (4 (v4:eql vec-a vec-b)))))
-
-;;----------------------------------------------------------------
-
 (defun = (&rest vecs)
   "Returns either t if the vectors are equal.
    Otherwise it returns nil."
-  (let ((vec-a (first vecs)))
-    (loop :for vec :in (cdr vecs)
-       :when (not (v:eql vec vec-a)) :do (return nil)
-       :finally (return t))))
+  (let* ((vec-a (first vecs))
+	 (a-len (length vec-a)))
+    (loop :for vec :in (cdr vecs) :always
+       (and (= (length vec) a-len)
+	    (loop :for i :below a-len :always
+	       (cl:= (svref vec i) (svref vec-a i)))))))
 
 ;;----------------------------------------------------------------
 
 (defun /= (&rest vecs)
   "Returns either t if the two vectors are equal.
    Otherwise it returns nil."
-  (let ((vec-a (first vecs)))
-    (loop :for vec :in (cdr vecs)
-       :when (eql vec-a vec) :do (return nil)
-       :finally (return t))))
+  (let* ((vec-a (first vecs))
+	 (a-len (length vec-a)))
+    (not (loop :for vec :in (cdr vecs) :always
+	    (and (= (length vec) a-len)
+		 (loop :for i :below a-len :always
+		    (cl:= (svref vec i) (svref vec-a i))))))))
 
 ;;----------------------------------------------------------------
 
@@ -299,21 +293,21 @@
 ;;----------------------------------------------------------------
 
 (declaim (inline lerp)
-         (ftype (function ((or (simple-array single-float (2))
-                               (simple-array single-float (3))
-                               (simple-array single-float (4)))
-                           (or (simple-array single-float (2))
-                               (simple-array single-float (3))
-                               (simple-array single-float (4)))
-                           (or (integer) (single-float)))
-                          (or (simple-array single-float (2))
-                              (simple-array single-float (3))
-                              (simple-array single-float (4))))
+         (ftype (function ((or vec2
+                               vec3
+                               vec4)
+                           (or vec2
+                               vec3
+                               vec4)
+                           (or (integer) single-float))
+                          (or vec2
+                              vec3
+                              vec4))
                 lerp))
 (defun lerp (vector-a vector-b ammount)
-  (declare ((or (simple-array single-float (2))
-                (simple-array single-float (3))
-                (simple-array single-float (4)))
+  (declare ((or vec2
+                vec3
+                vec4)
             vector-a vector-b))
   (case= (cl:length vector-a)
     (2 (v2:lerp vector-a vector-b (float ammount)))
@@ -322,21 +316,21 @@
     (otherwise (error "only vectors of size 2-4 are valid"))))
 
 (declaim (inline mix)
-         (ftype (function ((or (simple-array single-float (2))
-                               (simple-array single-float (3))
-                               (simple-array single-float (4)))
-                           (or (simple-array single-float (2))
-                               (simple-array single-float (3))
-                               (simple-array single-float (4)))
-                           (or (integer) (single-float)))
-                          (or (simple-array single-float (2))
-                              (simple-array single-float (3))
-                              (simple-array single-float (4))))
+         (ftype (function ((or vec2
+                               vec3
+                               vec4)
+                           (or vec2
+                               vec3
+                               vec4)
+                           (or (integer) single-float))
+                          (or vec2
+                              vec3
+                              vec4))
                 mix))
 (defun mix (vector-a vector-b ammount)
-  (declare ((or (simple-array single-float (2))
-                (simple-array single-float (3))
-                (simple-array single-float (4)))
+  (declare ((or vec2
+                vec3
+                vec4)
             vector-a vector-b))
   (lerp vector-a vector-b ammount))
 
@@ -344,34 +338,3 @@
   (lerp (lerp a1 a2 ammount)
         (lerp b1 b2 ammount)
         ammount))
-
-;----------------------------------------------------------------
-
-;; {TODO} compiler macro these
-(defun x (vec)
-  "Returns the x component of the vector"
-  (aref vec 0))
-(defun y (vec)
-  "Returns the y component of the vector"
-  (aref vec 1))
-(defun z (vec)
-  "Returns the z component of the vector"
-  (aref vec 2))
-(defun w (vec)
-  "Returns the w component of the vector"
-  (aref vec 3))
-
-(defun (setf x) (value vec)
-  "Sets the x component of the vector"
-  (setf (aref vec 0) (float value)))
-(defun (setf y) (value vec)
-  "Sets the y component of the vector"
-  (setf (aref vec 1) (float value)))
-(defun (setf z) (value vec)
-  "Sets the z component of the vector"
-  (setf (aref vec 2) (float value)))
-(defun (setf w) (value vec)
-  "Sets the w component of the vector"
-  (setf (aref vec 3) (float value)))
-
-;;----------------------------------------------------------------
