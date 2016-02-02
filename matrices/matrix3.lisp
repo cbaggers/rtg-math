@@ -236,7 +236,7 @@
    matrix are floats the values have an error bound as defined
    in base-maths"
   (declare ((simple-array single-float (9)) mat-a))
-  (loop :for i :below 9 :always (not (float-zero (aref mat-a i)))))
+  (loop :for i :below 9 :always (not (= 0f0 (aref mat-a i)))))
 
 ;;----------------------------------------------------------------
 
@@ -251,15 +251,15 @@
    matrix are floats the values have an error bound as defined
    in base-maths"
   (declare ((simple-array single-float (9)) mat-a))
-  (and (float-zero (- (melm mat-a 0 0) 1.0))
-       (float-zero (- (melm mat-a 1 1) 1.0))
-       (float-zero (- (melm mat-a 2 2) 1.0))
-       (float-zero (melm mat-a 0 1))
-       (float-zero (melm mat-a 0 2))
-       (float-zero (melm mat-a 1 0))
-       (float-zero (melm mat-a 1 2))
-       (float-zero (melm mat-a 2 0))
-       (float-zero (melm mat-a 2 1))))
+  (and (= 0f0 (- (melm mat-a 0 0) 1.0))
+       (= 0f0 (- (melm mat-a 1 1) 1.0))
+       (= 0f0 (- (melm mat-a 2 2) 1.0))
+       (= 0f0 (melm mat-a 0 1))
+       (= 0f0 (melm mat-a 0 2))
+       (= 0f0 (melm mat-a 1 0))
+       (= 0f0 (melm mat-a 1 2))
+       (= 0f0 (melm mat-a 2 0))
+       (= 0f0 (melm mat-a 2 1))))
 
 ;;----------------------------------------------------------------
 
@@ -312,7 +312,7 @@
          (det (+ (* (melm mat-a 0 0) cofactor-0)
                  (* (melm mat-a 0 1) cofactor-3)
                  (* (melm mat-a 0 2) cofactor-6))))
-    (if (float-zero det)
+    (if (= 0f0 det)
 	(error "Matrix4 Inverse: Singular Matrix")
 	(let*
 	    ((inv-det (/ 1.0 det))
@@ -521,7 +521,7 @@
   (declare ((simple-array single-float (9)) mat-a))
   (let* ((sy (melm mat-a 0 2))
          (cy (c-sqrt (- 1.0 (* sy sy)))))
-    (if (not (float-zero cy)) ; [TODO: not correct PI-epsilon]
+    (if (not (= 0f0 cy)) ; [TODO: not correct PI-epsilon]
         (let* ((factor (/ 1.0 cy))
                (sx (* factor (- (melm mat-a 2 1))))
                (cx (* factor (melm mat-a 2 2)))
@@ -549,7 +549,7 @@
   (declare ((simple-array single-float (9)) mat-a))
   (let* ((c-a (* 0.5 (- (mtrace mat-a) 1.0)))
          (angle (acos c-a)))
-    (cond ((float-zero angle) ;; <-angle is zero so axis can be anything
+    (cond ((= 0f0 angle) ;; <-angle is zero so axis can be anything
            (make-vector3 1.0 0.0 0.0))
           ((< angle (- rtg-math.base-maths:+pi+
 		       rtg-math.base-maths:+float-threshold+))

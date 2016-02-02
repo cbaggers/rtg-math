@@ -237,7 +237,7 @@
   "Returns 't' if this is a zero matrix (as contents of the
    matrix are floats the values have an error bound as defined
    in base-maths"
-  (loop :for i :below 16 :always (float-zero (aref mat-a i))))
+  (loop :for i :below 16 :always (= 0f0 (aref mat-a i))))
 
 ;;----------------------------------------------------------------
 
@@ -246,22 +246,22 @@
   "Returns 't' if this is an identity matrix (as contents of the
    matrix are floats the values have an error bound as defined
    in base-maths"
-  (and (float-zero (- (melm mat-a 0 0) 1.0))
-       (float-zero (- (melm mat-a 1 1) 1.0))
-       (float-zero (- (melm mat-a 2 2) 1.0))
-       (float-zero (- (melm mat-a 3 3) 1.0))
-       (float-zero (melm mat-a 0 1))
-       (float-zero (melm mat-a 0 2))
-       (float-zero (melm mat-a 0 3))
-       (float-zero (melm mat-a 1 0))
-       (float-zero (melm mat-a 1 2))
-       (float-zero (melm mat-a 1 3))
-       (float-zero (melm mat-a 2 0))
-       (float-zero (melm mat-a 2 1))
-       (float-zero (melm mat-a 2 3))
-       (float-zero (melm mat-a 3 0))
-       (float-zero (melm mat-a 3 1))
-       (float-zero (melm mat-a 3 2))))
+  (and (= 0f0 (- (melm mat-a 0 0) 1.0))
+       (= 0f0 (- (melm mat-a 1 1) 1.0))
+       (= 0f0 (- (melm mat-a 2 2) 1.0))
+       (= 0f0 (- (melm mat-a 3 3) 1.0))
+       (= 0f0 (melm mat-a 0 1))
+       (= 0f0 (melm mat-a 0 2))
+       (= 0f0 (melm mat-a 0 3))
+       (= 0f0 (melm mat-a 1 0))
+       (= 0f0 (melm mat-a 1 2))
+       (= 0f0 (melm mat-a 1 3))
+       (= 0f0 (melm mat-a 2 0))
+       (= 0f0 (melm mat-a 2 1))
+       (= 0f0 (melm mat-a 2 3))
+       (= 0f0 (melm mat-a 3 0))
+       (= 0f0 (melm mat-a 3 1))
+       (= 0f0 (melm mat-a 3 2))))
 
 ;;----------------------------------------------------------------
 
@@ -357,7 +357,7 @@
                  (* (melm mat-a 0 1) cofac-4)
                  (* (melm mat-a 0 2) cofac-8))))
     (if
-     (float-zero det)
+     (= 0f0 det)
      (error "Matrix4 Inverse: Singular Matrix")
      (let*
          ((inv-det (/ 1.0 det))
@@ -535,7 +535,7 @@
    is returned as vector3"
   (let* ((sy (melm mat-a 0 2))
          (cy (rtg-math.base-maths:c-sqrt (- 1.0 (* sy sy)))))
-    (if (float-zero cy)
+    (if (= 0f0 cy)
         (let ((sz 0.0)
               (cz 1.0)
               (sx (melm mat-a 2 1))
@@ -567,8 +567,8 @@
                      (melm mat-a 2 2)))
          (cos-theta (* 0.5 (- trace-a 1.0)))
          (angle (acos cos-theta)))
-    (cond ((float-zero angle) (values v3:*unit-x* angle))
-          ((float-zero (- rtg-math.base-maths:+pi+ angle))
+    (cond ((= 0f0 angle) (values v3:*unit-x* angle))
+          ((= 0f0 (- rtg-math.base-maths:+pi+ angle))
            (values
             (v3:normalize
              (make-vector3 (- (melm mat-a 2 1) (melm mat-a 1 2))

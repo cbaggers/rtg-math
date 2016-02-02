@@ -28,20 +28,20 @@
 
 (defun zero-quatp (quat)
   (let ((w (w quat)) (x (x quat)) (y (y quat)) (z (z quat)))
-    (float-zero (+ (* w w) (* x x) (* y y) (* z z)))))
+    (= 0f0 (+ (* w w) (* x x) (* y y) (* z z)))))
 
 (defun unit-quatp (quat)
   (let ((w (w quat)) (x (x quat)) (y (y quat)) (z (z quat)))
-    (float-zero (- 1.0 (* w w) (* x x) (* y y) (* z z)))))
+    (= 0f0 (- 1.0 (* w w) (* x x) (* y y) (* z z)))))
 
 (defun identity-quat ()
   (make-quat 1.0 0.0 0.0 0.0))
 
 (defun identity-p (quat)
-  (and (float-zero (- 1.0 (w quat)))
-       (float-zero (x quat))
-       (float-zero (y quat))
-       (float-zero (z quat))))
+  (and (= 0f0 (- 1.0 (w quat)))
+       (= 0f0 (x quat))
+       (= 0f0 (y quat))
+       (= 0f0 (z quat))))
 
 ;;[TODO] base quaternions? what about q:* like v:*
 (declaim (inline q!)
@@ -110,7 +110,7 @@
 
 (defun make-quat-from-axis-angle (axis-vec3 angle)
   (let ((length (v3:length-squared axis-vec3)))
-    (if (float-zero length)
+    (if (= 0f0 length)
         (identity-quat)
         (let* ((half-angle (/ angle 2.0))
                (sin-half-angle (sin half-angle))
@@ -157,13 +157,13 @@
     (+ (* w w) (* x x) (* y y) (* z z))))
 
 (defun quat-eql (q1 q2)
-  (and (float-zero (- (w q2) (w q1))) (float-zero (- (x q2) (x q1)))
-       (float-zero (- (y q2) (y q1))) (float-zero (- (z q2) (z q1)))))
+  (and (= 0f0 (- (w q2) (w q1))) (= 0f0 (- (x q2) (x q1)))
+       (= 0f0 (- (y q2) (y q1))) (= 0f0 (- (z q2) (z q1)))))
 
 ;;[TODO] This seems wrong!...but book says it's right
 (defun quat-!eql (q1 q2)
-  (not (or (float-zero (- (w q2) (w q1))) (float-zero (- (x q2) (x q1)))
-           (float-zero (- (y q2) (y q1))) (float-zero (- (z q2) (z q1))))))
+  (not (or (= 0f0 (- (w q2) (w q1))) (= 0f0 (- (x q2) (x q1)))
+           (= 0f0 (- (y q2) (y q1))) (= 0f0 (- (z q2) (z q1))))))
 
 (defun copy (quat)
   (make-quat (w quat) (x quat) (y quat) (z quat)))
@@ -171,7 +171,7 @@
 (defun get-axis-angle (quat)
   (list
    (let ((length (c-sqrt (- 1.0 (* (w quat) (w quat))))))
-     (if (float-zero length)
+     (if (= 0f0 length)
          (v3:make-vector3 0.0 0.0 0.0)
          (let ((length (/ 1.0 length)))
            (v3:make-vector3 (* length (x quat))
@@ -181,7 +181,7 @@
 
 (defun normalize (quat)
   (let ((length-squared (v4:dot quat quat)))
-    (if (float-zero length-squared)
+    (if (= 0f0 length-squared)
         (zero-quat)
         (let ((factor (c-inv-sqrt length-squared)))
           (make-quat (* (w quat) factor)
@@ -194,7 +194,7 @@
 
 (defun inverse (quat)
   (let ((norm (norm quat)))
-    (if (float-zero norm)
+    (if (= 0f0 norm)
         (identity-quat)
         (let ((norm-recip (/ 1.0 norm)))
           (make-quat (* norm-recip (w quat))
@@ -293,7 +293,7 @@
    will always take the shortest path."
   ;; get cos of 'angle' between quaternions
   (let ((cos-angle (v4:dot start-quat end-quat)))
-    (if (float>=0 cos-angle)
+    (if (>= cos-angle 0f0)
         (q+1 (q* end-quat pos)
              (q* start-quat (- 1.0 pos)))
         (q+1 (q* end-quat pos)

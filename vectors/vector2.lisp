@@ -39,7 +39,7 @@
    floating point number it checks to see if the length is
    below a threshold set in the base-maths package"
   (declare ((simple-array single-float (2)) vector-a))
-  (float-zero (cl:+ (EXPT (AREF VECTOR-A 0) 2) (EXPT (AREF VECTOR-A 1) 2))))
+  (= 0f0 (cl:+ (EXPT (AREF VECTOR-A 0) 2) (EXPT (AREF VECTOR-A 1) 2))))
 
 ;;----------------------------------------------------------------
 
@@ -51,7 +51,7 @@
    floating point number it checks to see if the length is
    within the range of 1 + or - and threshold set in base-maths"
   (declare ((simple-array single-float (2)) vector-a))
-  (float-zero (cl:- 1.0 (cl:+ (EXPT (AREF VECTOR-A 0) 2) (EXPT (AREF VECTOR-A 1) 2)))))
+  (= 0f0 (cl:- 1.0 (cl:+ (EXPT (AREF VECTOR-A 0) 2) (EXPT (AREF VECTOR-A 1) 2)))))
 ;;----------------------------------------------------------------
 
 ;; Would be interesting to see if checking that the arrays
@@ -279,7 +279,7 @@
    vector won't throw an error."
   (declare ((simple-array single-float (2)) vector-a))
   (let ((len (length-squared vector-a)))
-    (if (float-zero len)
+    (if (= 0f0 len)
         vector-a
         (* vector-a (c-inv-sqrt len)))))
 

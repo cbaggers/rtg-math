@@ -22,12 +22,6 @@
            :+float-threshold+
            :+one-degree-in-radians+
            :+pi+
-           :float-zero
-           :float>=0
-           :float<=0
-           :float>0
-           :float<0
-           :float-greater-than-zero
            :c-sqrt
            :c-inv-sqrt
            :degrees
@@ -59,7 +53,7 @@
            :*unit-x* :*unit-y* :*unit-scale*
            :zerop :unitp :cross :face-foreward :lerp
            :bezier :spline :from-complex)
-  (:import-from :rtg-math.base-maths :float-zero
+  (:import-from :rtg-math.base-maths
                 :c-sqrt
                 :c-inv-sqrt)
   (:import-from :rtg-math.base-vectors :v-x :v-y))
@@ -75,7 +69,7 @@
            :*unit-x* :*unit-y* :*unit-z* :*unit-scale*
            :zerop :unitp :cross :face-foreward :lerp
            :bezier :spline :incf)
-  (:import-from :rtg-math.base-maths :float-zero
+  (:import-from :rtg-math.base-maths
                 :c-sqrt
                 :c-inv-sqrt)
   (:import-from :rtg-math.base-vectors :v-x :v-y :v-z))
@@ -91,7 +85,7 @@
            :*unit-x* :*unit-y* :*unit-z* :*unit-w* :*unit-scale*
            :zerop :unitp :face-foreward :lerp
            :bezier :spline)
-  (:import-from :rtg-math.base-maths :float-zero
+  (:import-from :rtg-math.base-maths
                 :c-sqrt
                 :c-inv-sqrt)
   (:import-from :rtg-math.base-vectors :v-x :v-y :v-z :v-w))
@@ -127,7 +121,7 @@
            :rotation-x :rotation-y :rotation-z
            :get-fixed-angles :get-axis-angle :m+ :m- :negate
            :m* :m*vec :mcol*vec3 :mrow*vec3 :m*scalar :eql)
-  (:import-from :rtg-math.base-maths :float-zero
+  (:import-from :rtg-math.base-maths
                 :c-sqrt)
   (:import-from :rtg-math.vector3
                 :make-vector3)
@@ -149,7 +143,7 @@
            :mcol*vec4 :mrow*vec4 :m* :transform
            :to-matrix3 :get-row :get-rows :get-column
            :get-columns :eql)
-  (:import-from :rtg-math.base-maths :float-zero
+  (:import-from :rtg-math.base-maths
                 :c-sqrt)
   (:import-from :rtg-math.vector3
                 :make-vector3)
