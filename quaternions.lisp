@@ -16,7 +16,7 @@
 (defun float-greater-than-zero (x)
   (> x 1.0s0))
 
-					;----------------------------------------------------------------
+;;----------------------------------------------------------------
 
 (defun w (quat)
   "Returns the w component of the quaternion"

@@ -120,7 +120,7 @@
   (:export :melm :identity :zero-matrix3
            :make :! :make-from-rows :get-rows
            :get-row :make-from-columns :get-columns
-           :get-column :determinate-cramer :inverse
+           :get-column :determinate :affine-inverse
            :mzerop :identityp :transpose :adjoint
            :mtrace :rotation-from-euler
            :rotation-from-axis-angle :scale

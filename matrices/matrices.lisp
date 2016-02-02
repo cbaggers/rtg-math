@@ -9,11 +9,11 @@
 
 
 (defun unitp (matrix)
-  (let ((len (length matrix)))
+  (let ((len (cl:length matrix)))
     (cond
-      ((= len 9)
+      ((cl:= len 9)
        (null (mismatch matrix (m3:identity))))
-      ((= len 16)
+      ((cl:= len 16)
        (null (mismatch matrix (m4:identity)))))))
 
 
@@ -21,12 +21,12 @@
 
 
 (defun eql (matrix-a matrix-b)
-  (let ((len (length matrix-a)))
-    (assert (= len (length matrix-b)))
+  (let ((len (cl:length matrix-a)))
+    (assert (cl:= len (cl:length matrix-b)))
     (cond
-      ((= len 9)
+      ((cl:= len 9)
        (m3:eql matrix-a matrix-b))
-      ((= len 16)
+      ((cl:= len 16)
        (m4:eql matrix-a matrix-b)))))
 
 
@@ -35,10 +35,13 @@
 (defun = (&rest matrices)
   "Returns either t if the matrices are equal.
    Otherwise it returns nil."
-  (let ((matrix-a (first matrices)))
-    (loop for matrix in (cdr matrices)
-       when (not (eql matrix-a matrix)) do (return nil)
-       finally (return t))))
+  (let* ((matrix-a (first matrices))
+	 (len-a (cl:length matrix-a)))
+    (and (every (lambda (x) (cl:= (cl:length x) len-a)) (rest matrices))
+	 (loop :for i :below len-a :always
+	    (loop :for j :in (rest matrices)
+	       :for v cl:= (aref matrix-a i)
+	       :always (cl:= (aref j i) v))))))
 
 ;;----------------------------------------------------------------
 
@@ -54,19 +57,19 @@
 
 
 (defun 1+ (matrix-a matrix-b)
-  (let ((len (length matrix-a)))
-    (assert (= len (length matrix-b)))
+  (let ((len (cl:length matrix-a)))
+    (assert (cl:= len (cl:length matrix-b)))
     (cond
-      ((= len 9)
+      ((cl:= len 9)
        (m3:m+ matrix-a matrix-b))
-      ((= len 16)
+      ((cl:= len 16)
        (m4:m+ matrix-a matrix-b)))))
 
 
 ;;----------------------------------------------------------------
 
 (defun + (&rest matrices)
-  (let* ((len (length (first matrices)))
+  (let* ((len (cl:length (first matrices)))
          (matrix-a (make-array len :element-type 'single-float
                                :initial-element 0.0)))
     (loop for matrix in matrices
@@ -79,19 +82,19 @@
 
 
 (defun 1- (matrix-a matrix-b)
-  (let ((len (length matrix-a)))
-    (assert (= len (length matrix-b)))
+  (let ((len (cl:length matrix-a)))
+    (assert (cl:= len (cl:length matrix-b)))
     (cond
-      ((= len 9)
+      ((cl:= len 9)
        (m3:m- matrix-a matrix-b ))
-      ((= len 16)
+      ((cl:= len 16)
        (m4:m- matrix-a matrix-b)))))
 
 
 ;;----------------------------------------------------------------
 
 (defun - (&rest matrices)
-  (let* ((len (length (first matrices)))
+  (let* ((len (cl:length (first matrices)))
          (matrix-a (make-array len :element-type 'single-float
                                :initial-element 0.0)))
     (loop for matrix in matrices
@@ -104,22 +107,22 @@
 
 (defun elt (matrix row col)
   (declare (simple-array matrix))
-  (let ((len (if (cl:= (length matrix) 16) 4 3)))
+  (let ((len (if (cl:= (cl:length matrix) 16) 4 3)))
     (aref matrix (cl:+ row (cl:* col len)))))
 
 (defun elm (matrix row col)
-  (let ((len (if (cl:= (length matrix) 16) 4 3)))
+  (let ((len (if (cl:= (cl:length matrix) 16) 4 3)))
     (aref matrix (cl:+ row (cl:* col len)))))
 
 ;;----------------------------------------------------------------
 
 
 (defun get-rows (matrix-a)
-  (let ((len (length matrix-a)))
+  (let ((len (cl:length matrix-a)))
     (cond
-      ((= len 9)
+      ((cl:= len 9)
        (m3:get-rows matrix-a))
-      ((= len 16)
+      ((cl:= len 16)
        (m4:get-rows matrix-a)))))
 
 
@@ -127,11 +130,11 @@
 
 
 (defun get-columns (matrix-a)
-  (let ((len (length matrix-a)))
+  (let ((len (cl:length matrix-a)))
     (cond
-      ((= len 9)
+      ((cl:= len 9)
        (m3:get-columns matrix-a))
-      ((= len 16)
+      ((cl:= len 16)
        (m4:get-columns matrix-a)))))
 
 
@@ -139,11 +142,11 @@
 
 
 (defun get-row (matrix-a row-num)
-  (let ((len (length matrix-a)))
+  (let ((len (cl:length matrix-a)))
     (cond
-      ((= len 9)
+      ((cl:= len 9)
        (m3:get-row matrix-a row-num))
-      ((= len 16)
+      ((cl:= len 16)
        (m4:get-row matrix-a row-num)))))
 
 
@@ -151,11 +154,11 @@
 
 
 (defun get-column (matrix-a col-num)
-  (let ((len (length matrix-a)))
+  (let ((len (cl:length matrix-a)))
     (cond
-      ((= len 9)
+      ((cl:= len 9)
        (m3:get-column matrix-a col-num))
-      ((= len 16)
+      ((cl:= len 16)
        (m4:get-column matrix-a col-num)))))
 
 
@@ -163,11 +166,11 @@
 
 
 (defun determinant (matrix-a)
-  (let ((len (length matrix-a)))
+  (let ((len (cl:length matrix-a)))
     (cond
-      ((= len 9)
-       (m3:determinate-cramer matrix-a))
-      ((= len 16)
+      ((cl:= len 9)
+       (m3:determinate matrix-a))
+      ((cl:= len 16)
        (m4:determinant matrix-a)))))
 
 
@@ -175,11 +178,11 @@
 
 
 (defun inverse (matrix-a)
-  (let ((len (length matrix-a)))
+  (let ((len (cl:length matrix-a)))
     (cond
-      ((= len 9)
-       (m3:inverse matrix-a))
-      ((= len 16)
+      ((cl:= len 9)
+       (m3:affine-inverse matrix-a))
+      ((cl:= len 16)
        (m4:affine-inverse matrix-a)))))
 
 
@@ -187,11 +190,11 @@
 
 
 (defun transpose (matrix-a)
-  (let ((len (length matrix-a)))
+  (let ((len (cl:length matrix-a)))
     (cond
-      ((= len 9)
+      ((cl:= len 9)
        (m3:transpose matrix-a))
-      ((= len 16)
+      ((cl:= len 16)
        (m4:transpose matrix-a)))))
 
 
@@ -199,11 +202,11 @@
 
 
 (defun trace (matrix-a)
-  (let ((len (length matrix-a)))
+  (let ((len (cl:length matrix-a)))
     (cond
-      ((= len 9)
+      ((cl:= len 9)
        (m3:mtrace matrix-a))
-      ((= len 16)
+      ((cl:= len 16)
        (m4:mtrace matrix-a)))))
 
 
@@ -211,11 +214,11 @@
 
 
 (defun negate (matrix-a)
-  (let ((len (length matrix-a)))
+  (let ((len (cl:length matrix-a)))
     (cond
-      ((= len 9)
+      ((cl:= len 9)
        (m3:negate matrix-a))
-      ((= len 16)
+      ((cl:= len 16)
        (m4:negate matrix-a)))))
 
 
@@ -223,26 +226,26 @@
 
 
 (defun * (matrix-a mat-vec-or-scalar)
-  (let ((len (length matrix-a)))
+  (let ((len (cl:length matrix-a)))
     (if (typep mat-vec-or-scalar 'number)
         (cond
-          ((= len 9)
+          ((cl:= len 9)
            (m3:m*scalar matrix-a mat-vec-or-scalar))
-          ((= len 16)
+          ((cl:= len 16)
            (m4:m*scalar matrix-a mat-vec-or-scalar)))
 
         (cond
-          ((= len 9)
+          ((cl:= len 9)
            (if (< (cl:length mat-vec-or-scalar) 5)
                (m3:mcol*vec3 matrix-a mat-vec-or-scalar)
                (progn
-                 (assert (= len (length mat-vec-or-scalar)))
+                 (assert (cl:= len (cl:length mat-vec-or-scalar)))
                  (m3:m* matrix-a mat-vec-or-scalar))))
-          ((= len 16)
+          ((cl:= len 16)
            (if (< (cl:length mat-vec-or-scalar) 5)
                (m4:mcol*vec4 matrix-a mat-vec-or-scalar)
                (progn
-                 (assert (= len (length mat-vec-or-scalar)))
+                 (assert (cl:= len (cl:length mat-vec-or-scalar)))
                  (m4:m* matrix-a mat-vec-or-scalar))))))))
 
 
@@ -250,7 +253,7 @@
 
 
 (defun to-string (mat)
-  (case= (length mat)
+  (case= (cl:length mat)
     (9 (format nil "(m! ~a ~a ~a ~%     ~a ~a ~a ~%     ~a ~a ~a)~%"
                (m3:melm mat 0 0) (m3:melm mat 0 1) (m3:melm mat 0 2)
                (m3:melm mat 1 0) (m3:melm mat 1 1) (m3:melm mat 1 2)
