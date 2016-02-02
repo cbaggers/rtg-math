@@ -534,7 +534,7 @@
    this matrix. Assumes that this is a rotation matrix. Result
    is returned as vector3"
   (let* ((sy (melm mat-a 0 2))
-         (cy (rtg-math.base-maths:c-sqrt (- 1.0 (* sy sy)))))
+         (cy (sqrt (- 1.0 (* sy sy)))))
     (if (= 0f0 cy)
         (let ((sz 0.0)
               (cz 1.0)
@@ -585,7 +585,7 @@
                (let* ((i (biggest-trace mat-a))
                       (j (mod (+ i 1) 3))
                       (k (mod (+ i 1) 3))
-                      (s (c-sqrt (+ 1.0 (- (melm mat-a i i)
+                      (s (sqrt (+ 1.0 (- (melm mat-a i i)
                                            (melm mat-a j j)
                                            (melm mat-a k k)))))
                       (recip (/ 1.0 s)))

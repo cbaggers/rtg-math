@@ -19,11 +19,9 @@
   (:use :cl)
   (:export :clamp
            :clampf
-           :+float-threshold+
            :+one-degree-in-radians+
            :+pi+
-           :c-sqrt
-           :c-inv-sqrt
+           :inv-sqrt
            :degrees
            :radians
 	   :case=))
@@ -54,8 +52,7 @@
            :zerop :unitp :cross :face-foreward :lerp
            :bezier :spline :from-complex)
   (:import-from :rtg-math.base-maths
-                :c-sqrt
-                :c-inv-sqrt)
+                :inv-sqrt)
   (:import-from :rtg-math.base-vectors :v-x :v-y))
 
 (defpackage :rtg-math.vector3
@@ -70,8 +67,7 @@
            :zerop :unitp :cross :face-foreward :lerp
            :bezier :spline :incf)
   (:import-from :rtg-math.base-maths
-                :c-sqrt
-                :c-inv-sqrt)
+                :inv-sqrt)
   (:import-from :rtg-math.base-vectors :v-x :v-y :v-z))
 
 (defpackage :rtg-math.vector4
@@ -86,8 +82,7 @@
            :zerop :unitp :face-foreward :lerp
            :bezier :spline)
   (:import-from :rtg-math.base-maths
-                :c-sqrt
-                :c-inv-sqrt)
+                :inv-sqrt)
   (:import-from :rtg-math.base-vectors :v-x :v-y :v-z :v-w))
 
 (defpackage :rtg-math.vectors
@@ -121,8 +116,7 @@
            :rotation-x :rotation-y :rotation-z
            :get-fixed-angles :get-axis-angle :m+ :m- :negate
            :m* :m*vec :mcol*vec3 :mrow*vec3 :m*scalar :eql)
-  (:import-from :rtg-math.base-maths
-                :c-sqrt)
+  (:import-from :rtg-math.base-maths)
   (:import-from :rtg-math.vector3
                 :make-vector3)
   (:import-from :rtg-math.base-vectors :v-x :v-y :v-z :v-w))
@@ -143,8 +137,7 @@
            :mcol*vec4 :mrow*vec4 :m* :transform
            :to-matrix3 :get-row :get-rows :get-column
            :get-columns :eql)
-  (:import-from :rtg-math.base-maths
-                :c-sqrt)
+  (:import-from :rtg-math.base-maths)
   (:import-from :rtg-math.vector3
                 :make-vector3)
   (:import-from :rtg-math.vector4

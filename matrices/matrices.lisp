@@ -3,7 +3,7 @@
 ;;----------------------------------------------------------------
 
 (defun zerop (matrix)
-  (every #'rtg-math.base-maths:float-zero matrix))
+  (loop :for e :across matrix :always (= 0f0 e)))
 
 ;;----------------------------------------------------------------
 

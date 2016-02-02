@@ -520,7 +520,7 @@
    this matrix. Assumes that this is a rotation matrix"
   (declare ((simple-array single-float (9)) mat-a))
   (let* ((sy (melm mat-a 0 2))
-         (cy (c-sqrt (- 1.0 (* sy sy)))))
+         (cy (sqrt (- 1.0 (* sy sy)))))
     (if (not (= 0f0 cy)) ; [TODO: not correct PI-epsilon]
         (let* ((factor (/ 1.0 cy))
                (sx (* factor (- (melm mat-a 2 1))))
@@ -551,8 +551,7 @@
          (angle (acos c-a)))
     (cond ((= 0f0 angle) ;; <-angle is zero so axis can be anything
            (make-vector3 1.0 0.0 0.0))
-          ((< angle (- rtg-math.base-maths:+pi+
-		       rtg-math.base-maths:+float-threshold+))
+          ((< angle rtg-math.base-maths:+pi+)
                                         ;its not 180 degrees
            (let ((axis (make-vector3
                         (- (melm mat-a 1 2) (melm mat-a 2 1))
@@ -567,7 +566,7 @@
                                0)))
                     (j (mod (+ i 1) 3))
                     (k (mod (+ j 1) 3))
-                    (s (c-sqrt (+ 1.0 (- (melm mat-a i i)
+                    (s (sqrt (+ 1.0 (- (melm mat-a i i)
                                          (melm mat-a j j)
                                          (melm mat-a k k)))))
                     (recip (/ 1.0 s))

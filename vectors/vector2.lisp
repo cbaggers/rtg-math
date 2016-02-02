@@ -210,7 +210,7 @@
    If you only need to compare relative lengths then definately
    stick to length-squared as the sqrt is a slow operation."
   (declare ((simple-array single-float (2)) vector-a))
-  (c-sqrt (length-squared vector-a)))
+  (sqrt (length-squared vector-a)))
 
 ;;----------------------------------------------------------------
 
@@ -235,10 +235,10 @@
 (defun distance (vector-a vector-b)
   "Return the distance between 2 points defined by vectors
    vector-a & vector-b. If comparing distances, use
-   c-distance-squared as it desnt require a c-sqrt and thus is
+   c-distance-squared as it desnt require a sqrt and thus is
    faster."
   (declare ((simple-array single-float (2)) vector-a vector-b))
-  (c-sqrt (distance-squared vector-a vector-b)))
+  (sqrt (distance-squared vector-a vector-b)))
 
 ;;----------------------------------------------------------------
 
@@ -281,7 +281,7 @@
   (let ((len (length-squared vector-a)))
     (if (= 0f0 len)
         vector-a
-        (* vector-a (c-inv-sqrt len)))))
+        (* vector-a (inv-sqrt len)))))
 
 ;;----------------------------------------------------------------
 

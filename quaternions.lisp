@@ -83,7 +83,7 @@
 (defun make-quat-from-rotation-matrix3 (mat3)
   (let ((trace (m3:mtrace mat3)))
     (if (> trace 0.0)
-        (let* ((s (c-sqrt (+ 1.0 trace)))
+        (let* ((s (sqrt (+ 1.0 trace)))
                (recip (/ 0.5 s)))
           (make-quat (* s 0.5)
                      (* (- (m3:melm mat3 2 1) (m3:melm mat3 1 2)) recip)
@@ -93,7 +93,7 @@
                (i (if (> (m3:melm mat3 2 2) (m3:melm mat3 i i)) 2 i))
                (j (mod (+ 1 i) 3))
                (k (mod (+ 1 j) 3))
-               (s (c-sqrt (+ (- (m3:melm mat3 i i)
+               (s (sqrt (+ (- (m3:melm mat3 i i)
                                 (m3:melm mat3 j j)
                                 (m3:melm mat3 k k))
                              1.0)))
@@ -115,7 +115,7 @@
         (let* ((half-angle (/ angle 2.0))
                (sin-half-angle (sin half-angle))
                (cos-half-angle (cos half-angle))
-               (scale-factor (/ sin-half-angle (c-sqrt length))))
+               (scale-factor (/ sin-half-angle (sqrt length))))
           (v4:make-vector4 cos-half-angle
                            (* scale-factor (aref axis-vec3 0))
                            (* scale-factor (aref axis-vec3 1))
@@ -150,7 +150,7 @@
 
 (defun magnitude (quat)
   (let ((w (w quat)) (x (x quat)) (y (y quat)) (z (z quat)))
-    (c-sqrt (+ (* w w) (* x x) (* y y) (* z z)))))
+    (sqrt (+ (* w w) (* x x) (* y y) (* z z)))))
 
 (defun norm (quat)
   (let ((w (w quat)) (x (x quat)) (y (y quat)) (z (z quat)))
@@ -170,7 +170,7 @@
 
 (defun get-axis-angle (quat)
   (list
-   (let ((length (c-sqrt (- 1.0 (* (w quat) (w quat))))))
+   (let ((length (sqrt (- 1.0 (* (w quat) (w quat))))))
      (if (= 0f0 length)
          (v3:make-vector3 0.0 0.0 0.0)
          (let ((length (/ 1.0 length)))
@@ -183,7 +183,7 @@
   (let ((length-squared (v4:dot quat quat)))
     (if (= 0f0 length-squared)
         (zero-quat)
-        (let ((factor (c-inv-sqrt length-squared)))
+        (let ((factor (inv-sqrt length-squared)))
           (make-quat (* (w quat) factor)
                      (* (x quat) factor)
                      (* (y quat) factor)

@@ -1,11 +1,5 @@
-;; {TODO}
-;; Man, there is a whole lot of stupid mistakes around this code
-;; I know I was a lisp newbie but..jesus. Gotta clean it all up.
-
 (in-package :rtg-math.base-maths)
 
-(defconstant +float-threshold+ 1.0e-6)
-;; [TODO] Need to declare type of these as float
 (defconstant +pi+ (the single-float 3.1415926535897932384626433832795))
 (defconstant +one-degree-in-radians+ (the single-float (/ (* +pi+ 2.0) 360.0)))
 (defconstant +one-radian-in-degrees+ (the single-float (/ 180.0 +pi+)))
@@ -25,21 +19,11 @@
 
 ;;----------------------------------------------------------------
 
-;;Come back and implement the fast versions of these two
-(declaim (inline c-sqrt)
+(declaim (inline inv-sqrt)
 	 (ftype (function ((single-float))
 			  (single-float))
-		c-sqrt))
-(defun c-sqrt (x)
-  "Calculates the square root of a number"
-  (declare (single-float x))
-  (sqrt x))
-
-(declaim (inline c-inv-sqrt)
-	 (ftype (function ((single-float))
-			  (single-float))
-		c-inv-sqrt))
-(defun c-inv-sqrt (x)
+		inv-sqrt))
+(defun inv-sqrt (x)
   "Calculates the inverse square root of a number"
   (declare (single-float x))
   (/ 1.0 (sqrt x)))
