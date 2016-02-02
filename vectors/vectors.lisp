@@ -14,7 +14,7 @@
                 ,len :element-type 'single-float :initial-contents
                 (list ,@(loop :for char :across name
                            :collect `(svref ,arr ,(or (position char '(#\X #\Y #\Z #\W))
-                                                     (error "Vectors: swizzle: Pattern component was not X, Y, Z or W: ~a" char)))))))))
+						      (error "Vectors: swizzle: Pattern component was not X, Y, Z or W: ~a" char)))))))))
       form))
 
 (defun swizzle (vec pattern)
@@ -26,7 +26,7 @@
         (loop :for char :across name :for i :from 0 :do
            (setf (svref result i)
                  (svref vec (or (position char '(#\X #\Y #\Z #\W))
-                               (error "Vectors: swizzle: Pattern component was not X, Y, Z or W: ~a" char))))))
+				(error "Vectors: swizzle: Pattern component was not X, Y, Z or W: ~a" char))))))
     result))
 
 (defun s~ (vec pattern) (swizzle vec pattern))
@@ -69,9 +69,9 @@
 (defun make-vector (x y &optional z w)
   "This takes floats and give back a vector, this is just an
    array but it specifies the array type and populates it. "
-  (cond (w (v4:make-vector4 (float x) (float y) (float z) (float w)))
-        (z (v3:make-vector3 (float x) (float y) (float z)))
-        (t (v2:make-vector2 (float x) (float y)))))
+  (cond (w (v4:make (float x) (float y) (float z) (float w)))
+        (z (v3:make (float x) (float y) (float z)))
+        (t (v2:make (float x) (float y)))))
 
 ;;
 (defun merge-into-vector (&rest vectors)
@@ -94,13 +94,13 @@
 
 ;;----------------------------------------------------------------
 
-(defun zerop (vec-a)
+(defun 0p (vec-a)
   "Returns t if the vector is of zero length"
   (let ((vec-a (floatify vec-a)))
     (case= (cl:length vec-a)
-      (2 (v2:zerop vec-a))
-      (3 (v3:zerop vec-a))
-      (4 (v4:zerop vec-a)))))
+      (2 (v2:0p vec-a))
+      (3 (v3:0p vec-a))
+      (4 (v4:0p vec-a)))))
 
 ;;----------------------------------------------------------------
 
@@ -199,9 +199,9 @@
 (defun length-squared (vec-a)
   (let ((vec-a (floatify vec-a)))
     (case= (cl:length vec-a)
-     (2 (v2:length-squared vec-a))
-     (3 (v3:length-squared vec-a))
-     (4 (v4:length-squared vec-a)))))
+      (2 (v2:length-squared vec-a))
+      (3 (v3:length-squared vec-a))
+      (4 (v4:length-squared vec-a)))))
 
 ;;----------------------------------------------------------------
 

@@ -14,7 +14,7 @@
                :collect (coerce c 'single-float)))
            (len (length components))
            (arr (make-array (length components) :element-type 'single-float
-                  :initial-contents components)))
+			    :initial-contents components)))
       (cond
         ((= len 16) (m4:transpose arr))
         ((= len 9) (m3:transpose arr))

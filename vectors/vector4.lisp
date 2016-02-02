@@ -2,14 +2,14 @@
 
 ;;----------------------------------------------------------------
 
-(declaim (inline make-vector4)
+(declaim (inline make)
          (ftype (function (single-float
                            single-float
                            single-float
                            single-float)
                           vec4)
-                make-vector4))
-(defun make-vector4 (x y z w)
+                make))
+(defun make (x y z w)
   "This takes 4 floats and give back a vector4, this is just an
    array but it specifies the array type and populates it.
    For speed reasons it will not accept integers so make sure
@@ -25,16 +25,16 @@
 ;;----------------------------------------------------------------
 
 ;;[TODO] What is faster (cl:* x x) or (expt x 2) ?
-(declaim (inline zerop)
+(declaim (inline 0p)
          (ftype (function (vec4)
-                          (boolean)) zerop))
-(defun zerop (vector-a)
+                          (boolean)) 0p))
+(defun 0p (vector-a)
   "Checks if the length of the vector is zero. As this is a
    floating point number it checks to see if the length is
    below a threshold set in the base-maths package"
   (declare (vec4 vector-a))
   (cl:= 0f0 (cl:+ (EXPT (SVREF VECTOR-A 0) 2) (EXPT (SVREF VECTOR-A 1) 2)
-                    (EXPT (SVREF VECTOR-A 2) 2) (EXPT (SVREF VECTOR-A 3) 2))))
+		  (EXPT (SVREF VECTOR-A 2) 2) (EXPT (SVREF VECTOR-A 3) 2))))
 
 ;;----------------------------------------------------------------
 
@@ -47,7 +47,7 @@
    within the range of 1 + or - and threshold set in base-maths"
   (declare (vec4 vector-a))
   (cl:= 0f0 (cl:- 1.0 (cl:+ (EXPT (SVREF VECTOR-A 0) 2) (EXPT (SVREF VECTOR-A 1) 2)
-                              (EXPT (SVREF VECTOR-A 2) 2) (EXPT (SVREF VECTOR-A 3) 2)))))
+			    (EXPT (SVREF VECTOR-A 2) 2) (EXPT (SVREF VECTOR-A 3) 2)))))
 ;;----------------------------------------------------------------
 
 (declaim (inline =)
@@ -79,10 +79,10 @@
 (defun %+ (vector-a vector-b)
   "Add two vectors and return a new vector containing the result"
   (declare (vec4 vector-a vector-b))
-  (MAKE-VECTOR4 (cl:+ (SVREF VECTOR-A 0) (SVREF VECTOR-B 0))
-                (cl:+ (SVREF VECTOR-A 1) (SVREF VECTOR-B 1))
-                (cl:+ (SVREF VECTOR-A 2) (SVREF VECTOR-B 2))
-                (cl:+ (SVREF VECTOR-A 3) (SVREF VECTOR-B 3))))
+  (MAKE (cl:+ (SVREF VECTOR-A 0) (SVREF VECTOR-B 0))
+	(cl:+ (SVREF VECTOR-A 1) (SVREF VECTOR-B 1))
+	(cl:+ (SVREF VECTOR-A 2) (SVREF VECTOR-B 2))
+	(cl:+ (SVREF VECTOR-A 3) (SVREF VECTOR-B 3))))
 
 ;;----------------------------------------------------------------
 
@@ -101,10 +101,10 @@
   "Subtract two vectors and return a new vector containing
    the result"
   (declare (vec4 vector-a vector-b))
-  (MAKE-VECTOR4 (cl:- (SVREF VECTOR-A 0) (SVREF VECTOR-B 0))
-                (cl:- (SVREF VECTOR-A 1) (SVREF VECTOR-B 1))
-                (cl:- (SVREF VECTOR-A 2) (SVREF VECTOR-B 2))
-                (cl:- (SVREF VECTOR-A 3) (SVREF VECTOR-B 3))))
+  (MAKE (cl:- (SVREF VECTOR-A 0) (SVREF VECTOR-B 0))
+	(cl:- (SVREF VECTOR-A 1) (SVREF VECTOR-B 1))
+	(cl:- (SVREF VECTOR-A 2) (SVREF VECTOR-B 2))
+	(cl:- (SVREF VECTOR-A 3) (SVREF VECTOR-B 3))))
 
 ;;----------------------------------------------------------------
 
@@ -116,8 +116,8 @@
   "Multiply vector by scalar"
   (declare (vec4 vector-a)
            (single-float a))
-  (MAKE-VECTOR4 (cl:* (SVREF VECTOR-A 0) A) (cl:* (SVREF VECTOR-A 1) A)
-                (cl:* (SVREF VECTOR-A 2) A) (cl:* (SVREF VECTOR-A 3) A)))
+  (MAKE (cl:* (SVREF VECTOR-A 0) A) (cl:* (SVREF VECTOR-A 1) A)
+	(cl:* (SVREF VECTOR-A 2) A) (cl:* (SVREF VECTOR-A 3) A)))
 
 ;;----------------------------------------------------------------
 
@@ -129,8 +129,8 @@
   "Multiply vector by scalar"
   (declare (vec4 vector-a)
            (single-float a))
-  (make-vector4 (cl:* (svref vector-a 0) a) (cl:* (svref vector-a 1) a)
-                (cl:* (svref vector-a 2) a) (svref vector-a 3)))
+  (make (cl:* (svref vector-a 0) a) (cl:* (svref vector-a 1) a)
+	(cl:* (svref vector-a 2) a) (svref vector-a 3)))
 
 ;;----------------------------------------------------------------
 
@@ -143,10 +143,10 @@
   "Multiplies components, is not dot product, not sure what
    i'll need this for yet but hey!"
   (declare (vec4 vector-a vector-b))
-  (MAKE-VECTOR4 (cl:* (SVREF VECTOR-A 0) (SVREF VECTOR-B 0))
-                (cl:* (SVREF VECTOR-A 1) (SVREF VECTOR-B 1))
-                (cl:* (SVREF VECTOR-A 2) (SVREF VECTOR-B 2))
-                (cl:* (SVREF VECTOR-A 3) (SVREF VECTOR-B 3))))
+  (MAKE (cl:* (SVREF VECTOR-A 0) (SVREF VECTOR-B 0))
+	(cl:* (SVREF VECTOR-A 1) (SVREF VECTOR-B 1))
+	(cl:* (SVREF VECTOR-A 2) (SVREF VECTOR-B 2))
+	(cl:* (SVREF VECTOR-A 3) (SVREF VECTOR-B 3))))
 
 ;;----------------------------------------------------------------
 
@@ -159,8 +159,8 @@
   (declare (vec4 vector-a)
            (single-float a))
   (let ((b (cl:/ 1 a)))
-    (MAKE-VECTOR4 (cl:* (SVREF VECTOR-A 0) B) (cl:* (SVREF VECTOR-A 1) B)
-                  (cl:* (SVREF VECTOR-A 2) B) (cl:* (SVREF VECTOR-A 3) B))))
+    (MAKE (cl:* (SVREF VECTOR-A 0) B) (cl:* (SVREF VECTOR-A 1) B)
+	  (cl:* (SVREF VECTOR-A 2) B) (cl:* (SVREF VECTOR-A 3) B))))
 
 ;;----------------------------------------------------------------
 
@@ -173,10 +173,10 @@
   "Divides components, not sure what, i'll need this for
    yet but hey!"
   (declare (vec4 vector-a vector-b))
-  (MAKE-VECTOR4 (cl:/ (SVREF VECTOR-A 0) (SVREF VECTOR-B 0))
-                (cl:/ (SVREF VECTOR-A 1) (SVREF VECTOR-B 1))
-                (cl:/ (SVREF VECTOR-A 2) (SVREF VECTOR-B 2))
-                (cl:/ (SVREF VECTOR-A 3) (SVREF VECTOR-B 3))))
+  (MAKE (cl:/ (SVREF VECTOR-A 0) (SVREF VECTOR-B 0))
+	(cl:/ (SVREF VECTOR-A 1) (SVREF VECTOR-B 1))
+	(cl:/ (SVREF VECTOR-A 2) (SVREF VECTOR-B 2))
+	(cl:/ (SVREF VECTOR-A 3) (SVREF VECTOR-B 3))))
 
 ;;----------------------------------------------------------------
 
@@ -187,8 +187,8 @@
 (defun negate (vector-a)
   "Return a vector that is the negative of the vector passed in"
   (declare (vec4 vector-a))
-  (MAKE-VECTOR4 (cl:- (SVREF VECTOR-A 0)) (cl:- (SVREF VECTOR-A 1)) (cl:- (SVREF VECTOR-A 2))
-                (cl:- (SVREF VECTOR-A 3))))
+  (MAKE (cl:- (SVREF VECTOR-A 0)) (cl:- (SVREF VECTOR-A 1)) (cl:- (SVREF VECTOR-A 2))
+	(cl:- (SVREF VECTOR-A 3))))
 
 ;;----------------------------------------------------------------
 
@@ -339,7 +339,7 @@
 ;;----------------------------------------------------------------
 
 (defun spline (x knots)
-  (make-vector4 (rtg-math.maths:spline x (mapcar #'x knots))
-                (rtg-math.maths:spline x (mapcar #'y knots))
-                (rtg-math.maths:spline x (mapcar #'z knots))
-                (rtg-math.maths:spline x (mapcar #'w knots))))
+  (make (rtg-math.maths:spline x (mapcar #'x knots))
+	(rtg-math.maths:spline x (mapcar #'y knots))
+	(rtg-math.maths:spline x (mapcar #'z knots))
+	(rtg-math.maths:spline x (mapcar #'w knots))))

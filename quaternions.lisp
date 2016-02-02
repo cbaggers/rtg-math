@@ -26,7 +26,7 @@
 (defun 0! ()
   (q! 0.0 0.0 0.0 0.0))
 
-(defun 0-p (quat)
+(defun 0p (quat)
   (let ((w (w quat)) (x (x quat)) (y (y quat)) (z (z quat)))
     (cl:= 0f0 (+ (* w w) (* x x) (* y y) (* z z)))))
 
@@ -86,9 +86,9 @@
 			    recip) 0.0 0.0 0.0)))
           (setf (svref quat i) (* s 0.5)
                 (svref quat j) (* (+ (m3:melm mat3 j i) (m3:melm mat3 i j))
-                                 recip)
+				  recip)
                 (svref quat k) (* (+ (m3:melm mat3 k i) (m3:melm mat3 i k))
-                                 recip))
+				  recip))
           quat))))
 
 (defun from-axis-angle (axis-vec3 angle)
@@ -99,10 +99,10 @@
                (sin-half-angle (sin half-angle))
                (cos-half-angle (cos half-angle))
                (scale-factor (/ sin-half-angle (sqrt length))))
-          (v4:make-vector4 cos-half-angle
-                           (* scale-factor (svref axis-vec3 0))
-                           (* scale-factor (svref axis-vec3 1))
-                           (* scale-factor (svref axis-vec3 2)))))))
+          (v4:make cos-half-angle
+		   (* scale-factor (svref axis-vec3 0))
+		   (* scale-factor (svref axis-vec3 1))
+		   (* scale-factor (svref axis-vec3 2)))))))
 
 (defun from-axies (x-axies y-axies z-axies)
   (from-matrix3
@@ -114,7 +114,7 @@
 (defun from-look-at (from3 to3)
   (let* ((dir (v3:- from3 to3))
          (n-dir (v3:normalize dir))
-         (right (v3:make-vector3 (v:z n-dir) 0.0 (- (v:x n-dir))))
+         (right (v3:make (v:z n-dir) 0.0 (- (v:x n-dir))))
          (n-right (v3:normalize right))
          (up (v3:cross n-dir n-right)))
     (q:from-axies n-right up n-dir)))
@@ -155,11 +155,11 @@
   (list
    (let ((length (sqrt (- 1.0 (* (w quat) (w quat))))))
      (if (cl:= 0f0 length)
-         (v3:make-vector3 0.0 0.0 0.0)
+         (v3:make 0.0 0.0 0.0)
          (let ((length (/ 1.0 length)))
-           (v3:make-vector3 (* length (x quat))
-                            (* length (y quat))
-                            (* length (z quat))))))
+           (v3:make (* length (x quat))
+		    (* length (y quat))
+		    (* length (z quat))))))
    (* 2.0 (acos (w quat)))))
 
 (defun normalize (quat)
@@ -248,21 +248,21 @@
                            (* (z quat) (svref vec3 2)))))
          (cross-mult (* 2.0 (w quat)))
          (p-mult (- (* cross-mult (w quat)) 1.0)))
-    (v3:make-vector3 (+ (* p-mult (svref vec3 0))
-                        (* v-mult (x quat))
-                        (* cross-mult
-                           (- (* (y quat) (svref vec3 2))
-                              (* (z quat) (svref vec3 1)))))
-                     (+ (* p-mult (svref vec3 1))
-                        (* v-mult (y quat))
-                        (* cross-mult
-                           (- (* (z quat) (svref vec3 0))
-                              (* (x quat) (svref vec3 2)))))
-                     (+ (* p-mult (svref vec3 2))
-                        (* v-mult (z quat))
-                        (* cross-mult
-                           (- (* (x quat) (svref vec3 1))
-                              (* (y quat) (svref vec3 0))))))))
+    (v3:make (+ (* p-mult (svref vec3 0))
+		(* v-mult (x quat))
+		(* cross-mult
+		   (- (* (y quat) (svref vec3 2))
+		      (* (z quat) (svref vec3 1)))))
+	     (+ (* p-mult (svref vec3 1))
+		(* v-mult (y quat))
+		(* cross-mult
+		   (- (* (z quat) (svref vec3 0))
+		      (* (x quat) (svref vec3 2)))))
+	     (+ (* p-mult (svref vec3 2))
+		(* v-mult (z quat))
+		(* cross-mult
+		   (- (* (x quat) (svref vec3 1))
+		      (* (y quat) (svref vec3 0))))))))
 
 ;; [TODO] Could be faster (see q+1 area)
 (defun lerp (start-quat end-quat pos)

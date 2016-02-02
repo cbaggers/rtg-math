@@ -26,7 +26,7 @@
 (defmacro defun-typed-inline (name typed-args -> result-type &body body)
   (assert (string= (symbol-name ->) "->"))
   `(progn
-     (declaim (inline make-vector3)
+     (declaim (inline make)
 	      (ftype (function ,(mapcar #'second typed-args)
 			       ,result-type)
 		     ,name))

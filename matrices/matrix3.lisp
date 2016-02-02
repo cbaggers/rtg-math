@@ -133,15 +133,15 @@
 (defun get-rows (mat-a)
   "Return the rows of the matrix a 3 vector3s"
   (declare (mat3 mat-a))
-  (list (make-vector3 (melm mat-a 0 0)
-                      (melm mat-a 0 1)
-                      (melm mat-a 0 2))
-        (make-vector3 (melm mat-a 1 0)
-                      (melm mat-a 1 1)
-                      (melm mat-a 1 2))
-        (make-vector3 (melm mat-a 2 0)
-                      (melm mat-a 2 1)
-                      (melm mat-a 2 2))))
+  (list (make (melm mat-a 0 0)
+	      (melm mat-a 0 1)
+	      (melm mat-a 0 2))
+        (make (melm mat-a 1 0)
+	      (melm mat-a 1 1)
+	      (melm mat-a 1 2))
+        (make (melm mat-a 2 0)
+	      (melm mat-a 2 1)
+	      (melm mat-a 2 2))))
 
 ;;----------------------------------------------------------------
 
@@ -154,9 +154,9 @@
   "Return the specified row of the matrix a vector3"
   (declare (mat3 mat-a)
            ((integer 0 3) row-num))
-  (make-vector3 (melm mat-a row-num 0)
-                (melm mat-a row-num 1)
-                (melm mat-a row-num 2)))
+  (make (melm mat-a row-num 0)
+	(melm mat-a row-num 1)
+	(melm mat-a row-num 2)))
 
 ;;----------------------------------------------------------------
 
@@ -181,15 +181,15 @@
 (defun get-columns (mat-a)
   "Return the columns of the matrix as 3 vector3s"
   (declare (mat3 mat-a))
-  (list (make-vector3 (melm mat-a 0 0)
-                      (melm mat-a 1 0)
-                      (melm mat-a 2 0))
-        (make-vector3 (melm mat-a 0 1)
-                      (melm mat-a 1 1)
-                      (melm mat-a 2 1))
-        (make-vector3 (melm mat-a 0 2)
-                      (melm mat-a 1 2)
-                      (melm mat-a 2 2))))
+  (list (make (melm mat-a 0 0)
+	      (melm mat-a 1 0)
+	      (melm mat-a 2 0))
+        (make (melm mat-a 0 1)
+	      (melm mat-a 1 1)
+	      (melm mat-a 2 1))
+        (make (melm mat-a 0 2)
+	      (melm mat-a 1 2)
+	      (melm mat-a 2 2))))
 
 ;;----------------------------------------------------------------
 
@@ -202,18 +202,18 @@
   "Return the specified column of the matrix a vector3"
   (declare (mat3 mat-a)
            ((integer 0 3) col-num))
-  (make-vector3 (melm mat-a 0 col-num)
-                (melm mat-a 1 col-num)
-                (melm mat-a 2 col-num)))
+  (make (melm mat-a 0 col-num)
+	(melm mat-a 1 col-num)
+	(melm mat-a 2 col-num)))
 
 ;;----------------------------------------------------------------
 
 (declaim
- (inline mzerop)
+ (inline 0p)
  (ftype (function (mat3)
                   boolean)
-        mzerop))
-(defun mzerop (mat-a)
+        0p))
+(defun 0p (mat-a)
   "Returns 't' if this is a zero matrix (as contents of the
    matrix are floats the values have an error bound as defined
    in base-maths"
@@ -408,9 +408,9 @@
 (defun rotation-from-axis-angle (axis3 angle)
   "Returns a matrix which will rotate a point about the axis
    specified by the angle provided"
-  (cond ((v3:= axis3 (v3:make-vector3 1f0 0f0 0f0)) (rotation-x angle))
-        ((v3:= axis3 (v3:make-vector3 0f0 1f0 0f0)) (rotation-y angle))
-        ((v3:= axis3 (v3:make-vector3 0f0 0f0 1f0)) (rotation-z angle))
+  (cond ((v3:= axis3 (v3:make 1f0 0f0 0f0)) (rotation-x angle))
+        ((v3:= axis3 (v3:make 0f0 1f0 0f0)) (rotation-y angle))
+        ((v3:= axis3 (v3:make 0f0 0f0 1f0)) (rotation-z angle))
         (t
          (let ((c (cos angle))
                (s (sin angle))
@@ -509,12 +509,12 @@
                (cx (* factor (melm mat-a 2 2)))
                (sz (* factor (- (melm mat-a 1 0))))
                (cz (* factor (melm mat-a 0 0))))
-          (make-vector3 (atan sx cx) (atan sy cy) (atan sz cz)))
+          (make (atan sx cx) (atan sy cy) (atan sz cz)))
         (let* ((sz 0.0)
                (cx 1.0)
                (sx (melm mat-a 1 2))
                (cz (melm mat-a 1 1)))
-          (make-vector3 (atan sx cx) (atan sy cy) (atan sz cz))))))
+          (make (atan sx cx) (atan sy cy) (atan sz cz))))))
 
 ;;----------------------------------------------------------------
 
@@ -532,10 +532,10 @@
   (let* ((c-a (* 0.5 (- (mtrace mat-a) 1.0)))
          (angle (acos c-a)))
     (cond ((cl:= 0f0 angle) ;; <-angle is zero so axis can be anything
-           (make-vector3 1.0 0.0 0.0))
+           (make 1.0 0.0 0.0))
           ((< angle rtg-math.base-maths:+pi+)
                                         ;its not 180 degrees
-           (let ((axis (make-vector3
+           (let ((axis (make
                         (- (melm mat-a 1 2) (melm mat-a 2 1))
                         (- (melm mat-a 2 0) (melm mat-a 0 2))
                         (- (melm mat-a 0 1) (melm mat-a 1 0)))))
@@ -552,7 +552,7 @@
 				       (melm mat-a j j)
 				       (melm mat-a k k)))))
                     (recip (/ 1.0 s))
-                    (result (make-vector3 0.0 0.0 0.0)))
+                    (result (make 0.0 0.0 0.0)))
                (setf (svref result i) (* 0.5 s))
                (setf (svref result j) (* recip (melm mat-a i j)))
                (setf (svref result j) (* recip (melm mat-a k i)))
@@ -611,7 +611,7 @@
 ;;----------------------------------------------------------------
 
 (defun mcol*vec3 (mat-a vec)
-  (make-vector3
+  (make
    (+ (* (x vec) (melm mat-a 0 0)) (* (y vec) (melm mat-a 0 1))
       (* (z vec) (melm mat-a 0 2)))
 
@@ -624,7 +624,7 @@
 ;;----------------------------------------------------------------
 
 (defun mrow*vec3 (vec mat-a)
-  (make-vector3
+  (make
    (+ (* (x vec) (melm mat-a 0 0)) (* (y vec) (melm mat-a 1 0))
       (* (z vec) (melm mat-a 2 0)))
 
@@ -672,15 +672,15 @@
 (defun m*vec (mat-a vec-a)
   "Multiplies the vector3 by the matrix and returns the result
    as a new vector3"
-  (make-vector3 (+ (* (melm mat-a 0 0) (x vec-a))
-                   (* (melm mat-a 0 1) (y vec-a))
-                   (* (melm mat-a 0 2) (z vec-a)))
-                (+ (* (melm mat-a 1 0) (x vec-a))
-                   (* (melm mat-a 1 1) (y vec-a))
-                   (* (melm mat-a 1 2) (z vec-a)))
-                (+ (* (melm mat-a 2 0) (x vec-a))
-                   (* (melm mat-a 2 1) (y vec-a))
-                   (* (melm mat-a 2 2) (z vec-a)))))
+  (make (+ (* (melm mat-a 0 0) (x vec-a))
+	   (* (melm mat-a 0 1) (y vec-a))
+	   (* (melm mat-a 0 2) (z vec-a)))
+	(+ (* (melm mat-a 1 0) (x vec-a))
+	   (* (melm mat-a 1 1) (y vec-a))
+	   (* (melm mat-a 1 2) (z vec-a)))
+	(+ (* (melm mat-a 2 0) (x vec-a))
+	   (* (melm mat-a 2 1) (y vec-a))
+	   (* (melm mat-a 2 2) (z vec-a)))))
 
 ;;----------------------------------------------------------------
 

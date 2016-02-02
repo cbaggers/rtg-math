@@ -2,12 +2,12 @@
 
 ;;----------------------------------------------------------------
 
-(declaim (inline make-vector2)
+(declaim (inline make)
          (ftype (function (single-float
                            single-float)
                           vec2)
-                make-vector2))
-(defun make-vector2 (x y)
+                make))
+(defun make (x y)
   "This takes 2 floats and give back a vector2, this is just an
    array but it specifies the array type and populates it.
    For speed reasons it will not accept integers so make sure
@@ -21,10 +21,10 @@
 ;;----------------------------------------------------------------
 
 ;;[TODO] What is faster (cl:* x x) or (expt x 2) ?
-(declaim (inline zerop)
+(declaim (inline 0p)
          (ftype (function (vec2)
-                          (boolean)) zerop))
-(defun zerop (vector-a)
+                          (boolean)) 0p))
+(defun 0p (vector-a)
   "Checks if the length of the vector is zero. As this is a
    floating point number it checks to see if the length is
    below a threshold set in the base-maths package"
@@ -72,8 +72,8 @@
 (defun %+ (vector-a vector-b)
   "Add two vectors and return a new vector containing the result"
   (declare (vec2 vector-a vector-b))
-  (MAKE-VECTOR2 (cl:+ (SVREF VECTOR-A 0) (SVREF VECTOR-B 0))
-                (cl:+ (SVREF VECTOR-A 1) (SVREF VECTOR-B 1))))
+  (MAKE (cl:+ (SVREF VECTOR-A 0) (SVREF VECTOR-B 0))
+	(cl:+ (SVREF VECTOR-A 1) (SVREF VECTOR-B 1))))
 
 ;;----------------------------------------------------------------
 
@@ -93,8 +93,8 @@
   "Subtract two vectors and return a new vector containing
    the result"
   (declare (vec2 vector-a vector-b))
-  (MAKE-VECTOR2 (cl:- (SVREF VECTOR-A 0) (SVREF VECTOR-B 0))
-                (cl:- (SVREF VECTOR-A 1) (SVREF VECTOR-B 1))))
+  (MAKE (cl:- (SVREF VECTOR-A 0) (SVREF VECTOR-B 0))
+	(cl:- (SVREF VECTOR-A 1) (SVREF VECTOR-B 1))))
 
 ;;----------------------------------------------------------------
 
@@ -106,7 +106,7 @@
   "Multiply vector by scalar"
   (declare (vec2 vector-a)
            (single-float a))
-  (MAKE-VECTOR2 (cl:* (SVREF VECTOR-A 0) A) (cl:* (SVREF VECTOR-A 1) A)))
+  (MAKE (cl:* (SVREF VECTOR-A 0) A) (cl:* (SVREF VECTOR-A 1) A)))
 
 ;;----------------------------------------------------------------
 
@@ -119,8 +119,8 @@
   "Multiplies components, is not dot product, not sure what
    i'll need this for yet but hey!"
   (declare (vec2 vector-a vector-b))
-  (MAKE-VECTOR2 (cl:* (SVREF VECTOR-A 0) (SVREF VECTOR-B 0))
-                (cl:* (SVREF VECTOR-A 1) (SVREF VECTOR-B 1))))
+  (MAKE (cl:* (SVREF VECTOR-A 0) (SVREF VECTOR-B 0))
+	(cl:* (SVREF VECTOR-A 1) (SVREF VECTOR-B 1))))
 
 ;;----------------------------------------------------------------
 
@@ -133,7 +133,7 @@
   (declare (vec2 vector-a)
            (single-float a))
   (let ((b (cl:/ 1 a)))
-    (MAKE-VECTOR2 (cl:* (SVREF VECTOR-A 0) B) (cl:* (SVREF VECTOR-A 1) B))))
+    (MAKE (cl:* (SVREF VECTOR-A 0) B) (cl:* (SVREF VECTOR-A 1) B))))
 
 ;;----------------------------------------------------------------
 
@@ -146,8 +146,8 @@
   "Divides components, not sure what, i'll need this for
    yet but hey!"
   (declare (vec2 vector-a vector-b))
-  (MAKE-VECTOR2 (cl:/ (SVREF VECTOR-A 0) (SVREF VECTOR-B 0))
-                (cl:/ (SVREF VECTOR-A 1) (SVREF VECTOR-B 1))))
+  (MAKE (cl:/ (SVREF VECTOR-A 0) (SVREF VECTOR-B 0))
+	(cl:/ (SVREF VECTOR-A 1) (SVREF VECTOR-B 1))))
 
 ;;----------------------------------------------------------------
 
@@ -158,7 +158,7 @@
 (defun negate (vector-a)
   "Return a vector that is the negative of the vector passed in"
   (declare (vec2 vector-a))
-  (MAKE-VECTOR2 (cl:- (SVREF VECTOR-A 0)) (- (SVREF VECTOR-A 1))))
+  (MAKE (cl:- (SVREF VECTOR-A 0)) (- (SVREF VECTOR-A 1))))
 
 ;;----------------------------------------------------------------
 
@@ -328,11 +328,11 @@
 ;;----------------------------------------------------------------
 
 (defun spline (x knots)
-  (make-vector2 (rtg-math.maths:spline x (mapcar #'x knots))
-                (rtg-math.maths:spline x (mapcar #'y knots))))
+  (make (rtg-math.maths:spline x (mapcar #'x knots))
+	(rtg-math.maths:spline x (mapcar #'y knots))))
 
 ;;----------------------------------------------------------------
 
 (defun from-complex (c)
-  (make-vector2 (coerce (realpart c) 'single-float)
-                (coerce (imagpart c) 'single-float)))
+  (make (coerce (realpart c) 'single-float)
+	(coerce (imagpart c) 'single-float)))
