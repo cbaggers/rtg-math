@@ -134,13 +134,13 @@
   (:shadow :identity :trace :+ := :/= :- :* :/)
   (:export :0p :identityp
 	   :make :0! :identity
-	   := :+ :- :* :*s :*v :negate :mrow*vec4
+	   := :+ :- :* :*s :*v :*v3 :negate :mrow*vec4
 	   :melm :to-mat3
 	   :from-rows :from-columns :get-rows :get-columns :get-row :get-column
 	   :transpose :adjoint :determinant :minor :trace
            :2dclipspace-to-imagespace-matrix4
 	   :translation
-	   :rotation-from-matrix3 :rotation-from-euler :rotation-from-axis-angle
+	   :rotation-from-mat3 :rotation-from-euler :rotation-from-axis-angle
 	   :rotation-x :rotation-y :rotation-z
 	   :scale
 	   :affine-inverse
@@ -164,7 +164,7 @@
   (:shadow :lerp :/= := :+ :- :* :identity)
   (:export :w :x :y :z :q! :0! :0p
            :unitp :identity :identity-p
-           :from-matrix3
+           :from-mat3
            :from-axis-angle
            :from-look-at
            :from-axies

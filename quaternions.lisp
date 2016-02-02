@@ -60,7 +60,7 @@
           (aref q 3) z)
     q))
 
-(defun from-matrix3 (mat3)
+(defun from-mat3 (mat3)
   (let ((trace (m3:trace mat3)))
     (if (> trace 0.0)
         (let* ((s (sqrt (+ 1.0 trace)))
@@ -102,7 +102,7 @@
 		   (* scale-factor (aref axis-vec3 2)))))))
 
 (defun from-axies (x-axies y-axies z-axies)
-  (from-matrix3
+  (from-mat3
    (m3:make
     (aref x-axies 0) (aref y-axies 1) (aref z-axies 2)
     (aref x-axies 0) (aref y-axies 1) (aref z-axies 2)

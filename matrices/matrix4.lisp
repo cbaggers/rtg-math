@@ -384,7 +384,7 @@
 
 ;;----------------------------------------------------------------
 
-(defun rotation-from-matrix3 (m-a)
+(defun rotation-from-mat3 (m-a)
   "Takes a 3x3 rotation matrix and returns a 4x4 rotation matrix
    with the same values. The 4th component is filled as an
    identity matrix would be."
@@ -615,6 +615,21 @@
 	    (cl:* (y vec) (melm mat-a 3 1))
 	    (cl:* (z vec) (melm mat-a 3 2))
 	    (cl:* (w vec) (melm mat-a 3 3)))))
+
+(defun *v3 (mat-a vec)
+  "Returns the transform of a matrix"
+  (v3:make (cl:+ (cl:* (melm mat-a 0 0) (x vec))
+		 (cl:* (melm mat-a 0 1) (y vec))
+		 (cl:* (melm mat-a 0 2) (z vec))
+		 (melm mat-a 0 3))
+	   (cl:+ (cl:* (melm mat-a 1 0) (x vec))
+		 (cl:* (melm mat-a 1 1) (y vec))
+		 (cl:* (melm mat-a 1 2) (z vec))
+		 (melm mat-a 1 3))
+	   (cl:+ (cl:* (melm mat-a 2 0) (x vec))
+		 (cl:* (melm mat-a 2 1) (y vec))
+		 (cl:* (melm mat-a 2 2) (z vec))
+		 (melm mat-a 2 3))))
 
 ;;----------------------------------------------------------------
 
