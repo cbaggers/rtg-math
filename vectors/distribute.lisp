@@ -1,4 +1,4 @@
-(in-package :cl-game-math.distribute)
+(in-package :rtg-math.distribute)
 
 (defun distrib (shape size num-of-points)
   (assert (> num-of-points 1))

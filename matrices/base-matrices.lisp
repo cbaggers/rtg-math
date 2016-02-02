@@ -6,7 +6,7 @@
 ;; (http://opensource.franz.com/preamble.html),
 ;; known as the LLGPL.
 
-(in-package :cl-game-math.base-matrices)
+(in-package :rtg-math.base-matrices)
 
 (labels ((convert (x)
            (coerce x 'single-float)))

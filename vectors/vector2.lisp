@@ -11,7 +11,7 @@
 ;; as possible for people writing the games but this will
 ;; be in a seperate package (prehaps the base-maths one)
 
-(in-package :cl-game-math.vector2)
+(in-package :rtg-math.vector2)
 
 
 ;;; [TODO] make destructive versions aswell
@@ -371,8 +371,8 @@
 ;;----------------------------------------------------------------
 
 (defun spline (x knots)
-  (make-vector2 (cl-game-math.maths:spline x (mapcar #'v-x knots))
-                (cl-game-math.maths:spline x (mapcar #'v-y knots))))
+  (make-vector2 (rtg-math.maths:spline x (mapcar #'v-x knots))
+                (rtg-math.maths:spline x (mapcar #'v-y knots))))
 
 ;;----------------------------------------------------------------
 

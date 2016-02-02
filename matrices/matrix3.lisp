@@ -11,7 +11,7 @@
 ;; as possible for people writing the games but this will
 ;; be in a seperate package (prehaps the base-maths one)
 
-(in-package :cl-game-math.matrix3)
+(in-package :rtg-math.matrix3)
 
 ;; The coordinate system is assumed to be right-handed.
 ;; Coordinate axis rotation matrices are of the form
@@ -564,8 +564,8 @@
          (angle (acos c-a)))
     (cond ((float-zero angle) ;; <-angle is zero so axis can be anything
            (make-vector3 1.0 0.0 0.0))
-          ((< angle (- cl-game-math.base-maths:+pi+
-		       cl-game-math.base-maths:+float-threshold+))
+          ((< angle (- rtg-math.base-maths:+pi+
+		       rtg-math.base-maths:+float-threshold+))
                                         ;its not 180 degrees
            (let ((axis (make-vector3
                         (- (melm mat-a 1 2) (melm mat-a 2 1))

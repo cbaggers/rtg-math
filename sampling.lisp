@@ -1,4 +1,4 @@
-(in-package :cl-game-math.sampling)
+(in-package :rtg-math.sampling)
 
 (defun sample-2d (function
                   &key (x-range (v! 0 1)) (y-range (v! 0 1))

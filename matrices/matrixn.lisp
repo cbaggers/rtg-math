@@ -11,7 +11,7 @@
 ;; as possible for people writing the games but this will
 ;; be in a seperate package (prehaps the base-maths one)
 
-(in-package :cl-game-math.matrixn)
+(in-package :rtg-math.matrixn)
 
 (defun convolve (array)
   (let ((data (loop for y across array append

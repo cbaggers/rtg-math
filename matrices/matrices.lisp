@@ -1,9 +1,9 @@
-(in-package :cl-game-math.matrices)
+(in-package :rtg-math.matrices)
 
 ;;----------------------------------------------------------------
 
 (defun zerop (matrix)
-  (every #'cl-game-math.base-maths:float-zero matrix))
+  (every #'rtg-math.base-maths:float-zero matrix))
 
 ;;----------------------------------------------------------------
 

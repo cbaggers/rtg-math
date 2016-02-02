@@ -11,7 +11,7 @@
 ;; as possible for people writing the games but this will
 ;; be in a seperate package (prehaps the base-maths one)
 
-(in-package :cl-game-math.matrix4)
+(in-package :rtg-math.matrix4)
 
 ;;----------------------------------------------------------------
 
@@ -547,7 +547,7 @@
    this matrix. Assumes that this is a rotation matrix. Result
    is returned as vector3"
   (let* ((sy (melm mat-a 0 2))
-         (cy (cl-game-math.base-maths:c-sqrt (- 1.0 (* sy sy)))))
+         (cy (rtg-math.base-maths:c-sqrt (- 1.0 (* sy sy)))))
     (if (float-zero cy)
         (let ((sz 0.0)
               (cz 1.0)
@@ -581,7 +581,7 @@
          (cos-theta (* 0.5 (- trace-a 1.0)))
          (angle (acos cos-theta)))
     (cond ((float-zero angle) (values v3:*unit-x* angle))
-          ((float-zero (- cl-game-math.base-maths:+pi+ angle))
+          ((float-zero (- rtg-math.base-maths:+pi+ angle))
            (values
             (v3:normalize
              (make-vector3 (- (melm mat-a 2 1) (melm mat-a 1 2))

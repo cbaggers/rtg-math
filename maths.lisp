@@ -1,4 +1,4 @@
-(in-package :cl-game-math.maths)
+(in-package :rtg-math.maths)
 
 (defun lerp (start end ammount)
   (+ start (* ammount (- end start))))

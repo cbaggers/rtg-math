@@ -18,7 +18,7 @@
 ;; Man, there is a whole lot of stupid mistakes around this code
 ;; I know I was a lisp newbie but..jesus. Gotta clean it all up.
 
-(in-package :cl-game-math.base-maths)
+(in-package :rtg-math.base-maths)
 
 (defconstant +float-threshold+ 1.0e-6)
 ;; [TODO] Need to declare type of these as float

@@ -1,6 +1,6 @@
-;;;; cl-game-math.asd
+;;;; rtg-math.asd
 
-(asdf:defsystem #:cl-game-math
+(asdf:defsystem #:rtg-math
   :description "A selection of the math routines most commonly needed for making games in lisp"
   :author "Chris Bagley <techsnuffle@gmail.com>"
   :license "BSD 2 Clause"

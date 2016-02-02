@@ -1,4 +1,4 @@
-(in-package :cl-game-math.projection)
+(in-package :rtg-math.projection)
 
 (defun perspective (frame-width frame-height near far fov)
   (let* ((aspect-ratio (/ frame-width frame-height))

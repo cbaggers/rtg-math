@@ -1,4 +1,4 @@
-(in-package :cl-game-math.types)
+(in-package :rtg-math.types)
 
 (deftype vec2 ()
   '(simple-array single-float (2)))

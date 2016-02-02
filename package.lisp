@@ -1,9 +1,9 @@
 ;;;; package.lisp
 
-(defpackage #:cl-game-math
+(defpackage #:rtg-math
   (:use #:cl))
 
-(defpackage #:cl-game-math.types
+(defpackage #:rtg-math.types
   (:use #:cl)
   (:export :quaternion
 	   :mat3 :mat4
@@ -15,7 +15,7 @@
 	   :int8-vec2 :int8-vec3 :int8-vec4
 	   :uint8-vec2 :uint8-vec3 :uint8-vec4))
 
-(defpackage :cl-game-math.base-maths
+(defpackage :rtg-math.base-maths
   (:use :cl)
   (:export :clamp
            :clampf
@@ -34,21 +34,21 @@
            :radians
 	   :case=))
 
-(defpackage :cl-game-math.maths
+(defpackage :rtg-math.maths
   (:use :cl)
   (:export :lerp :mix :stepv :clamp :smoothstep :pulse
            :spline))
 
-(defpackage :cl-game-math.base-vectors
+(defpackage :rtg-math.base-vectors
   (:use :cl)
   (:export :v! :v-x :v-y :v-z :v-w
            :v!byte :v!ubyte :v!int))
 
-(defpackage :cl-game-math.base-matrices
+(defpackage :rtg-math.base-matrices
   (:use :cl)
   (:export :m!))
 
-(defpackage :cl-game-math.vector2
+(defpackage :rtg-math.vector2
   (:use :cl)
   (:nicknames :v2)
   (:shadow :eql :+ :- :* :/ :length :zerop)
@@ -59,12 +59,12 @@
            :*unit-x* :*unit-y* :*unit-scale*
            :zerop :unitp :cross :face-foreward :lerp
            :bezier :spline :from-complex)
-  (:import-from :cl-game-math.base-maths :float-zero
+  (:import-from :rtg-math.base-maths :float-zero
                 :c-sqrt
                 :c-inv-sqrt)
-  (:import-from :cl-game-math.base-vectors :v-x :v-y))
+  (:import-from :rtg-math.base-vectors :v-x :v-y))
 
-(defpackage :cl-game-math.vector3
+(defpackage :rtg-math.vector3
   (:use :cl)
   (:nicknames :v3)
   (:shadow :incf :eql :+ :- :* :/ :length :zerop)
@@ -75,12 +75,12 @@
            :*unit-x* :*unit-y* :*unit-z* :*unit-scale*
            :zerop :unitp :cross :face-foreward :lerp
            :bezier :spline :incf)
-  (:import-from :cl-game-math.base-maths :float-zero
+  (:import-from :rtg-math.base-maths :float-zero
                 :c-sqrt
                 :c-inv-sqrt)
-  (:import-from :cl-game-math.base-vectors :v-x :v-y :v-z))
+  (:import-from :rtg-math.base-vectors :v-x :v-y :v-z))
 
-(defpackage :cl-game-math.vector4
+(defpackage :rtg-math.vector4
   (:use :cl)
   (:nicknames :v4)
   (:shadow :eql :+ :- :* :/ :length :zerop)
@@ -91,29 +91,29 @@
            :*unit-x* :*unit-y* :*unit-z* :*unit-w* :*unit-scale*
            :zerop :unitp :face-foreward :lerp
            :bezier :spline)
-  (:import-from :cl-game-math.base-maths :float-zero
+  (:import-from :rtg-math.base-maths :float-zero
                 :c-sqrt
                 :c-inv-sqrt)
-  (:import-from :cl-game-math.base-vectors :v-x :v-y :v-z :v-w))
+  (:import-from :rtg-math.base-vectors :v-x :v-y :v-z :v-w))
 
-(defpackage :cl-game-math.vectors
+(defpackage :rtg-math.vectors
   (:use :cl)
   (:nicknames :v)
-  (:import-from :cl-game-math.base-maths :case=)
+  (:import-from :rtg-math.base-maths :case=)
   (:export :v :make-vector :zerop :unitp := :+ :/= :1+ :1- :- :*
            :/ :length :length-squared :distance :distance-squared
            :dot :absolute-dot :perp-dot :normalize :cross :eql
            :swizzle :s~ :merge-into-vector :negate :face-foreward :lerp
            :mix :bezier :x :y :z :w :dvec :dvec*)
   (:shadow :zerop :+ :eql := :/= :1+ :1- :- :* :/ :length)
-  (:import-from :cl-game-math.vector2
+  (:import-from :rtg-math.vector2
                 :make-vector2)
-  (:import-from :cl-game-math.vector3
+  (:import-from :rtg-math.vector3
                 :make-vector3)
-  (:import-from :cl-game-math.vector4
+  (:import-from :rtg-math.vector4
                 :make-vector4))
 
-(defpackage :cl-game-math.matrix3
+(defpackage :rtg-math.matrix3
   (:use :cl)
   (:nicknames :m3)
   (:shadow :eql :identity)
@@ -127,13 +127,13 @@
            :rotation-x :rotation-y :rotation-z
            :get-fixed-angles :get-axis-angle :m+ :m- :negate
            :m* :m*vec :mcol*vec3 :mrow*vec3 :m*scalar :eql)
-  (:import-from :cl-game-math.base-maths :float-zero
+  (:import-from :rtg-math.base-maths :float-zero
                 :c-sqrt)
-  (:import-from :cl-game-math.vector3
+  (:import-from :rtg-math.vector3
                 :make-vector3)
-  (:import-from :cl-game-math.base-vectors :v-x :v-y :v-z :v-w))
+  (:import-from :rtg-math.base-vectors :v-x :v-y :v-z :v-w))
 
-(defpackage :cl-game-math.matrix4
+(defpackage :rtg-math.matrix4
   (:use :cl)
   (:nicknames :m4)
   (:shadow :eql :identity)
@@ -149,19 +149,19 @@
            :mcol*vec4 :mrow*vec4 :m* :transform
            :to-matrix3 :get-row :get-rows :get-column
            :get-columns :eql)
-  (:import-from :cl-game-math.base-maths :float-zero
+  (:import-from :rtg-math.base-maths :float-zero
                 :c-sqrt)
-  (:import-from :cl-game-math.vector3
+  (:import-from :rtg-math.vector3
                 :make-vector3)
-  (:import-from :cl-game-math.vector4
+  (:import-from :rtg-math.vector4
                 :make-vector4)
-  (:import-from :cl-game-math.base-vectors :v-x :v-y :v-z :v-w))
+  (:import-from :rtg-math.base-vectors :v-x :v-y :v-z :v-w))
 
 
-(defpackage :cl-game-math.matrices
+(defpackage :rtg-math.matrices
   (:use :cl)
   (:nicknames :m)
-  (:import-from :cl-game-math.base-maths :case=)
+  (:import-from :rtg-math.base-maths :case=)
   (:export :zerop :unitp :+ :eql := :/= :1+ :1- :- :*
            :identityp :elt :elm :get-rows :get-row
            :get-columns :get-column :determinant
@@ -170,8 +170,8 @@
   (:shadow :zerop :unitp :+ :eql := :/= :1+ :1- :- :*
            :elt :trace))
 
-(defpackage :cl-game-math.quaternions
-  (:use :cl :cl-game-math.base-maths)
+(defpackage :rtg-math.quaternions
+  (:use :cl :rtg-math.base-maths)
   (:nicknames :q)
   (:shadow :lerp)
   (:export :w :x :y :z :q! :zero-quit :zero-quatp
@@ -188,7 +188,7 @@
            :dot :rotate :lerp :slerp :approx-slerp
            :to-matrix3 :to-matrix4))
 
-(defpackage :cl-game-math.projection
-  (:use :cl :cl-game-math.base-maths)
+(defpackage :rtg-math.projection
+  (:use :cl :rtg-math.base-maths)
   (:shadow :lerp)
   (:export :perspective :orthographic))

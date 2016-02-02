@@ -13,7 +13,7 @@
 ;; DO NOT ':USE' THIS PACKAGE IN YOUR PROGRAMS AS IT REDEFINES
 ;; VARIOUS MATHEMATICAL SYMBOLS
 
-(in-package :cl-game-math.vectors)
+(in-package :rtg-math.vectors)
 
 ;;----------------------------------------------------------------
 

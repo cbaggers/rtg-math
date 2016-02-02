@@ -1,4 +1,4 @@
-(in-package :cl-game-math.base-vectors)
+(in-package :rtg-math.base-vectors)
 
 (defmacro def-v! (name type)
   (let ((one-arg (gensym "v!one-arg")))

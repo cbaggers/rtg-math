@@ -11,7 +11,7 @@
 ;;; [TODO] NEED TO GO THROUGH ALL OF THIS AND DOUBLE CHECK
 ;;;        THE SQRT v INV-SQRT AS I HAVE A FEW WRONG
 
-(in-package #:cl-game-math.quaternions)
+(in-package #:rtg-math.quaternions)
 
 (defun float-greater-than-zero (x)
   (> x 1.0s0))
