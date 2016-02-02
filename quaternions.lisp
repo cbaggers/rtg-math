@@ -4,19 +4,19 @@
 
 (defun w (quat)
   "Returns the w component of the quaternion"
-  (svref quat 0))
+  (aref quat 0))
 
 (defun x (quat)
   "Returns the x component of the quaternion"
-  (svref quat 1))
+  (aref quat 1))
 
 (defun y (quat)
   "Returns the y component of the quaternion"
-  (svref quat 2))
+  (aref quat 2))
 
 (defun z (quat)
   "Returns the z component of the quaternion"
-  (svref quat 3))
+  (aref quat 3))
 
 ;;----------------------------------------------------------------;;
 
@@ -54,10 +54,10 @@
    you hand it floats."
   (declare (single-float x y z w))
   (let ((q (make-array 4 :element-type `single-float)))
-    (setf (svref q 0) w
-          (svref q 1) x
-          (svref q 2) y
-          (svref q 3) z)
+    (setf (aref q 0) w
+          (aref q 1) x
+          (aref q 2) y
+          (aref q 3) z)
     q))
 
 (defun from-matrix3 (mat3)
@@ -81,11 +81,11 @@
                (quat (q! (* (- (m3:melm mat3 k j)
 			       (m3:melm mat3 j k))
 			    recip) 0.0 0.0 0.0)))
-          (setf (svref quat i) (* s 0.5)
-                (svref quat j) (* (+ (m3:melm mat3 j i) (m3:melm mat3 i j))
-				  recip)
-                (svref quat k) (* (+ (m3:melm mat3 k i) (m3:melm mat3 i k))
-				  recip))
+          (setf (aref quat i) (* s 0.5)
+                (aref quat j) (* (+ (m3:melm mat3 j i) (m3:melm mat3 i j))
+				 recip)
+                (aref quat k) (* (+ (m3:melm mat3 k i) (m3:melm mat3 i k))
+				 recip))
           quat))))
 
 (defun from-axis-angle (axis-vec3 angle)
@@ -97,16 +97,16 @@
                (cos-half-angle (cos half-angle))
                (scale-factor (/ sin-half-angle (sqrt length))))
           (v4:make cos-half-angle
-		   (* scale-factor (svref axis-vec3 0))
-		   (* scale-factor (svref axis-vec3 1))
-		   (* scale-factor (svref axis-vec3 2)))))))
+		   (* scale-factor (aref axis-vec3 0))
+		   (* scale-factor (aref axis-vec3 1))
+		   (* scale-factor (aref axis-vec3 2)))))))
 
 (defun from-axies (x-axies y-axies z-axies)
   (from-matrix3
    (m3:make
-    (svref x-axies 0) (svref y-axies 1) (svref z-axies 2)
-    (svref x-axies 0) (svref y-axies 1) (svref z-axies 2)
-    (svref x-axies 0) (svref y-axies 1) (svref z-axies 2))))
+    (aref x-axies 0) (aref y-axies 1) (aref z-axies 2)
+    (aref x-axies 0) (aref y-axies 1) (aref z-axies 2)
+    (aref x-axies 0) (aref y-axies 1) (aref z-axies 2))))
 
 (defun from-look-at (from3 to3)
   (let* ((dir (v3:- from3 to3))
@@ -240,26 +240,26 @@
 ;; [TODO] Look into assets (this should be a unit quaternion
 (defun rotate (vec3 quat)
   "Rotate vec3 by quaternion. Assumes quaternion is normalized."
-  (let* ((v-mult (* 2.0 (+ (* (x quat) (svref vec3 0))
-                           (* (y quat) (svref vec3 1))
-                           (* (z quat) (svref vec3 2)))))
+  (let* ((v-mult (* 2.0 (+ (* (x quat) (aref vec3 0))
+                           (* (y quat) (aref vec3 1))
+                           (* (z quat) (aref vec3 2)))))
          (cross-mult (* 2.0 (w quat)))
          (p-mult (- (* cross-mult (w quat)) 1.0)))
-    (v3:make (+ (* p-mult (svref vec3 0))
+    (v3:make (+ (* p-mult (aref vec3 0))
 		(* v-mult (x quat))
 		(* cross-mult
-		   (- (* (y quat) (svref vec3 2))
-		      (* (z quat) (svref vec3 1)))))
-	     (+ (* p-mult (svref vec3 1))
+		   (- (* (y quat) (aref vec3 2))
+		      (* (z quat) (aref vec3 1)))))
+	     (+ (* p-mult (aref vec3 1))
 		(* v-mult (y quat))
 		(* cross-mult
-		   (- (* (z quat) (svref vec3 0))
-		      (* (x quat) (svref vec3 2)))))
-	     (+ (* p-mult (svref vec3 2))
+		   (- (* (z quat) (aref vec3 0))
+		      (* (x quat) (aref vec3 2)))))
+	     (+ (* p-mult (aref vec3 2))
 		(* v-mult (z quat))
 		(* cross-mult
-		   (- (* (x quat) (svref vec3 1))
-		      (* (y quat) (svref vec3 0))))))))
+		   (- (* (x quat) (aref vec3 1))
+		      (* (y quat) (aref vec3 0))))))))
 
 ;; [TODO] Could be faster (see q+1 area)
 (defun lerp (start-quat end-quat pos)

@@ -182,6 +182,7 @@
 
 (defpackage #:rtg-math
   (:use #:cl)
+  (:import-from :rtg-math.base-maths :radians :degrees)
   (:import-from :rtg-math.base-vectors :v! :v!byte :v!ubyte :v!int :x :y :z :w)
   (:import-from :rtg-math.base-matrices :m!)
   (:import-from :rtg-math.quaternions :q!)

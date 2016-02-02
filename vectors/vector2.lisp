@@ -14,8 +14,8 @@
    you hand it floats."
   (declare (single-float x y))
   (let (( vec (make-array 2 :element-type `single-float)))
-    (setf (svref vec 0) x
-          (svref vec 1) y)
+    (setf (aref vec 0) x
+          (aref vec 1) y)
     vec))
 
 ;;----------------------------------------------------------------
@@ -29,7 +29,7 @@
    floating point number it checks to see if the length is
    below a threshold set in the base-maths package"
   (declare (vec2 vector-a))
-  (cl:= 0f0 (cl:+ (EXPT (SVREF VECTOR-A 0) 2) (EXPT (SVREF VECTOR-A 1) 2))))
+  (cl:= 0f0 (cl:+ (EXPT (AREF VECTOR-A 0) 2) (EXPT (AREF VECTOR-A 1) 2))))
 
 ;;----------------------------------------------------------------
 
@@ -41,7 +41,7 @@
    floating point number it checks to see if the length is
    within the range of 1 + or - and threshold set in base-maths"
   (declare (vec2 vector-a))
-  (cl:= 0f0 (cl:- 1.0 (cl:+ (EXPT (SVREF VECTOR-A 0) 2) (EXPT (SVREF VECTOR-A 1) 2)))))
+  (cl:= 0f0 (cl:- 1.0 (cl:+ (EXPT (AREF VECTOR-A 0) 2) (EXPT (AREF VECTOR-A 1) 2)))))
 ;;----------------------------------------------------------------
 
 (declaim (inline =)
@@ -52,8 +52,8 @@
   "Returns either t if the two vectors are equal.
    Otherwise it returns nil."
   (declare (vec2 vector-a vector-b))
-  (AND (cl:= (SVREF VECTOR-A 0) (SVREF VECTOR-B 0))
-       (cl:= (SVREF VECTOR-A 1) (SVREF VECTOR-B 1))))
+  (AND (cl:= (AREF VECTOR-A 0) (AREF VECTOR-B 0))
+       (cl:= (AREF VECTOR-A 1) (AREF VECTOR-B 1))))
 
 ;;----------------------------------------------------------------
 
@@ -72,8 +72,8 @@
 (defun %+ (vector-a vector-b)
   "Add two vectors and return a new vector containing the result"
   (declare (vec2 vector-a vector-b))
-  (MAKE (cl:+ (SVREF VECTOR-A 0) (SVREF VECTOR-B 0))
-	(cl:+ (SVREF VECTOR-A 1) (SVREF VECTOR-B 1))))
+  (MAKE (cl:+ (AREF VECTOR-A 0) (AREF VECTOR-B 0))
+	(cl:+ (AREF VECTOR-A 1) (AREF VECTOR-B 1))))
 
 ;;----------------------------------------------------------------
 
@@ -93,8 +93,8 @@
   "Subtract two vectors and return a new vector containing
    the result"
   (declare (vec2 vector-a vector-b))
-  (MAKE (cl:- (SVREF VECTOR-A 0) (SVREF VECTOR-B 0))
-	(cl:- (SVREF VECTOR-A 1) (SVREF VECTOR-B 1))))
+  (MAKE (cl:- (AREF VECTOR-A 0) (AREF VECTOR-B 0))
+	(cl:- (AREF VECTOR-A 1) (AREF VECTOR-B 1))))
 
 ;;----------------------------------------------------------------
 
@@ -106,7 +106,7 @@
   "Multiply vector by scalar"
   (declare (vec2 vector-a)
            (single-float a))
-  (MAKE (cl:* (SVREF VECTOR-A 0) A) (cl:* (SVREF VECTOR-A 1) A)))
+  (MAKE (cl:* (AREF VECTOR-A 0) A) (cl:* (AREF VECTOR-A 1) A)))
 
 ;;----------------------------------------------------------------
 
@@ -117,8 +117,8 @@
   "Multiplies components, is not dot product, not sure what
    i'll need this for yet but hey!"
   (declare (vec2 vector-a vector-b))
-  (MAKE (cl:* (SVREF VECTOR-A 0) (SVREF VECTOR-B 0))
-	(cl:* (SVREF VECTOR-A 1) (SVREF VECTOR-B 1))))
+  (MAKE (cl:* (AREF VECTOR-A 0) (AREF VECTOR-B 0))
+	(cl:* (AREF VECTOR-A 1) (AREF VECTOR-B 1))))
 
 ;;----------------------------------------------------------------
 
@@ -131,7 +131,7 @@
   (declare (vec2 vector-a)
            (single-float a))
   (let ((b (cl:/ 1 a)))
-    (make (cl:* (svref vector-a 0) b) (cl:* (svref vector-a 1) b))))
+    (make (cl:* (aref vector-a 0) b) (cl:* (aref vector-a 1) b))))
 
 ;;----------------------------------------------------------------
 
@@ -144,10 +144,10 @@
   "Divides components, not sure what, i'll need this for
    yet but hey!"
   (declare (vec2 vector-a vector-b))
-  (make (cl:/ (svref vector-a 0)
-	      (svref vector-b 0))
-	(cl:/ (svref vector-a 1)
-	      (svref vector-b 1))))
+  (make (cl:/ (aref vector-a 0)
+	      (aref vector-b 0))
+	(cl:/ (aref vector-a 1)
+	      (aref vector-b 1))))
 
 ;;----------------------------------------------------------------
 
@@ -158,7 +158,7 @@
 (defun negate (vector-a)
   "Return a vector that is the negative of the vector passed in"
   (declare (vec2 vector-a))
-  (MAKE (cl:- (SVREF VECTOR-A 0)) (- (SVREF VECTOR-A 1))))
+  (MAKE (cl:- (AREF VECTOR-A 0)) (- (AREF VECTOR-A 1))))
 
 ;;----------------------------------------------------------------
 
@@ -238,8 +238,8 @@
 (defun dot (vector-a vector-b)
   "Return the dot product of the vector-a and vector-b."
   (declare (vec2 vector-a vector-b))
-  (cl:+ (cl:* (SVREF VECTOR-A 0) (SVREF VECTOR-B 0))
-        (cl:* (SVREF VECTOR-A 1) (SVREF VECTOR-B 1))))
+  (cl:+ (cl:* (AREF VECTOR-A 0) (AREF VECTOR-B 0))
+        (cl:* (AREF VECTOR-A 1) (AREF VECTOR-B 1))))
 
 ;;----------------------------------------------------------------
 
@@ -251,8 +251,8 @@
 (defun absolute-dot (vector-a vector-b)
   "Return the absolute dot product of the vector-a and vector-b."
   (declare (vec2 vector-a vector-b))
-  (cl:+ (ABS (cl:* (SVREF VECTOR-A 0) (SVREF VECTOR-B 0)))
-        (ABS (cl:* (SVREF VECTOR-A 1) (SVREF VECTOR-B 1)))))
+  (cl:+ (ABS (cl:* (AREF VECTOR-A 0) (AREF VECTOR-B 0)))
+        (ABS (cl:* (AREF VECTOR-A 1) (AREF VECTOR-B 1)))))
 
 ;;----------------------------------------------------------------
 

@@ -5,9 +5,9 @@
 (defun-typed-inline make
     ((x single-float) (y single-float) (z single-float)) -> vec3
   (let (( vec (make-array 3 :element-type `single-float)))
-    (setf (svref vec 0) x
-	  (svref vec 1) y
-	  (svref vec 2) z)
+    (setf (aref vec 0) x
+	  (aref vec 1) y
+	  (aref vec 2) z)
     vec))
 
 ;;---------------------------------------------------------------
@@ -21,8 +21,8 @@
    floating point number it checks to see if the length is
    below a threshold set in the base-maths package"
   (declare (vec3 vector-a))
-  (cl:= 0f0 (cl:+ (EXPT (SVREF VECTOR-A 0) 2) (EXPT (SVREF VECTOR-A 1) 2)
-		  (EXPT (SVREF VECTOR-A 2) 2))))
+  (cl:= 0f0 (cl:+ (EXPT (AREF VECTOR-A 0) 2) (EXPT (AREF VECTOR-A 1) 2)
+		  (EXPT (AREF VECTOR-A 2) 2))))
 
 ;;---------------------------------------------------------------
 
@@ -34,8 +34,8 @@
    floating point number it checks to see if the length is
    within the range of 1 + or - and threshold set in base-maths"
   (declare (vec3 vector-a))
-  (cl:= 0f0 (cl:- 1.0 (cl:+ (EXPT (SVREF VECTOR-A 0) 2) (EXPT (SVREF VECTOR-A 1) 2)
-			    (EXPT (SVREF VECTOR-A 2) 2)))))
+  (cl:= 0f0 (cl:- 1.0 (cl:+ (EXPT (AREF VECTOR-A 0) 2) (EXPT (AREF VECTOR-A 1) 2)
+			    (EXPT (AREF VECTOR-A 2) 2)))))
 ;;---------------------------------------------------------------
 
 (declaim (inline =)
@@ -46,9 +46,9 @@
   "Returns either t if the two vectors are equal.
    Otherwise it returns nil."
   (declare (vec3 vector-a vector-b))
-  (AND (cl:= (SVREF VECTOR-A 0) (SVREF VECTOR-B 0))
-       (cl:= (SVREF VECTOR-A 1) (SVREF VECTOR-B 1))
-       (cl:= (SVREF VECTOR-A 2) (SVREF VECTOR-B 2))))
+  (AND (cl:= (AREF VECTOR-A 0) (AREF VECTOR-B 0))
+       (cl:= (AREF VECTOR-A 1) (AREF VECTOR-B 1))
+       (cl:= (AREF VECTOR-A 2) (AREF VECTOR-B 2))))
 
 ;;---------------------------------------------------------------
 
@@ -67,9 +67,9 @@
 (defun %+ (vector-a vector-b)
   "Add two vectors and return a new vector containing the result"
   (declare (vec3 vector-a vector-b))
-  (MAKE (cl:+ (SVREF VECTOR-A 0) (SVREF VECTOR-B 0))
-	(cl:+ (SVREF VECTOR-A 1) (SVREF VECTOR-B 1))
-	(cl:+ (SVREF VECTOR-A 2) (SVREF VECTOR-B 2))))
+  (MAKE (cl:+ (AREF VECTOR-A 0) (AREF VECTOR-B 0))
+	(cl:+ (AREF VECTOR-A 1) (AREF VECTOR-B 1))
+	(cl:+ (AREF VECTOR-A 2) (AREF VECTOR-B 2))))
 
 ;;---------------------------------------------------------------
 
@@ -89,9 +89,9 @@
   "Subtract two vectors and return a new vector containing
    the result"
   (declare (vec3 vector-a vector-b))
-  (MAKE (cl:- (SVREF VECTOR-A 0) (SVREF VECTOR-B 0))
-	(cl:- (SVREF VECTOR-A 1) (SVREF VECTOR-B 1))
-	(cl:- (SVREF VECTOR-A 2) (SVREF VECTOR-B 2))))
+  (MAKE (cl:- (AREF VECTOR-A 0) (AREF VECTOR-B 0))
+	(cl:- (AREF VECTOR-A 1) (AREF VECTOR-B 1))
+	(cl:- (AREF VECTOR-A 2) (AREF VECTOR-B 2))))
 
 ;;---------------------------------------------------------------
 
@@ -101,8 +101,8 @@
   "Multiply vector by scalar"
   (declare (vec3 vector-a)
            (single-float a))
-  (MAKE (cl:* (SVREF VECTOR-A 0) A) (cl:* (SVREF VECTOR-A 1) A)
-	(cl:* (SVREF VECTOR-A 2) A)))
+  (MAKE (cl:* (AREF VECTOR-A 0) A) (cl:* (AREF VECTOR-A 1) A)
+	(cl:* (AREF VECTOR-A 2) A)))
 
 ;;---------------------------------------------------------------
 
@@ -115,9 +115,9 @@
   "Multiplies components, is not dot product, not sure what
    i'll need this for yet but hey!"
   (declare (vec3 vector-a vector-b))
-  (MAKE (cl:* (SVREF VECTOR-A 0) (SVREF VECTOR-B 0))
-	(cl:* (SVREF VECTOR-A 1) (SVREF VECTOR-B 1))
-	(cl:* (SVREF VECTOR-A 2) (SVREF VECTOR-B 2))))
+  (MAKE (cl:* (AREF VECTOR-A 0) (AREF VECTOR-B 0))
+	(cl:* (AREF VECTOR-A 1) (AREF VECTOR-B 1))
+	(cl:* (AREF VECTOR-A 2) (AREF VECTOR-B 2))))
 
 ;;---------------------------------------------------------------
 
@@ -129,8 +129,8 @@
   (declare (vec3 vector-a)
            (single-float a))
   (let ((b (cl:/ 1 a)))
-    (MAKE (cl:* (SVREF VECTOR-A 0) B) (cl:* (SVREF VECTOR-A 1) B)
-	  (cl:* (SVREF VECTOR-A 2) B))))
+    (MAKE (cl:* (AREF VECTOR-A 0) B) (cl:* (AREF VECTOR-A 1) B)
+	  (cl:* (AREF VECTOR-A 2) B))))
 
 ;;---------------------------------------------------------------
 
@@ -141,9 +141,9 @@
   "Divides components, not sure what, i'll need this for
    yet but hey!"
   (declare (vec3 vector-a vector-b))
-  (MAKE (cl:/ (SVREF VECTOR-A 0) (SVREF VECTOR-B 0))
-	(cl:/ (SVREF VECTOR-A 1) (SVREF VECTOR-B 1))
-	(cl:/ (SVREF VECTOR-A 2) (SVREF VECTOR-B 2))))
+  (MAKE (cl:/ (AREF VECTOR-A 0) (AREF VECTOR-B 0))
+	(cl:/ (AREF VECTOR-A 1) (AREF VECTOR-B 1))
+	(cl:/ (AREF VECTOR-A 2) (AREF VECTOR-B 2))))
 
 ;;---------------------------------------------------------------
 
@@ -154,7 +154,7 @@
 (defun negate (vector-a)
   "Return a vector that is the negative of the vector passed in"
   (declare (vec3 vector-a))
-  (MAKE (cl:- (SVREF VECTOR-A 0)) (cl:- (SVREF VECTOR-A 1)) (cl:- (SVREF VECTOR-A 2))))
+  (MAKE (cl:- (AREF VECTOR-A 0)) (cl:- (AREF VECTOR-A 1)) (cl:- (AREF VECTOR-A 2))))
 
 ;;----------------------------------------------------------------
 
@@ -235,9 +235,9 @@
 (defun dot (vector-a vector-b)
   "Return the dot product of the vector-a and vector-b."
   (declare (vec3 vector-a vector-b))
-  (cl:+ (cl:* (SVREF VECTOR-A 0) (SVREF VECTOR-B 0))
-        (cl:* (SVREF VECTOR-A 1) (SVREF VECTOR-B 1))
-        (cl:* (SVREF VECTOR-A 2) (SVREF VECTOR-B 2))))
+  (cl:+ (cl:* (AREF VECTOR-A 0) (AREF VECTOR-B 0))
+        (cl:* (AREF VECTOR-A 1) (AREF VECTOR-B 1))
+        (cl:* (AREF VECTOR-A 2) (AREF VECTOR-B 2))))
 
 ;;---------------------------------------------------------------
 
@@ -249,9 +249,9 @@
 (defun absolute-dot (vector-a vector-b)
   "Return the absolute dot product of the vector-a and vector-b."
   (declare (vec3 vector-a vector-b))
-  (cl:+ (ABS (cl:* (SVREF VECTOR-A 0) (SVREF VECTOR-B 0)))
-        (ABS (cl:* (SVREF VECTOR-A 1) (SVREF VECTOR-B 1)))
-        (ABS (cl:* (SVREF VECTOR-A 2) (SVREF VECTOR-B 2)))))
+  (cl:+ (ABS (cl:* (AREF VECTOR-A 0) (AREF VECTOR-B 0)))
+        (ABS (cl:* (AREF VECTOR-A 1) (AREF VECTOR-B 1)))
+        (ABS (cl:* (AREF VECTOR-A 2) (AREF VECTOR-B 2)))))
 
 ;;---------------------------------------------------------------
 

@@ -51,28 +51,28 @@
 ;; {TODO} compiler macro these
 (defun x (vec)
   "Returns the x component of the vector"
-  (svref vec 0))
+  (aref vec 0))
 (defun y (vec)
   "Returns the y component of the vector"
-  (svref vec 1))
+  (aref vec 1))
 (defun z (vec)
   "Returns the z component of the vector"
-  (svref vec 2))
+  (aref vec 2))
 (defun w (vec)
   "Returns the w component of the vector"
-  (svref vec 3))
+  (aref vec 3))
 
 (defun (setf x) (value vec)
   "Sets the x component of the vector"
-  (setf (svref vec 0) (float value)))
+  (setf (aref vec 0) (float value)))
 (defun (setf y) (value vec)
   "Sets the y component of the vector"
-  (setf (svref vec 1) (float value)))
+  (setf (aref vec 1) (float value)))
 (defun (setf z) (value vec)
   "Sets the z component of the vector"
-  (setf (svref vec 2) (float value)))
+  (setf (aref vec 2) (float value)))
 (defun (setf w) (value vec)
   "Sets the w component of the vector"
-  (setf (svref vec 3) (float value)))
+  (setf (aref vec 3) (float value)))
 
 ;;----------------------------------------------------------------

@@ -28,8 +28,8 @@
     (and (every (lambda (x) (cl:= (cl:length x) len-a)) (rest matrices))
 	 (loop :for i :below len-a :always
 	    (loop :for j :in (rest matrices)
-	       :for v cl:= (svref matrix-a i)
-	       :always (cl:= (svref j i) v))))))
+	       :for v cl:= (aref matrix-a i)
+	       :always (cl:= (aref j i) v))))))
 
 ;;----------------------------------------------------------------
 
@@ -60,9 +60,9 @@
                                :initial-element 0.0)))
     (loop for matrix in matrices
        do (loop for i below len
-             do (cl:setf (cl:svref matrix-a i)
-                         (cl:+ (cl:svref matrix-a i)
-                               (cl:svref matrix i)))))))
+             do (cl:setf (cl:aref matrix-a i)
+                         (cl:+ (cl:aref matrix-a i)
+                               (cl:aref matrix i)))))))
 
 ;;----------------------------------------------------------------
 
@@ -85,20 +85,20 @@
                                :initial-element 0.0)))
     (loop for matrix in matrices
        do (loop for i below len
-             do (cl:setf (cl:svref matrix-a i)
-                         (cl:- (cl:svref matrix-a i)
-                               (cl:svref matrix i)))))))
+             do (cl:setf (cl:aref matrix-a i)
+                         (cl:- (cl:aref matrix-a i)
+                               (cl:aref matrix i)))))))
 
 ;;----------------------------------------------------------------
 
 (defun elt (matrix row col)
   (declare (simple-array matrix))
   (let ((len (if (cl:= (cl:length matrix) 16) 4 3)))
-    (svref matrix (cl:+ row (cl:* col len)))))
+    (aref matrix (cl:+ row (cl:* col len)))))
 
 (defun elm (matrix row col)
   (let ((len (if (cl:= (cl:length matrix) 16) 4 3)))
-    (svref matrix (cl:+ row (cl:* col len)))))
+    (aref matrix (cl:+ row (cl:* col len)))))
 
 ;;----------------------------------------------------------------
 

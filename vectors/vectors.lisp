@@ -13,8 +13,8 @@
                (cl:make-array
                 ,len :element-type 'single-float :initial-contents
                 (list ,@(loop :for char :across name
-                           :collect `(svref ,arr ,(or (position char '(#\X #\Y #\Z #\W))
-						      (error "Vectors: swizzle: Pattern component was not X, Y, Z or W: ~a" char)))))))))
+                           :collect `(aref ,arr ,(or (position char '(#\X #\Y #\Z #\W))
+						     (error "Vectors: swizzle: Pattern component was not X, Y, Z or W: ~a" char)))))))))
       form))
 
 (defun swizzle (vec pattern)
@@ -24,9 +24,9 @@
     (if (or (> len 4) (< len 2))
         (error "Vectors: swizzle: Cepl vectors cannot have a length less that 2 or greater than 4")
         (loop :for char :across name :for i :from 0 :do
-           (setf (svref result i)
-                 (svref vec (or (position char '(#\X #\Y #\Z #\W))
-				(error "Vectors: swizzle: Pattern component was not X, Y, Z or W: ~a" char))))))
+           (setf (aref result i)
+                 (aref vec (or (position char '(#\X #\Y #\Z #\W))
+			       (error "Vectors: swizzle: Pattern component was not X, Y, Z or W: ~a" char))))))
     result))
 
 (defun s~ (vec pattern) (swizzle vec pattern))
@@ -42,7 +42,7 @@
   (let ((e (gensym "expression")))
     `(let ((,e ,expression))
        (let ,(loop :for v :in var-list :for i :from 0 :collect
-		`(,v (svref ,e ,i)))
+		`(,v (aref ,e ,i)))
 	 ,@body))))
 
 (defmacro dvec* (var-list-expression-pairs &body body)
@@ -121,7 +121,7 @@
     (loop :for vec :in (cdr vecs) :always
        (and (= (length vec) a-len)
 	    (loop :for i :below a-len :always
-	       (cl:= (svref vec i) (svref vec-a i)))))))
+	       (cl:= (aref vec i) (aref vec-a i)))))))
 
 ;;----------------------------------------------------------------
 
@@ -133,7 +133,7 @@
     (not (loop :for vec :in (cdr vecs) :always
 	    (and (= (length vec) a-len)
 		 (loop :for i :below a-len :always
-		    (cl:= (svref vec i) (svref vec-a i))))))))
+		    (cl:= (aref vec i) (aref vec-a i))))))))
 
 ;;----------------------------------------------------------------
 

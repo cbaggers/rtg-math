@@ -17,7 +17,7 @@
    texts and online tutorials choose to show matrices"
   (declare (mat3 mat-a)
            ((integer 0 3) row col))
-  (svref mat-a (cl:+ row (cl:* col 3))))
+  (aref mat-a (cl:+ row (cl:* col 3))))
 
 (defun (setf melm) (value mat-a row col)
   "Provides access to data in the matrix by row
@@ -28,7 +28,7 @@
   (declare (mat3 mat-a)
            ((integer 0 3) row col)
            (single-float value))
-  (setf (svref mat-a (cl:+ row (cl:* col 3))) value))
+  (setf (aref mat-a (cl:+ row (cl:* col 3))) value))
 
 (define-compiler-macro melm (mat-a row col)
   "Provide access to data in the matrix by row
@@ -37,10 +37,10 @@
    to think in row major order which is how most mathematical
    texts and online tutorials choose to show matrices"
   (cond ((and (numberp row) (numberp col))
-         `(svref ,mat-a ,(cl:+ row (cl:* col 3))))
+         `(aref ,mat-a ,(cl:+ row (cl:* col 3))))
         ((numberp col)
-         `(svref ,mat-a (cl:+ ,row ,(cl:* col 3))))
-        (t `(svref ,mat-a (cl:+ ,row (cl:* ,col 3))))))
+         `(aref ,mat-a (cl:+ ,row ,(cl:* col 3))))
+        (t `(aref ,mat-a (cl:+ ,row (cl:* ,col 3))))))
 
 ;;----------------------------------------------------------------
 
@@ -194,7 +194,7 @@
    matrix are floats the values have an error bound as defined
    in base-maths"
   (declare (mat3 mat-a))
-  (loop :for i :below 9 :always (not (cl:= 0f0 (svref mat-a i)))))
+  (loop :for i :below 9 :always (not (cl:= 0f0 (aref mat-a i)))))
 
 ;;----------------------------------------------------------------
 
@@ -230,7 +230,7 @@
   "Returns t if all elements of both matrices provided are
    equal"
   (declare (mat3 mat-a mat-b))
-  (loop :for i :below 9 :always (= (svref mat-a i) (svref mat-b i))))
+  (loop :for i :below 9 :always (= (aref mat-a i) (aref mat-b i))))
 
 ;;----------------------------------------------------------------
 
@@ -528,9 +528,9 @@
 					     (melm mat-a k k)))))
                     (recip (cl:/ 1.0 s))
                     (result (v! 0.0 0.0 0.0)))
-               (setf (svref result i) (cl:* 0.5 s))
-               (setf (svref result j) (cl:* recip (melm mat-a i j)))
-               (setf (svref result j) (cl:* recip (melm mat-a k i)))
+               (setf (aref result i) (cl:* 0.5 s))
+               (setf (aref result j) (cl:* recip (melm mat-a i j)))
+               (setf (aref result j) (cl:* recip (melm mat-a k i)))
                result)))))
 
 ;;----------------------------------------------------------------
@@ -548,7 +548,7 @@
   (let ((r (0!)))
     (declare (mat3 r))
     (loop :for i :below 9 :do
-       (setf (svref r i) (cl:+ (svref mat-a i) (svref mat-b i))))
+       (setf (aref r i) (cl:+ (aref mat-a i) (aref mat-b i))))
     r))
 
 ;;----------------------------------------------------------------
@@ -564,7 +564,7 @@
   (let ((r (0!)))
     (declare (mat3 r))
     (loop :for i :below 9 :do
-       (setf (svref r i) (cl:- (svref mat-a i) (svref mat-b i))))
+       (setf (aref r i) (cl:- (aref mat-a i) (aref mat-b i))))
     r))
 
 ;;----------------------------------------------------------------
@@ -578,7 +578,7 @@
   "Negates the components of the matrix"
   (let ((result (0!)))
     (loop :for i :below 9 :do
-       (setf (svref result i) (cl:- (svref mat-a i))))
+       (setf (aref result i) (cl:- (aref mat-a i))))
     result))
 
 ;;----------------------------------------------------------------
@@ -647,5 +647,5 @@
   "Multiplies the components of the matrix by the scalar
    provided"
   (let ((result (0!)))
-    (loop :for i :below 9 :do (setf (svref result i) (cl:* scalar (svref mat-a i))))
+    (loop :for i :below 9 :do (setf (aref result i) (cl:* scalar (aref mat-a i))))
     result))
