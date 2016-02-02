@@ -66,7 +66,7 @@
 
 ;;----------------------------------------------------------------
 
-(defun make-vector (x y &optional z w)
+(defun %make-vector (x y &optional z w)
   "This takes floats and give back a vector, this is just an
    array but it specifies the array type and populates it. "
   (cond (w (v4:make (float x) (float y) (float z) (float w)))
@@ -84,7 +84,7 @@
                                 (coerce x 'single-float))
                             (apply #'concatenate 'list
                                    (mapcar #'seqify vectors)))))
-      (apply #'make-vector combined))))
+      (apply #'%make-vector combined))))
 
 ;;----------------------------------------------------------------
 
@@ -161,13 +161,13 @@
     (typecase scalar-or-vec
       (number (let ((num (coerce scalar-or-vec 'single-float)))
                 (case= (cl:length vec-a)
-                  (2 (v2:* vec-a num))
-                  (3 (v3:* vec-a num))
-                  (4 (v4:* vec-a num)))))
+                  (2 (v2:*s vec-a num))
+                  (3 (v3:*s vec-a num))
+                  (4 (v4:*s vec-a num)))))
       (array (case= (cl:length vec-a)
-               (2 (v2:*vec vec-a scalar-or-vec))
-               (3 (v3:*vec vec-a scalar-or-vec))
-               (4 (v4:*vec vec-a scalar-or-vec)))))))
+               (2 (v2:* vec-a scalar-or-vec))
+               (3 (v3:* vec-a scalar-or-vec))
+               (4 (v4:* vec-a scalar-or-vec)))))))
 
 ;;----------------------------------------------------------------
 
@@ -176,14 +176,14 @@
     (if (typep scalar-or-vec 'number)
         (let ((scalar (float scalar-or-vec)))
           (case= (cl:length vec-a)
-            (2 (v2:/ vec-a scalar))
-            (3 (v3:/ vec-a scalar))
-            (4 (v4:/ vec-a scalar))))
+            (2 (v2:/s vec-a scalar))
+            (3 (v3:/s vec-a scalar))
+            (4 (v4:/s vec-a scalar))))
         (let ((vec-b (floatify scalar-or-vec)))
           (case= (cl:length vec-a)
-            (2 (v2:/vec vec-a vec-b))
-            (3 (v3:/vec vec-a vec-b))
-            (4 (v4:/vec vec-a vec-b)))))))
+            (2 (v2:/ vec-a vec-b))
+            (3 (v3:/ vec-a vec-b))
+            (4 (v4:/ vec-a vec-b)))))))
 
 ;;----------------------------------------------------------------
 

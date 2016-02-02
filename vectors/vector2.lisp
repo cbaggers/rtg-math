@@ -102,7 +102,7 @@
          (ftype (function (vec2
                            single-float)
                           vec2) *))
-(defun * (vector-a a)
+(defun *s (vector-a a)
   "Multiply vector by scalar"
   (declare (vec2 vector-a)
            (single-float a))
@@ -110,12 +110,10 @@
 
 ;;----------------------------------------------------------------
 
-(declaim (inline *vec)
-         (ftype (function (vec2
-                           vec2)
-                          vec2)
-                *vec))
-(defun *vec (vector-a vector-b)
+(declaim (inline *)
+         (ftype (function (vec2 vec2) vec2)
+                *))
+(defun * (vector-a vector-b)
   "Multiplies components, is not dot product, not sure what
    i'll need this for yet but hey!"
   (declare (vec2 vector-a vector-b))
@@ -124,30 +122,32 @@
 
 ;;----------------------------------------------------------------
 
-(declaim (inline /)
+(declaim (inline /s)
          (ftype (function (vec2
                            single-float)
-                          vec2) /))
-(defun / (vector-a a)
+                          vec2) /s))
+(defun /s (vector-a a)
   "divide vector by scalar and return result as new vector"
   (declare (vec2 vector-a)
            (single-float a))
   (let ((b (cl:/ 1 a)))
-    (MAKE (cl:* (SVREF VECTOR-A 0) B) (cl:* (SVREF VECTOR-A 1) B))))
+    (make (cl:* (svref vector-a 0) b) (cl:* (svref vector-a 1) b))))
 
 ;;----------------------------------------------------------------
 
-(declaim (inline /vec)
+(declaim (inline /)
          (ftype (function (vec2
                            vec2)
                           vec2)
-                /vec))
-(defun /vec (vector-a vector-b)
+                /))
+(defun / (vector-a vector-b)
   "Divides components, not sure what, i'll need this for
    yet but hey!"
   (declare (vec2 vector-a vector-b))
-  (MAKE (cl:/ (SVREF VECTOR-A 0) (SVREF VECTOR-B 0))
-	(cl:/ (SVREF VECTOR-A 1) (SVREF VECTOR-B 1))))
+  (make (cl:/ (svref vector-a 0)
+	      (svref vector-b 0))
+	(cl:/ (svref vector-a 1)
+	      (svref vector-b 1))))
 
 ;;----------------------------------------------------------------
 
@@ -269,7 +269,7 @@
   (let ((len (length-squared vector-a)))
     (if (cl:= 0f0 len)
         vector-a
-        (* vector-a (inv-sqrt len)))))
+        (*s vector-a (inv-sqrt len)))))
 
 ;;----------------------------------------------------------------
 
@@ -299,14 +299,11 @@
 ;;----------------------------------------------------------------
 
 (declaim (inline lerp)
-         (ftype (function (vec2
-                           vec2
-                           single-float)
-                          vec2)
+         (ftype (function (vec2 vec2 single-float) vec2)
                 lerp))
 (defun lerp (vector-a vector-b ammount)
   (declare (vec2 vector-a vector-b))
-  (%+ vector-a (* (%- vector-b vector-a) ammount)))
+  (%+ vector-a (*s (%- vector-b vector-a) ammount)))
 
 ;;----------------------------------------------------------------
 

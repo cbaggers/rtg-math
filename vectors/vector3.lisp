@@ -95,11 +95,9 @@
 
 ;;---------------------------------------------------------------
 
-(declaim (inline *)
-         (ftype (function (vec3
-                           single-float)
-                          vec3) *))
-(defun * (vector-a a)
+(declaim (inline *s)
+         (ftype (function (vec3 single-float) vec3) *s))
+(defun *s (vector-a a)
   "Multiply vector by scalar"
   (declare (vec3 vector-a)
            (single-float a))
@@ -108,12 +106,12 @@
 
 ;;---------------------------------------------------------------
 
-(declaim (inline *vec)
+(declaim (inline *)
          (ftype (function (vec3
                            vec3)
                           vec3)
-                *vec))
-(defun *vec (vector-a vector-b)
+                *))
+(defun * (vector-a vector-b)
   "Multiplies components, is not dot product, not sure what
    i'll need this for yet but hey!"
   (declare (vec3 vector-a vector-b))
@@ -123,11 +121,10 @@
 
 ;;---------------------------------------------------------------
 
-(declaim (inline /)
-         (ftype (function (vec3
-                           single-float)
-                          vec3) /))
-(defun / (vector-a a)
+(declaim (inline /s)
+         (ftype (function (vec3 single-float) vec3)
+		/s))
+(defun /s (vector-a a)
   "divide vector by scalar and return result as new vector"
   (declare (vec3 vector-a)
            (single-float a))
@@ -137,12 +134,10 @@
 
 ;;---------------------------------------------------------------
 
-(declaim (inline /vec)
-         (ftype (function (vec3
-                           vec3)
-                          vec3)
-                /vec))
-(defun /vec (vector-a vector-b)
+(declaim (inline /)
+         (ftype (function (vec3 vec3) vec3)
+                /))
+(defun / (vector-a vector-b)
   "Divides components, not sure what, i'll need this for
    yet but hey!"
   (declare (vec3 vector-a vector-b))
@@ -273,7 +268,7 @@
   (let ((len (length-squared vector-a)))
     (if (cl:= 0f0 len)
         vector-a
-        (* vector-a (inv-sqrt len)))))
+        (*s vector-a (inv-sqrt len)))))
 
 ;;---------------------------------------------------------------
 
@@ -308,13 +303,13 @@
     (let* ((diff-vec (- point line-point))
            (dist-sq (dot line-dir line-dir))
            (projection (dot diff-vec line-dir)))
-      (v:+ line-point (* line-dir (cl:/ projection dist-sq))))))
+      (v:+ line-point (*s line-dir (cl:/ projection dist-sq))))))
 
 (defun closest-point-on-norm-line (line point)
   (destructuring-bind (line-point line-dir) line
     (let* ((diff-vec (- point line-point))
            (projection (dot diff-vec line-dir)))
-      (v:+ line-point (* line-dir projection)))))
+      (v:+ line-point (*s line-dir projection)))))
 
 (defun distance-to-line-sq (line point)
   (destructuring-bind (line-point line-dir) line
@@ -341,7 +336,7 @@
                 lerp))
 (defun lerp (vector-a vector-b ammount)
   (declare (vec3 vector-a vector-b))
-  (%+ vector-a (* (%- vector-b vector-a) ammount)))
+  (%+ vector-a (*s (%- vector-b vector-a) ammount)))
 
 ;; (declaim (inline slerp)
 ;;          (ftype (function (vec3
@@ -351,8 +346,8 @@
 ;;                 slerp))
 ;; (defun slerp3 (vector-a vector-b ammount)
 ;;   (let ((angle (cl:* (acos (clampf -1.0 1.0 (dot vector-a vector-b))) ammount))
-;;         (relative-vec (normalize (%- vector-b (*vec vector-a dot)))))
-;;     (%+ (* vector-a (cos angle)) (* relative-vec (sin angle)))))
+;;         (relative-vec (normalize (%- vector-b (*s vector-a dot)))))
+;;     (%+ (*s vector-a (cos angle)) (*s relative-vec (sin angle)))))
 
 ;;----------------------------------------------------------------
 
@@ -377,8 +372,3 @@
   (make (rtg-math.maths:spline x (mapcar #'x knots))
 	(rtg-math.maths:spline x (mapcar #'y knots))
 	(rtg-math.maths:spline x (mapcar #'z knots))))
-
-;;----------------------------------------------------------------
-
-(defmacro incf (vec3 val3)
-  `(setf ,vec3 (+ ,vec3 ,val3)))

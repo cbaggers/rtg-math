@@ -37,7 +37,7 @@
   "Returns either t if the matrices are equal.
    Otherwise it returns nil."
   (let ((matrix-a (first matrices)))
-    (loop :for matrix :in (cdr matrices) :always (/= matrix-a matrix))))
+    (loop :for matrix :in (cdr matrices) :always (cl:/= matrix-a matrix))))
 
 ;;----------------------------------------------------------------
 
@@ -47,9 +47,9 @@
     (assert (cl:= len (cl:length matrix-b)))
     (cond
       ((cl:= len 9)
-       (m3:m+ matrix-a matrix-b))
+       (m3:+ matrix-a matrix-b))
       ((cl:= len 16)
-       (m4:m+ matrix-a matrix-b)))))
+       (m4:+ matrix-a matrix-b)))))
 
 
 ;;----------------------------------------------------------------
@@ -72,9 +72,9 @@
     (assert (cl:= len (cl:length matrix-b)))
     (cond
       ((cl:= len 9)
-       (m3:m- matrix-a matrix-b ))
+       (m3:- matrix-a matrix-b ))
       ((cl:= len 16)
-       (m4:m- matrix-a matrix-b)))))
+       (m4:- matrix-a matrix-b)))))
 
 
 ;;----------------------------------------------------------------
@@ -191,9 +191,9 @@
   (let ((len (cl:length matrix-a)))
     (cond
       ((cl:= len 9)
-       (m3:mtrace matrix-a))
+       (m3:trace matrix-a))
       ((cl:= len 16)
-       (m4:mtrace matrix-a)))))
+       (m4:trace matrix-a)))))
 
 
 ;;----------------------------------------------------------------
@@ -216,29 +216,30 @@
     (if (typep mat-vec-or-scalar 'number)
         (cond
           ((cl:= len 9)
-           (m3:m*scalar matrix-a mat-vec-or-scalar))
+           (m3:*s matrix-a mat-vec-or-scalar))
           ((cl:= len 16)
-           (m4:m*scalar matrix-a mat-vec-or-scalar)))
+           (m4:*s matrix-a mat-vec-or-scalar)))
 
         (cond
           ((cl:= len 9)
            (if (< (cl:length mat-vec-or-scalar) 5)
-               (m3:mcol*vec3 matrix-a mat-vec-or-scalar)
+               (m3:*v matrix-a mat-vec-or-scalar)
                (progn
                  (assert (cl:= len (cl:length mat-vec-or-scalar)))
-                 (m3:m* matrix-a mat-vec-or-scalar))))
+                 (m3:* matrix-a mat-vec-or-scalar))))
           ((cl:= len 16)
            (if (< (cl:length mat-vec-or-scalar) 5)
-               (m4:mcol*vec4 matrix-a mat-vec-or-scalar)
+               (m4:*v matrix-a mat-vec-or-scalar)
                (progn
                  (assert (cl:= len (cl:length mat-vec-or-scalar)))
-                 (m4:m* matrix-a mat-vec-or-scalar))))))))
+                 (m4:* matrix-a mat-vec-or-scalar))))))))
 
 
 ;;----------------------------------------------------------------
 
 
 (defun to-string (mat)
+  (assert (typep mat '(or mat3 mat4)))
   (case= (cl:length mat)
     (9 (format nil "(m! ~a ~a ~a ~%     ~a ~a ~a ~%     ~a ~a ~a)~%"
                (m3:melm mat 0 0) (m3:melm mat 0 1) (m3:melm mat 0 2)

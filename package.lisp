@@ -43,127 +43,127 @@
 (defpackage :rtg-math.vector2
   (:use :cl :%rtg-math :rtg-math.types)
   (:nicknames :v2)
-  (:import-from :rtg-math.base-vectors :x :y :z :w)
-  (:shadow := :+ :- :* :/ :length :0p)
-  (:export :make :+ :- :* :=
-           :*vec :/ :/vec :negate :length-squared
-           :length :distance-squared :distance :dot
-           :absolute-dot :normalize :perp-dot
-           :0p :unitp :cross :face-foreward :lerp
-           :bezier :spline :from-complex)
-  (:import-from :rtg-math.base-maths
-                :inv-sqrt))
+  (:import-from :rtg-math.base-vectors :x :y :z :w :v!)
+  (:import-from :rtg-math.base-maths :inv-sqrt)
+  (:shadow := :+ :- :* :/ :length)
+  (:export :make
+	   :0p :unitp
+	   := :+ :- :* :/ :*s :/s
+	   :negate
+	   :length-squared :length :distance-squared :distance
+	   :dot :absolute-dot :perp-dot
+	   :normalize
+	   :cross
+	   :face-foreward
+	   :lerp :bezier :spline
+	   :from-complex))
 
 (defpackage :rtg-math.vector3
   (:use :cl :%rtg-math :rtg-math.types)
   (:nicknames :v3)
-  (:import-from :rtg-math.base-vectors :x :y :z :w)
-  (:shadow :incf := :+ :- :* :/ :length :0p)
-  (:export :make := :+ :- :* :/
-           :*vec :/vec :negate :length-squared
-           :length :distance-squared :distance :dot
-           :absolute-dot :normalize :cross
-           :0p :unitp :cross :face-foreward :lerp
-           :bezier :spline :incf)
-  (:import-from :rtg-math.base-maths
-                :inv-sqrt))
+  (:import-from :rtg-math.base-vectors :x :y :z :w :v!)
+  (:import-from :rtg-math.base-maths :inv-sqrt)
+  (:shadow :incf := :+ :- :* :/ :length)
+  (:export :make
+	   :0p :unitp
+	   := :+ :- :* :/ :*s :/s
+           :negate
+	   :length-squared :length :distance-squared :distance
+	   :dot :absolute-dot
+	   :normalize
+           :cross
+	   :face-foreward
+	   :lerp :bezier :spline))
 
 (defpackage :rtg-math.vector4
   (:use :cl :%rtg-math :rtg-math.types)
   (:nicknames :v4)
-  (:import-from :rtg-math.base-vectors :x :y :z :w)
-  (:shadow := :+ :- :* :/ :length :0p)
-  (:export :make :+ :- :* :/ :v3* :=
-           :*vec :/vec :negate :length-squared
-           :length :distance-squared :distance :dot
-           :absolute-dot :normalize :cross
-           :0p :unitp :face-foreward :lerp
-           :bezier :spline)
-  (:import-from :rtg-math.base-maths
-                :inv-sqrt))
+  (:import-from :rtg-math.base-vectors :x :y :z :w :v!)
+  (:import-from :rtg-math.base-maths :inv-sqrt)
+  (:shadow := :+ :- :* :/ :length)
+  (:export :make
+	   :0p :unitp
+	   := :+ :- :* :/ :*s :/s :*v3
+	   :negate
+	   :length-squared :length :distance-squared :distance
+	   :dot :absolute-dot
+	   :normalize
+	   :cross
+	   :face-foreward
+	   :lerp :bezier :spline))
 
 (defpackage :rtg-math.vectors
   (:use :cl :%rtg-math :rtg-math.types)
   (:nicknames :v)
-  (:import-from :rtg-math.base-maths :case=)
-  (:import-from :rtg-math.base-vectors :x :y :z :w)
-  (:export :v :make-vector :0p :unitp := :+ :/= :1+ :1- :- :*
-           :/ :length :length-squared :distance :distance-squared
-           :dot :absolute-dot :perp-dot :normalize :cross
-           :swizzle :s~ :merge-into-vector :negate :face-foreward :lerp
-           :mix :bezier :x :y :z :w)
-  (:shadow :0p :+ := :/= :1+ :1- :- :* :/ :length)
-  (:import-from :rtg-math.vector2
-                :make)
-  (:import-from :rtg-math.vector3
-                :make)
-  (:import-from :rtg-math.vector4
-                :make))
+  (:import-from :rtg-math.base-vectors :x :y :z :w :v!)
+  (:shadow :+ := :/= :1+ :1- :- :* :/ :length)
+  (:export :0p :unitp
+	   := :+ :/= :1+ :1- :- :* :/
+	   :negate
+	   :length :length-squared :distance :distance-squared
+           :dot :absolute-dot :perp-dot
+	   :normalize
+	   :cross
+           :swizzle :s~
+	   :merge-into-vector
+	   :face-foreward
+	   :lerp :bezier :mix
+	   :x :y :z :w))
 
 (defpackage :rtg-math.matrix3
   (:use :cl :%rtg-math :rtg-math.types)
   (:nicknames :m3)
-  (:shadow := :identity)
-  (:import-from :rtg-math.base-vectors :x :y :z :w)
-  (:export :melm :identity :zero-matrix3
-           :make :! :from-rows :get-rows
-           :get-row :from-columns :get-columns
-           :get-column :determinate :affine-inverse
-           :0p :identityp :transpose :adjoint
-           :mtrace :rotation-from-euler
-           :rotation-from-axis-angle :scale
-           :rotation-x :rotation-y :rotation-z
-           :get-fixed-angles :get-axis-angle :m+ :m- :negate
-           :m* :m*vec :mcol*vec3 :mrow*vec3 :m*scalar :=)
-  (:import-from :rtg-math.base-maths)
-  (:import-from :rtg-math.vector3
-                :make))
+  (:shadow :identity :trace :+ := :/= :- :* :/)
+  (:import-from :rtg-math.base-vectors :x :y :z :w :v!)
+  (:export :0p :identityp
+	   :make :0! :identity
+	   := :+ :- :* :*s :*v :mrow*vec3 :negate
+	   :melm
+	   :from-rows :from-columns :get-rows :get-columns :get-row :get-column
+	   :transpose :adjoint :determinate :trace
+	   :rotation-from-euler :rotation-from-axis-angle
+	   :rotation-x :rotation-y :rotation-z
+	   :scale
+	   :affine-inverse
+           :get-fixed-angles :get-axis-angle))
 
 (defpackage :rtg-math.matrix4
   (:use :cl :%rtg-math :rtg-math.types)
   (:nicknames :m4)
-  (:import-from :rtg-math.base-vectors :x :y :z :w)
-  (:shadow := :identity)
-  (:export :melm :identity :zero-matrix4
-	   :from-rows :from-columns
-           :2dclipspace-to-imagespace-matrix4 :make :!
-           :0p :identityp :minor :adjoint
-           :determinant :affine-inverse :transpose
-           :translation :rotation-from-matrix3
-           :rotation-from-euler :rotation-from-axis-angle
-           :scale :rotation-x :rotation-y
-           :rotation-z :get-fixed-angles :mtrace
-           :get-axis-angle :m+ :m- :negate :m*scalar
-           :mcol*vec4 :mrow*vec4 :m* :transform
-           :to-mat3 :get-row :get-rows :get-column
-           :get-columns :=)
-  (:import-from :rtg-math.base-maths)
-  (:import-from :rtg-math.vector3
-                :make)
-  (:import-from :rtg-math.vector4
-                :make))
+  (:import-from :rtg-math.base-vectors :x :y :z :w :v!)
+  (:shadow :identity :trace :+ := :/= :- :* :/)
+  (:export :0p :identityp
+	   :make :0! :identity
+	   := :+ :- :* :*s :*v :negate :mrow*vec4
+	   :melm :to-mat3
+	   :from-rows :from-columns :get-rows :get-columns :get-row :get-column
+	   :transpose :adjoint :determinant :minor :trace
+           :2dclipspace-to-imagespace-matrix4
+	   :translation
+	   :rotation-from-matrix3 :rotation-from-euler :rotation-from-axis-angle
+	   :rotation-x :rotation-y :rotation-z
+	   :scale
+	   :affine-inverse
+	   :get-fixed-angles :get-axis-angle))
 
 
 (defpackage :rtg-math.matrices
   (:use :cl :%rtg-math :rtg-math.types)
   (:nicknames :m)
-  (:import-from :rtg-math.base-vectors :x :y :z :w)
-  (:import-from :rtg-math.base-maths :case=)
+  (:import-from :rtg-math.base-vectors :x :y :z :w :v!)
+  (:shadow :0p :unitp :+ := :/= :1+ :1- :- :* :elt :trace)
   (:export :0p :unitp :+ := :/= :1+ :1- :- :*
            :identityp :elt :elm :get-rows :get-row
            :get-columns :get-column :determinant
            :inverse :transpose :trace :negate
-           :to-string)
-  (:shadow :0p :unitp :+ := :/= :1+ :1- :- :*
-           :elt :trace))
+           :to-string))
 
 (defpackage :rtg-math.quaternions
   (:use :cl :%rtg-math :rtg-math.types :rtg-math.base-maths)
   (:nicknames :q)
-  (:shadow :lerp :/= := :+ :- :*)
+  (:shadow :lerp :/= := :+ :- :* :identity)
   (:export :w :x :y :z :q! :0! :0p
            :unitp :identity :identity-p
-           :make-quat
            :from-matrix3
            :from-axis-angle
            :from-look-at
@@ -182,4 +182,8 @@
 
 (defpackage #:rtg-math
   (:use #:cl)
-  (:import-from :rtg-math.quaternions :q!))
+  (:import-from :rtg-math.base-vectors :v! :v!byte :v!ubyte :v!int :x :y :z :w)
+  (:import-from :rtg-math.base-matrices :m!)
+  (:import-from :rtg-math.quaternions :q!)
+  (:import-from :rtg-math.vectors :s~)
+  (:export :q! :m! :v! :v!byte :v!ubyte :v!int :s~))

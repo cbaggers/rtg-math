@@ -17,7 +17,7 @@
    texts and online tutorials choose to show matrices"
   (declare (mat3 mat-a)
            ((integer 0 3) row col))
-  (svref mat-a (+ row (* col 3))))
+  (svref mat-a (cl:+ row (cl:* col 3))))
 
 (defun (setf melm) (value mat-a row col)
   "Provides access to data in the matrix by row
@@ -28,7 +28,7 @@
   (declare (mat3 mat-a)
            ((integer 0 3) row col)
            (single-float value))
-  (setf (svref mat-a (+ row (* col 3))) value))
+  (setf (svref mat-a (cl:+ row (cl:* col 3))) value))
 
 (define-compiler-macro melm (mat-a row col)
   "Provide access to data in the matrix by row
@@ -37,10 +37,10 @@
    to think in row major order which is how most mathematical
    texts and online tutorials choose to show matrices"
   (cond ((and (numberp row) (numberp col))
-         `(svref ,mat-a ,(+ row (* col 3))))
+         `(svref ,mat-a ,(cl:+ row (cl:* col 3))))
         ((numberp col)
-         `(svref ,mat-a (+ ,row ,(* col 3))))
-        (t `(svref ,mat-a (+ ,row (* ,col 3))))))
+         `(svref ,mat-a (cl:+ ,row ,(cl:* col 3))))
+        (t `(svref ,mat-a (cl:+ ,row (cl:* ,col 3))))))
 
 ;;----------------------------------------------------------------
 
@@ -56,10 +56,10 @@
    0.0 0.0 1.0))
 
 (declaim
- (inline zero-matrix3)
+ (inline 0!)
  (ftype (function () mat3)
-        zero-matrix3))
-(defun zero-matrix3 ()
+        0!))
+(defun 0! ()
   "Return a 3x3 zero matrix"
   (make-array 9 :element-type `single-float :initial-element 0.0))
 
@@ -75,31 +75,7 @@
         make))
 (defun make (a b c d e f g h i)
   "Make a 3x3 matrix. Data must be provided in row major order"
-  (let ((result (zero-matrix3)))
-    (setf (melm result 0 0) a)
-    (setf (melm result 0 1) b)
-    (setf (melm result 0 2) c)
-    (setf (melm result 1 0) d)
-    (setf (melm result 1 1) e)
-    (setf (melm result 1 2) f)
-    (setf (melm result 2 0) g)
-    (setf (melm result 2 1) h)
-    (setf (melm result 2 2) i)
-    result))
-
-;;----------------------------------------------------------------
-
-(declaim
- (inline !)
- (ftype (function
-         (single-float single-float single-float
-                       single-float single-float single-float
-                       single-float single-float single-float)
-         mat3)
-        !))
-(defun ! (a b c d e f g h i)
-  "Make a 3x3 matrix. Data must be provided in row major order"
-  (let ((result (zero-matrix3)))
+  (let ((result (0!)))
     (setf (melm result 0 0) a)
     (setf (melm result 0 1) b)
     (setf (melm result 0 2) c)
@@ -133,15 +109,15 @@
 (defun get-rows (mat-a)
   "Return the rows of the matrix a 3 vector3s"
   (declare (mat3 mat-a))
-  (list (make (melm mat-a 0 0)
-	      (melm mat-a 0 1)
-	      (melm mat-a 0 2))
-        (make (melm mat-a 1 0)
-	      (melm mat-a 1 1)
-	      (melm mat-a 1 2))
-        (make (melm mat-a 2 0)
-	      (melm mat-a 2 1)
-	      (melm mat-a 2 2))))
+  (list (v3:make (melm mat-a 0 0)
+		 (melm mat-a 0 1)
+		 (melm mat-a 0 2))
+        (v3:make (melm mat-a 1 0)
+		 (melm mat-a 1 1)
+		 (melm mat-a 1 2))
+        (v3:make (melm mat-a 2 0)
+		 (melm mat-a 2 1)
+		 (melm mat-a 2 2))))
 
 ;;----------------------------------------------------------------
 
@@ -154,9 +130,9 @@
   "Return the specified row of the matrix a vector3"
   (declare (mat3 mat-a)
            ((integer 0 3) row-num))
-  (make (melm mat-a row-num 0)
-	(melm mat-a row-num 1)
-	(melm mat-a row-num 2)))
+  (v3:make (melm mat-a row-num 0)
+	   (melm mat-a row-num 1)
+	   (melm mat-a row-num 2)))
 
 ;;----------------------------------------------------------------
 
@@ -181,15 +157,15 @@
 (defun get-columns (mat-a)
   "Return the columns of the matrix as 3 vector3s"
   (declare (mat3 mat-a))
-  (list (make (melm mat-a 0 0)
-	      (melm mat-a 1 0)
-	      (melm mat-a 2 0))
-        (make (melm mat-a 0 1)
-	      (melm mat-a 1 1)
-	      (melm mat-a 2 1))
-        (make (melm mat-a 0 2)
-	      (melm mat-a 1 2)
-	      (melm mat-a 2 2))))
+  (list (v! (melm mat-a 0 0)
+	    (melm mat-a 1 0)
+	    (melm mat-a 2 0))
+        (v! (melm mat-a 0 1)
+	    (melm mat-a 1 1)
+	    (melm mat-a 2 1))
+        (v! (melm mat-a 0 2)
+	    (melm mat-a 1 2)
+	    (melm mat-a 2 2))))
 
 ;;----------------------------------------------------------------
 
@@ -202,9 +178,9 @@
   "Return the specified column of the matrix a vector3"
   (declare (mat3 mat-a)
            ((integer 0 3) col-num))
-  (make (melm mat-a 0 col-num)
-	(melm mat-a 1 col-num)
-	(melm mat-a 2 col-num)))
+  (v! (melm mat-a 0 col-num)
+      (melm mat-a 1 col-num)
+      (melm mat-a 2 col-num)))
 
 ;;----------------------------------------------------------------
 
@@ -233,9 +209,9 @@
    matrix are floats the values have an error bound as defined
    in base-maths"
   (declare (mat3 mat-a))
-  (and (cl:= 0f0 (- (melm mat-a 0 0) 1.0))
-       (cl:= 0f0 (- (melm mat-a 1 1) 1.0))
-       (cl:= 0f0 (- (melm mat-a 2 2) 1.0))
+  (and (cl:= 0f0 (cl:- (melm mat-a 0 0) 1.0))
+       (cl:= 0f0 (cl:- (melm mat-a 1 1) 1.0))
+       (cl:= 0f0 (cl:- (melm mat-a 2 2) 1.0))
        (cl:= 0f0 (melm mat-a 0 1))
        (cl:= 0f0 (melm mat-a 0 2))
        (cl:= 0f0 (melm mat-a 1 0))
@@ -261,17 +237,17 @@
 (defun determinate (mat-a)
   "Returns the determinate of the matrix (uses the cramer method)"
   (declare (mat3 mat-a))
-  (let* ((cofactor-0 (- (* (melm mat-a 1 1) (melm mat-a 2 2))
-			(* (melm mat-a 2 1) (melm mat-a 1 2))))
+  (let* ((cofactor-0 (cl:- (cl:* (melm mat-a 1 1) (melm mat-a 2 2))
+			   (cl:* (melm mat-a 2 1) (melm mat-a 1 2))))
 
-	 (cofactor-3 (- (* (melm mat-a 2 0) (melm mat-a 1 2))
-			(* (melm mat-a 1 0) (melm mat-a 2 2))))
+	 (cofactor-3 (cl:- (cl:* (melm mat-a 2 0) (melm mat-a 1 2))
+			   (cl:* (melm mat-a 1 0) (melm mat-a 2 2))))
 
-	 (cofactor-6 (- (* (melm mat-a 1 0) (melm mat-a 2 1))
-			(* (melm mat-a 2 0) (melm mat-a 1 1)))))
-    (+ (* (melm mat-a 0 0) cofactor-0)
-       (* (melm mat-a 0 1) cofactor-3)
-       (* (melm mat-a 0 2) cofactor-6))))
+	 (cofactor-6 (cl:- (cl:* (melm mat-a 1 0) (melm mat-a 2 1))
+			   (cl:* (melm mat-a 2 0) (melm mat-a 1 1)))))
+    (cl:+ (cl:* (melm mat-a 0 0) cofactor-0)
+	  (cl:* (melm mat-a 0 1) cofactor-3)
+	  (cl:* (melm mat-a 0 2) cofactor-6))))
 
 ;;----------------------------------------------------------------
 
@@ -283,36 +259,36 @@
 (defun affine-inverse (mat-a)
   "returns the inverse of the matrix"
   (declare (mat3 mat-a))
-  (let* ((cofactor-0 (- (* (melm mat-a 1 1) (melm mat-a 2 2))
-			(* (melm mat-a 2 1) (melm mat-a 1 2))))
+  (let* ((cofactor-0 (cl:- (cl:* (melm mat-a 1 1) (melm mat-a 2 2))
+			   (cl:* (melm mat-a 2 1) (melm mat-a 1 2))))
 
-         (cofactor-3 (- (* (melm mat-a 2 0) (melm mat-a 1 2))
-			(* (melm mat-a 1 0) (melm mat-a 2 2))))
+         (cofactor-3 (cl:- (cl:* (melm mat-a 2 0) (melm mat-a 1 2))
+			   (cl:* (melm mat-a 1 0) (melm mat-a 2 2))))
 
-         (cofactor-6 (- (* (melm mat-a 1 0) (melm mat-a 2 1))
-			(* (melm mat-a 2 0) (melm mat-a 1 1))))
-         (det (+ (* (melm mat-a 0 0) cofactor-0)
-                 (* (melm mat-a 0 1) cofactor-3)
-                 (* (melm mat-a 0 2) cofactor-6))))
+         (cofactor-6 (cl:- (cl:* (melm mat-a 1 0) (melm mat-a 2 1))
+			   (cl:* (melm mat-a 2 0) (melm mat-a 1 1))))
+         (det (cl:+ (cl:* (melm mat-a 0 0) cofactor-0)
+		    (cl:* (melm mat-a 0 1) cofactor-3)
+		    (cl:* (melm mat-a 0 2) cofactor-6))))
     (if (cl:= 0f0 det)
 	(error "Matrix4 Inverse: Singular Matrix")
 	(let*
-	    ((inv-det (/ 1.0 det))
-	     (r00 (* inv-det cofactor-0))
-	     (r10 (* inv-det cofactor-3))
-	     (r20 (* inv-det cofactor-6))
-	     (r01 (* inv-det (- (* (melm mat-a 2 1) (melm mat-a 0 2))
-				(* (melm mat-a 0 1) (melm mat-a 2 2)))))
-	     (r11 (* inv-det (- (* (melm mat-a 0 0) (melm mat-a 2 2))
-				(* (melm mat-a 2 0) (melm mat-a 0 2)))))
-	     (r21 (* inv-det (- (* (melm mat-a 2 0) (melm mat-a 0 1))
-				(* (melm mat-a 0 0) (melm mat-a 2 1)))))
-	     (r02 (* inv-det (- (* (melm mat-a 0 1) (melm mat-a 1 2))
-				(* (melm mat-a 1 1) (melm mat-a 0 2)))))
-	     (r12 (* inv-det (- (* (melm mat-a 1 0) (melm mat-a 0 2))
-				(* (melm mat-a 0 0) (melm mat-a 1 2)))))
-	     (r22 (* inv-det (- (* (melm mat-a 0 0) (melm mat-a 1 1))
-				(* (melm mat-a 1 0) (melm mat-a 0 1))))))
+	    ((inv-det (cl:/ 1.0 det))
+	     (r00 (cl:* inv-det cofactor-0))
+	     (r10 (cl:* inv-det cofactor-3))
+	     (r20 (cl:* inv-det cofactor-6))
+	     (r01 (cl:* inv-det (cl:- (cl:* (melm mat-a 2 1) (melm mat-a 0 2))
+				      (cl:* (melm mat-a 0 1) (melm mat-a 2 2)))))
+	     (r11 (cl:* inv-det (cl:- (cl:* (melm mat-a 0 0) (melm mat-a 2 2))
+				      (cl:* (melm mat-a 2 0) (melm mat-a 0 2)))))
+	     (r21 (cl:* inv-det (cl:- (cl:* (melm mat-a 2 0) (melm mat-a 0 1))
+				      (cl:* (melm mat-a 0 0) (melm mat-a 2 1)))))
+	     (r02 (cl:* inv-det (cl:- (cl:* (melm mat-a 0 1) (melm mat-a 1 2))
+				      (cl:* (melm mat-a 1 1) (melm mat-a 0 2)))))
+	     (r12 (cl:* inv-det (cl:- (cl:* (melm mat-a 1 0) (melm mat-a 0 2))
+				      (cl:* (melm mat-a 0 0) (melm mat-a 1 2)))))
+	     (r22 (cl:* inv-det (cl:- (cl:* (melm mat-a 0 0) (melm mat-a 1 1))
+				      (cl:* (melm mat-a 1 0) (melm mat-a 0 1))))))
 	  (make r00 r01 r02
 		r10 r11 r12
 		r20 r21 r22)))))
@@ -342,32 +318,32 @@
         adjoint))
 (defun adjoint (mat-a)
   "Returns the adjoint of the matrix"
-  (make  (- (* (melm mat-a 1 1) (melm mat-a 2 2))
-	    (* (melm mat-a 1 2) (melm mat-a 2 1)))
-	 (- (* (melm mat-a 0 2) (melm mat-a 2 1))
-	    (* (melm mat-a 0 1) (melm mat-a 2 2)))
-	 (- (* (melm mat-a 0 1) (melm mat-a 1 2))
-	    (* (melm mat-a 0 2) (melm mat-a 1 1)))
-	 (- (* (melm mat-a 1 2) (melm mat-a 2 0))
-	    (* (melm mat-a 1 0) (melm mat-a 2 2)))
-	 (- (* (melm mat-a 0 0) (melm mat-a 2 2))
-	    (* (melm mat-a 0 2) (melm mat-a 2 0)))
-	 (- (* (melm mat-a 0 2) (melm mat-a 1 0))
-	    (* (melm mat-a 0 0) (melm mat-a 1 2)))
-	 (- (* (melm mat-a 1 0) (melm mat-a 2 1))
-	    (* (melm mat-a 1 1) (melm mat-a 2 0)))
-	 (- (* (melm mat-a 0 1) (melm mat-a 2 0))
-	    (* (melm mat-a 0 0) (melm mat-a 2 1)))
-	 (- (* (melm mat-a 0 0) (melm mat-a 1 1))
-	    (* (melm mat-a 0 1) (melm mat-a 1 0)))))
+  (make  (cl:- (cl:* (melm mat-a 1 1) (melm mat-a 2 2))
+	       (cl:* (melm mat-a 1 2) (melm mat-a 2 1)))
+	 (cl:- (cl:* (melm mat-a 0 2) (melm mat-a 2 1))
+	       (cl:* (melm mat-a 0 1) (melm mat-a 2 2)))
+	 (cl:- (cl:* (melm mat-a 0 1) (melm mat-a 1 2))
+	       (cl:* (melm mat-a 0 2) (melm mat-a 1 1)))
+	 (cl:- (cl:* (melm mat-a 1 2) (melm mat-a 2 0))
+	       (cl:* (melm mat-a 1 0) (melm mat-a 2 2)))
+	 (cl:- (cl:* (melm mat-a 0 0) (melm mat-a 2 2))
+	       (cl:* (melm mat-a 0 2) (melm mat-a 2 0)))
+	 (cl:- (cl:* (melm mat-a 0 2) (melm mat-a 1 0))
+	       (cl:* (melm mat-a 0 0) (melm mat-a 1 2)))
+	 (cl:- (cl:* (melm mat-a 1 0) (melm mat-a 2 1))
+	       (cl:* (melm mat-a 1 1) (melm mat-a 2 0)))
+	 (cl:- (cl:* (melm mat-a 0 1) (melm mat-a 2 0))
+	       (cl:* (melm mat-a 0 0) (melm mat-a 2 1)))
+	 (cl:- (cl:* (melm mat-a 0 0) (melm mat-a 1 1))
+	       (cl:* (melm mat-a 0 1) (melm mat-a 1 0)))))
 
 ;;----------------------------------------------------------------
 
 
-(defun mtrace (mat-a)
+(defun trace (mat-a)
   "Returns the trace of the matrix (That is the diagonal values)"
   (declare (mat3 mat-a))
-  (+ (melm mat-a 0 0) (melm mat-a 1 1) (melm mat-a 2 2)))
+  (cl:+ (melm mat-a 0 0) (melm mat-a 1 1) (melm mat-a 2 2)))
 
 ;;----------------------------------------------------------------
 
@@ -386,17 +362,17 @@
     (let ((sx (sin x)) (cx (cos x))
           (sy (sin y)) (cy (cos y))
           (sz (sin z)) (cz (cos z)))
-      (make (* cy cz)
-	    (- (* cy sz))
+      (make (cl:* cy cz)
+	    (cl:- (cl:* cy sz))
 	    sy
 
-	    (+ (* sx sy cz) (* cx sz))
-	    (- (* cx cz) (* sx sy sz))
-	    (- (* sx cy))
+	    (cl:+ (cl:* sx sy cz) (cl:* cx sz))
+	    (cl:- (cl:* cx cz) (cl:* sx sy sz))
+	    (cl:- (cl:* sx cy))
 
-	    (- (* sx sz) (* cx sy cz))
-	    (+ (* cx sy sz) (* sx cz))
-	    (* cx cy)))))
+	    (cl:- (cl:* sx sz) (cl:* cx sy cz))
+	    (cl:+ (cl:* cx sy sz) (cl:* sx cz))
+	    (cl:* cx cy)))))
 
 ;;----------------------------------------------------------------
 
@@ -408,22 +384,22 @@
 (defun rotation-from-axis-angle (axis3 angle)
   "Returns a matrix which will rotate a point about the axis
    specified by the angle provided"
-  (cond ((v3:= axis3 (v3:make 1f0 0f0 0f0)) (rotation-x angle))
-        ((v3:= axis3 (v3:make 0f0 1f0 0f0)) (rotation-y angle))
-        ((v3:= axis3 (v3:make 0f0 0f0 1f0)) (rotation-z angle))
+  (cond ((v3:= axis3 (v! 1f0 0f0 0f0)) (rotation-x angle))
+        ((v3:= axis3 (v! 0f0 1f0 0f0)) (rotation-y angle))
+        ((v3:= axis3 (v! 0f0 0f0 1f0)) (rotation-z angle))
         (t
          (let ((c (cos angle))
                (s (sin angle))
-               (g (- 1f0 (cos angle))))
+               (g (cl:- 1f0 (cos angle))))
            (let* ((x (x axis3))
                   (y (y axis3))
                   (z (z axis3))
-                  (gxx (* g x x)) (gxy (* g x y)) (gxz (* g x z))
-                  (gyy (* g y y)) (gyz (* g y z)) (gzz (* g z z)))
+                  (gxx (cl:* g x x)) (gxy (cl:* g x y)) (gxz (cl:* g x z))
+                  (gyy (cl:* g y y)) (gyz (cl:* g y z)) (gzz (cl:* g z z)))
              (make
-              (+ gxx c)        (- gxy (* s z))  (+ gxz (* s y))
-              (+ gxy (* s z))  (+ gyy c)        (- gyz (* s x))
-              (- gxz (* s y))  (+ gyz (* s x))  (+ gzz c)))))))
+              (cl:+ gxx c)        (cl:- gxy (cl:* s z))  (cl:+ gxz (cl:* s y))
+              (cl:+ gxy (cl:* s z))  (cl:+ gyy c)        (cl:- gyz (cl:* s x))
+              (cl:- gxz (cl:* s y))  (cl:+ gyz (cl:* s x))  (cl:+ gzz c)))))))
 
 ;;----------------------------------------------------------------
 
@@ -453,7 +429,7 @@
   (let ((s-a (sin angle))
         (c-a (cos angle)))
     (make 1.0  0.0  0.0
-	  0.0  c-a  (- s-a)
+	  0.0  c-a  (cl:- s-a)
 	  0.0  s-a  c-a)))
 
 ;;----------------------------------------------------------------
@@ -471,7 +447,7 @@
         (c-a (cos angle)))
     (make c-a      0.0    s-a
 	  0.0      1.0    0.0
-	  (- s-a)  0.0    c-a)))
+	  (cl:- s-a)  0.0    c-a)))
 
 ;;----------------------------------------------------------------
 
@@ -486,7 +462,7 @@
   (declare (single-float angle))
   (let ((s-a (sin angle))
         (c-a (cos angle)))
-    (make c-a  (- s-a)  0.0
+    (make c-a  (cl:- s-a)  0.0
 	  s-a  c-a      0.0
 	  0.0  0.0      1.0)))
 
@@ -502,19 +478,19 @@
    this matrix. Assumes that this is a rotation matrix"
   (declare (mat3 mat-a))
   (let* ((sy (melm mat-a 0 2))
-         (cy (sqrt (- 1.0 (* sy sy)))))
+         (cy (sqrt (cl:- 1.0 (cl:* sy sy)))))
     (if (not (cl:= 0f0 cy)) ; [TODO: not correct PI-epsilon]
-        (let* ((factor (/ 1.0 cy))
-               (sx (* factor (- (melm mat-a 2 1))))
-               (cx (* factor (melm mat-a 2 2)))
-               (sz (* factor (- (melm mat-a 1 0))))
-               (cz (* factor (melm mat-a 0 0))))
-          (make (atan sx cx) (atan sy cy) (atan sz cz)))
+        (let* ((factor (cl:/ 1.0 cy))
+               (sx (cl:* factor (cl:- (melm mat-a 2 1))))
+               (cx (cl:* factor (melm mat-a 2 2)))
+               (sz (cl:* factor (cl:- (melm mat-a 1 0))))
+               (cz (cl:* factor (melm mat-a 0 0))))
+          (v! (atan sx cx) (atan sy cy) (atan sz cz)))
         (let* ((sz 0.0)
                (cx 1.0)
                (sx (melm mat-a 1 2))
                (cz (melm mat-a 1 1)))
-          (make (atan sx cx) (atan sy cy) (atan sz cz))))))
+          (v! (atan sx cx) (atan sy cy) (atan sz cz))))))
 
 ;;----------------------------------------------------------------
 
@@ -529,16 +505,15 @@
   "Gets one possible axis-angle pair that will generate this
    matrix. Assumes that this is a rotation matrix"
   (declare (mat3 mat-a))
-  (let* ((c-a (* 0.5 (- (mtrace mat-a) 1.0)))
+  (let* ((c-a (cl:* 0.5 (cl:- (trace mat-a) 1.0)))
          (angle (acos c-a)))
     (cond ((cl:= 0f0 angle) ;; <-angle is zero so axis can be anything
-           (make 1.0 0.0 0.0))
+           (v! 1.0 0.0 0.0))
           ((< angle rtg-math.base-maths:+pi+)
                                         ;its not 180 degrees
-           (let ((axis (make
-                        (- (melm mat-a 1 2) (melm mat-a 2 1))
-                        (- (melm mat-a 2 0) (melm mat-a 0 2))
-                        (- (melm mat-a 0 1) (melm mat-a 1 0)))))
+           (let ((axis (v! (cl:- (melm mat-a 1 2) (melm mat-a 2 1))
+			   (cl:- (melm mat-a 2 0) (melm mat-a 0 2))
+			   (cl:- (melm mat-a 0 1) (melm mat-a 1 0)))))
              (v3:normalize axis)))
           (t (let* ((i (if (> (melm mat-a 1 1) (melm mat-a 0 0))
                            1
@@ -546,52 +521,50 @@
                                   (melm mat-a 0 0))
                                2
                                0)))
-                    (j (mod (+ i 1) 3))
-                    (k (mod (+ j 1) 3))
-                    (s (sqrt (+ 1.0 (- (melm mat-a i i)
-				       (melm mat-a j j)
-				       (melm mat-a k k)))))
-                    (recip (/ 1.0 s))
-                    (result (make 0.0 0.0 0.0)))
-               (setf (svref result i) (* 0.5 s))
-               (setf (svref result j) (* recip (melm mat-a i j)))
-               (setf (svref result j) (* recip (melm mat-a k i)))
+                    (j (mod (cl:+ i 1) 3))
+                    (k (mod (cl:+ j 1) 3))
+                    (s (sqrt (cl:+ 1.0 (cl:- (melm mat-a i i)
+					     (melm mat-a j j)
+					     (melm mat-a k k)))))
+                    (recip (cl:/ 1.0 s))
+                    (result (v! 0.0 0.0 0.0)))
+               (setf (svref result i) (cl:* 0.5 s))
+               (setf (svref result j) (cl:* recip (melm mat-a i j)))
+               (setf (svref result j) (cl:* recip (melm mat-a k i)))
                result)))))
 
 ;;----------------------------------------------------------------
 
 (declaim
- (inline m+)
+ (inline +)
  (ftype (function (mat3
                    mat3)
                   mat3)
-        m+))
-(defun m+ (mat-a mat-b)
+        +))
+(defun + (mat-a mat-b)
   "Adds the 2 matrices component wise and returns the result as
    a new matrix"
   (declare (mat3 mat-a mat-b))
-  (let ((r (zero-matrix3)))
+  (let ((r (0!)))
     (declare (mat3 r))
     (loop :for i :below 9 :do
-       (setf (svref r i) (+ (svref mat-a i) (svref mat-b i))))
+       (setf (svref r i) (cl:+ (svref mat-a i) (svref mat-b i))))
     r))
 
 ;;----------------------------------------------------------------
 
 (declaim
- (inline m-)
- (ftype (function (mat3
-                   mat3)
-                  mat3)
-        m-))
-(defun m- (mat-a mat-b)
+ (inline -)
+ (ftype (function (mat3 mat3) mat3)
+        -))
+(defun - (mat-a mat-b)
   "Subtracts the 2 matrices component wise and returns the result
    as a new matrix"
   (declare (mat3 mat-a mat-b))
-  (let ((r (zero-matrix3)))
+  (let ((r (0!)))
     (declare (mat3 r))
     (loop :for i :below 9 :do
-       (setf (svref r i) (- (svref mat-a i) (svref mat-b i))))
+       (setf (svref r i) (cl:- (svref mat-a i) (svref mat-b i))))
     r))
 
 ;;----------------------------------------------------------------
@@ -603,90 +576,76 @@
         negate))
 (defun negate (mat-a)
   "Negates the components of the matrix"
-  (let ((result (zero-matrix3)))
+  (let ((result (0!)))
     (loop :for i :below 9 :do
-       (setf (svref result i) (- (svref mat-a i))))
+       (setf (svref result i) (cl:- (svref mat-a i))))
     result))
 
 ;;----------------------------------------------------------------
 
-(defun mcol*vec3 (mat-a vec)
-  (make
-   (+ (* (x vec) (melm mat-a 0 0)) (* (y vec) (melm mat-a 0 1))
-      (* (z vec) (melm mat-a 0 2)))
 
-   (+ (* (x vec) (melm mat-a 1 0)) (* (y vec) (melm mat-a 1 1))
-      (* (z vec) (melm mat-a 1 2)))
-
-   (+ (* (x vec) (melm mat-a 2 0)) (* (y vec) (melm mat-a 2 1))
-      (* (z vec) (melm mat-a 2 2)))))
+(defun *v (mat-a vec-a)
+  "Multiplies the vector3 by the matrix and returns the result
+   as a new vector3"
+  (v! (cl:+ (cl:* (x vec-a) (melm mat-a 0 0))
+	    (cl:* (y vec-a) (melm mat-a 0 1))
+	    (cl:* (z vec-a) (melm mat-a 0 2)))
+      (cl:+ (cl:* (x vec-a) (melm mat-a 1 0))
+	    (cl:* (y vec-a) (melm mat-a 1 1))
+	    (cl:* (z vec-a) (melm mat-a 1 2)))
+      (cl:+ (cl:* (x vec-a) (melm mat-a 2 0))
+	    (cl:* (y vec-a) (melm mat-a 2 1))
+	    (cl:* (z vec-a) (melm mat-a 2 2)))))
 
 ;;----------------------------------------------------------------
 
 (defun mrow*vec3 (vec mat-a)
-  (make
-   (+ (* (x vec) (melm mat-a 0 0)) (* (y vec) (melm mat-a 1 0))
-      (* (z vec) (melm mat-a 2 0)))
+  (v! (cl:+ (cl:* (x vec) (melm mat-a 0 0)) (cl:* (y vec) (melm mat-a 1 0))
+	    (cl:* (z vec) (melm mat-a 2 0)))
 
-   (+ (* (x vec) (melm mat-a 0 1)) (* (y vec) (melm mat-a 1 1))
-      (* (z vec) (melm mat-a 2 1)))
+      (cl:+ (cl:* (x vec) (melm mat-a 0 1)) (cl:* (y vec) (melm mat-a 1 1))
+	    (cl:* (z vec) (melm mat-a 2 1)))
 
-   (+ (* (x vec) (melm mat-a 0 2)) (* (y vec) (melm mat-a 1 2))
-      (* (z vec) (melm mat-a 2 2)))))
+      (cl:+ (cl:* (x vec) (melm mat-a 0 2)) (cl:* (y vec) (melm mat-a 1 2))
+	    (cl:* (z vec) (melm mat-a 2 2)))))
 
 ;;----------------------------------------------------------------
-(defun m* (mat-a mat-b)
+(defun * (mat-a mat-b)
   "Multiplies 2 matrices and returns the result as a new
    matrix"
-  (make (+ (* (melm mat-a 0 0) (melm mat-b 0 0))
-	   (* (melm mat-a 0 1) (melm mat-b 1 0))
-	   (* (melm mat-a 0 2) (melm mat-b 2 0)))
-	(+ (* (melm mat-a 1 0) (melm mat-b 0 0))
-	   (* (melm mat-a 1 1) (melm mat-b 1 0))
-	   (* (melm mat-a 1 2) (melm mat-b 2 0)))
-	(+ (* (melm mat-a 2 0) (melm mat-b 0 0))
-	   (* (melm mat-a 2 1) (melm mat-b 1 0))
-	   (* (melm mat-a 2 2) (melm mat-b 2 0)))
-	(+ (* (melm mat-a 0 0) (melm mat-b 0 1))
-	   (* (melm mat-a 0 1) (melm mat-b 1 1))
-	   (* (melm mat-a 0 2) (melm mat-b 2 1)))
-	(+ (* (melm mat-a 1 0) (melm mat-b 0 1))
-	   (* (melm mat-a 1 1) (melm mat-b 1 1))
-	   (* (melm mat-a 1 2) (melm mat-b 2 1)))
-	(+ (* (melm mat-a 2 0) (melm mat-b 0 1))
-	   (* (melm mat-a 2 1) (melm mat-b 1 1))
-	   (* (melm mat-a 2 2) (melm mat-b 2 1)))
-	(+ (* (melm mat-a 0 0) (melm mat-b 0 2))
-	   (* (melm mat-a 0 1) (melm mat-b 1 2))
-	   (* (melm mat-a 0 2) (melm mat-b 2 2)))
-	(+ (* (melm mat-a 0 1) (melm mat-b 0 2))
-	   (* (melm mat-a 1 1) (melm mat-b 1 2))
-	   (* (melm mat-a 1 2) (melm mat-b 2 2)))
-	(+ (* (melm mat-a 2 0) (melm mat-b 0 2))
-	   (* (melm mat-a 2 1) (melm mat-b 1 2))
-	   (* (melm mat-a 2 2) (melm mat-b 2 2)))))
+  (make (cl:+ (cl:* (melm mat-a 0 0) (melm mat-b 0 0))
+	      (cl:* (melm mat-a 0 1) (melm mat-b 1 0))
+	      (cl:* (melm mat-a 0 2) (melm mat-b 2 0)))
+	(cl:+ (cl:* (melm mat-a 1 0) (melm mat-b 0 0))
+	      (cl:* (melm mat-a 1 1) (melm mat-b 1 0))
+	      (cl:* (melm mat-a 1 2) (melm mat-b 2 0)))
+	(cl:+ (cl:* (melm mat-a 2 0) (melm mat-b 0 0))
+	      (cl:* (melm mat-a 2 1) (melm mat-b 1 0))
+	      (cl:* (melm mat-a 2 2) (melm mat-b 2 0)))
+	(cl:+ (cl:* (melm mat-a 0 0) (melm mat-b 0 1))
+	      (cl:* (melm mat-a 0 1) (melm mat-b 1 1))
+	      (cl:* (melm mat-a 0 2) (melm mat-b 2 1)))
+	(cl:+ (cl:* (melm mat-a 1 0) (melm mat-b 0 1))
+	      (cl:* (melm mat-a 1 1) (melm mat-b 1 1))
+	      (cl:* (melm mat-a 1 2) (melm mat-b 2 1)))
+	(cl:+ (cl:* (melm mat-a 2 0) (melm mat-b 0 1))
+	      (cl:* (melm mat-a 2 1) (melm mat-b 1 1))
+	      (cl:* (melm mat-a 2 2) (melm mat-b 2 1)))
+	(cl:+ (cl:* (melm mat-a 0 0) (melm mat-b 0 2))
+	      (cl:* (melm mat-a 0 1) (melm mat-b 1 2))
+	      (cl:* (melm mat-a 0 2) (melm mat-b 2 2)))
+	(cl:+ (cl:* (melm mat-a 0 1) (melm mat-b 0 2))
+	      (cl:* (melm mat-a 1 1) (melm mat-b 1 2))
+	      (cl:* (melm mat-a 1 2) (melm mat-b 2 2)))
+	(cl:+ (cl:* (melm mat-a 2 0) (melm mat-b 0 2))
+	      (cl:* (melm mat-a 2 1) (melm mat-b 1 2))
+	      (cl:* (melm mat-a 2 2) (melm mat-b 2 2)))))
 
 ;;----------------------------------------------------------------
 
-
-(defun m*vec (mat-a vec-a)
-  "Multiplies the vector3 by the matrix and returns the result
-   as a new vector3"
-  (make (+ (* (melm mat-a 0 0) (x vec-a))
-	   (* (melm mat-a 0 1) (y vec-a))
-	   (* (melm mat-a 0 2) (z vec-a)))
-	(+ (* (melm mat-a 1 0) (x vec-a))
-	   (* (melm mat-a 1 1) (y vec-a))
-	   (* (melm mat-a 1 2) (z vec-a)))
-	(+ (* (melm mat-a 2 0) (x vec-a))
-	   (* (melm mat-a 2 1) (y vec-a))
-	   (* (melm mat-a 2 2) (z vec-a)))))
-
-;;----------------------------------------------------------------
-
-(defun m*scalar (mat-a scalar)
+(defun *s (mat-a scalar)
   "Multiplies the components of the matrix by the scalar
    provided"
-  (let ((result (zero-matrix3)))
-    (loop :for i :below 9 :do (setf (svref result i) (* scalar (svref mat-a i))))
+  (let ((result (0!)))
+    (loop :for i :below 9 :do (setf (svref result i) (cl:* scalar (svref mat-a i))))
     result))

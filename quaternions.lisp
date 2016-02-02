@@ -1,8 +1,5 @@
 (in-package #:rtg-math.quaternions)
 
-(float-greater-than-zero (x)
-			 (> x 1.0s0))
-
 ;;----------------------------------------------------------------
 
 (defun w (quat)
@@ -64,7 +61,7 @@
     q))
 
 (defun from-matrix3 (mat3)
-  (let ((trace (m3:mtrace mat3)))
+  (let ((trace (m3:trace mat3)))
     (if (> trace 0.0)
         (let* ((s (sqrt (+ 1.0 trace)))
                (recip (/ 0.5 s)))
@@ -283,9 +280,9 @@
   (destructuring-bind (start-mult end-mult)
       (let ((cos-angle (v4:dot start-quat end-quat)))
         ;; if angle between quaternions is less than 90 degrees
-        (if (float-greater-than-zero cos-angle)
+        (if (> cos-angle 0f0)
             ;; if angle is greater than zero
-            (if (float-greater-than-zero (- 1.0 cos-angle))
+            (if (> (- 1.0 cos-angle) 0f0)
                 (let* ((angle (acos cos-angle))
                        (recip-sin-angle (/ 1.0 (sin angle))))
                   (list (* (sin (* (- 1.0 pos) angle))
@@ -296,7 +293,7 @@
                 (list (- 1.0 pos) pos))
             ;; we take the shorter route
             ;; if angle is less that 180 degrees
-            (if (float-greater-than-zero (+ 1.0 cos-angle))
+            (if (> (+ 1.0 cos-angle) 0f0)
                 (let* ((angle (acos (- cos-angle)))
                        (recip-sin-angle (/ 1.0 (sin angle))))
                   (list (* (sin (* (- pos 1.0) angle))
@@ -317,7 +314,7 @@
          (d (+ 1 k))
          (pos (+ (* pos (+ c (* b pos))) d)))
     ;; if angle is less than 90 degrees
-    (if (float-greater-than-zero cos-angle)
+    (if (> cos-angle 0f0)
         ;; use standard interp
         (q+1 (q* end-quat pos)
              (q* start-quat (- 1.0 pos)))
