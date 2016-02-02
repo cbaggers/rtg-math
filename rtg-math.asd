@@ -1,12 +1,12 @@
 ;;;; rtg-math.asd
 
 (asdf:defsystem #:rtg-math
-  :description "A selection of the math routines most commonly needed for making games in lisp"
+  :description "A selection of the math routines most commonly needed for realtime graphics in lisp"
   :author "Chris Bagley <techsnuffle@gmail.com>"
   :license "BSD 2 Clause"
   :serial t
-  :depends-on (#:alexandria)
   :components ((:file "package")
+	       (:file "utils")
 	       (:file "deftypes")
 	       (:file "base-maths")
                (:file "maths")

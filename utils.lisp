@@ -1,0 +1,35 @@
+(in-package #:%rtg-math)
+
+(defmacro case= (form &body cases)
+  (let ((g (gensym "val")))
+    (labels ((wrap-case (c) `((= ,g ,(first c)) ,@(rest c))))
+      (let* ((cases-but1 (mapcar #'wrap-case (butlast cases)))
+	     (last-case (car (last cases)))
+	     (last-case (if (eq (car last-case) 'otherwise)
+			    `(t ,@(rest last-case))
+			    (wrap-case last-case)))
+	     (cases (append cases-but1 (list last-case))))
+	`(let ((,g ,form))
+	   (cond ,@cases))))))
+
+
+(defmacro defun-typed (name typed-args -> result-type &body body)
+  (assert (string= (symbol-name ->) "->"))
+  `(progn
+     (declaim (ftype (function ,(mapcar #'second typed-args)
+			       ,result-type)
+		     ,name))
+     (defun ,name ,(mapcar #'first typed-args)
+       (declare ,@(mapcar #'reverse typed-args))
+       ,@body)))
+
+(defmacro defun-typed-inline (name typed-args -> result-type &body body)
+  (assert (string= (symbol-name ->) "->"))
+  `(progn
+     (declaim (inline make-vector3)
+	      (ftype (function ,(mapcar #'second typed-args)
+			       ,result-type)
+		     ,name))
+     (defun ,name ,(mapcar #'first typed-args)
+       (declare ,@(mapcar #'reverse typed-args))
+       ,@body)))

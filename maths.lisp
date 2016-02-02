@@ -10,8 +10,12 @@
 (defun stepv (threshold x)
   (if (< x threshold) 0 1))
 
-(defun clamp (x min max)
-  (alexandria:clamp x min max))
+(defun clamp (number min max)
+  (if (< number min)
+      min
+      (if (> number max)
+          max
+          number)))
 
 (defun smoothstep (a b x)
   (cond ((< x a) 0)

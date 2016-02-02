@@ -1,10 +1,11 @@
 ;;;; package.lisp
 
-(defpackage #:rtg-math
-  (:use #:cl))
+(defpackage #:%rtg-math
+  (:use #:cl)
+  (:export :case= :defun-typed :defun-typed-inline))
 
 (defpackage #:rtg-math.types
-  (:use #:cl)
+  (:use #:cl :%rtg-math)
   (:export :quaternion
 	   :mat3 :mat4
 	   :vec2 :vec3 :vec4
@@ -16,39 +17,37 @@
 	   :uint8-vec2 :uint8-vec3 :uint8-vec4))
 
 (defpackage :rtg-math.base-maths
-  (:use :cl)
+  (:use :cl :%rtg-math :rtg-math.types)
   (:export :clamp
            :clampf
            :+one-degree-in-radians+
            :+pi+
            :inv-sqrt
            :degrees
-           :radians
-	   :case=))
+           :radians))
 
 (defpackage :rtg-math.maths
-  (:use :cl)
+  (:use :cl :%rtg-math :rtg-math.types)
   (:export :lerp :mix :stepv :clamp :smoothstep :pulse
            :spline))
 
 (defpackage :rtg-math.base-vectors
-  (:use :cl)
+  (:use :cl :%rtg-math :rtg-math.types)
   (:export :v! :v-x :v-y :v-z :v-w
            :v!byte :v!ubyte :v!int))
 
 (defpackage :rtg-math.base-matrices
-  (:use :cl)
+  (:use :cl :%rtg-math :rtg-math.types)
   (:export :m!))
 
 (defpackage :rtg-math.vector2
-  (:use :cl)
+  (:use :cl :%rtg-math :rtg-math.types)
   (:nicknames :v2)
   (:shadow :eql :+ :- :* :/ :length :zerop)
   (:export :make-vector2 :+ :- :* :eql
            :*vec :/ :/vec :negate :length-squared
            :length :distance-squared :distance :dot
            :absolute-dot :normalize :perp-dot
-           :*unit-x* :*unit-y* :*unit-scale*
            :zerop :unitp :cross :face-foreward :lerp
            :bezier :spline :from-complex)
   (:import-from :rtg-math.base-maths
@@ -56,14 +55,13 @@
   (:import-from :rtg-math.base-vectors :v-x :v-y))
 
 (defpackage :rtg-math.vector3
-  (:use :cl)
+  (:use :cl :%rtg-math :rtg-math.types)
   (:nicknames :v3)
   (:shadow :incf :eql :+ :- :* :/ :length :zerop)
   (:export :make-vector3 :eql :+ :- :* :/
            :*vec :/vec :negate :length-squared
            :length :distance-squared :distance :dot
            :absolute-dot :normalize :cross
-           :*unit-x* :*unit-y* :*unit-z* :*unit-scale*
            :zerop :unitp :cross :face-foreward :lerp
            :bezier :spline :incf)
   (:import-from :rtg-math.base-maths
@@ -71,14 +69,13 @@
   (:import-from :rtg-math.base-vectors :v-x :v-y :v-z))
 
 (defpackage :rtg-math.vector4
-  (:use :cl)
+  (:use :cl :%rtg-math :rtg-math.types)
   (:nicknames :v4)
   (:shadow :eql :+ :- :* :/ :length :zerop)
   (:export :make-vector4 :+ :- :* :/ :v3* :eql
            :*vec :/vec :negate :length-squared
            :length :distance-squared :distance :dot
            :absolute-dot :normalize :cross
-           :*unit-x* :*unit-y* :*unit-z* :*unit-w* :*unit-scale*
            :zerop :unitp :face-foreward :lerp
            :bezier :spline)
   (:import-from :rtg-math.base-maths
@@ -86,7 +83,7 @@
   (:import-from :rtg-math.base-vectors :v-x :v-y :v-z :v-w))
 
 (defpackage :rtg-math.vectors
-  (:use :cl)
+  (:use :cl :%rtg-math :rtg-math.types)
   (:nicknames :v)
   (:import-from :rtg-math.base-maths :case=)
   (:export :v :make-vector :zerop :unitp := :+ :/= :1+ :1- :- :*
@@ -103,7 +100,7 @@
                 :make-vector4))
 
 (defpackage :rtg-math.matrix3
-  (:use :cl)
+  (:use :cl :%rtg-math :rtg-math.types)
   (:nicknames :m3)
   (:shadow :eql :identity)
   (:export :melm :identity :zero-matrix3
@@ -122,7 +119,7 @@
   (:import-from :rtg-math.base-vectors :v-x :v-y :v-z :v-w))
 
 (defpackage :rtg-math.matrix4
-  (:use :cl)
+  (:use :cl :%rtg-math :rtg-math.types)
   (:nicknames :m4)
   (:shadow :eql :identity)
   (:export :melm :identity :zero-matrix4
@@ -146,7 +143,7 @@
 
 
 (defpackage :rtg-math.matrices
-  (:use :cl)
+  (:use :cl :%rtg-math :rtg-math.types)
   (:nicknames :m)
   (:import-from :rtg-math.base-maths :case=)
   (:export :zerop :unitp :+ :eql := :/= :1+ :1- :- :*
@@ -158,7 +155,7 @@
            :elt :trace))
 
 (defpackage :rtg-math.quaternions
-  (:use :cl :rtg-math.base-maths)
+  (:use :cl :%rtg-math :rtg-math.types :rtg-math.base-maths)
   (:nicknames :q)
   (:shadow :lerp)
   (:export :w :x :y :z :q! :zero-quit :zero-quatp
@@ -176,6 +173,9 @@
            :to-matrix3 :to-matrix4))
 
 (defpackage :rtg-math.projection
-  (:use :cl :rtg-math.base-maths)
+  (:use :cl :%rtg-math :rtg-math.types :rtg-math.base-maths)
   (:shadow :lerp)
   (:export :perspective :orthographic))
+
+(defpackage #:rtg-math
+  (:use #:cl))

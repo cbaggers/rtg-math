@@ -567,7 +567,7 @@
                      (melm mat-a 2 2)))
          (cos-theta (* 0.5 (- trace-a 1.0)))
          (angle (acos cos-theta)))
-    (cond ((= 0f0 angle) (values v3:*unit-x* angle))
+    (cond ((= 0f0 angle) (values (make-vector3 1f0 0f0 0f0) angle))
           ((= 0f0 (- rtg-math.base-maths:+pi+ angle))
            (values
             (v3:normalize

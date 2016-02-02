@@ -2,34 +2,13 @@
 
 ;;---------------------------------------------------------------
 
-(declaim (inline make-vector3)
-         (ftype (function ((single-float)
-                           (single-float)
-                           (single-float))
-                          (simple-array single-float (3)))
-                make-vector3))
-(defun make-vector3 (x y z)
-  "This takes 3 floats and give back a vector3, this is just an
-   array but it specifies the array type and populates it.
-   For speed reasons it will not accept integers so make sure
-   you hand it floats."
-  (declare (single-float x y z))
+(defun-typed-inline make-vector3
+    ((x single-float) (y single-float) (z single-float)) -> vec3
   (let (( vec (make-array 3 :element-type `single-float)))
     (setf (aref vec 0) x
-          (aref vec 1) y
-          (aref vec 2) z)
+	  (aref vec 1) y
+	  (aref vec 2) z)
     vec))
-
-;;---------------------------------------------------------------
-
-;; Not sure what I'm going to do with these. I don't belive this
-;; is the best way to do this as it doesnt give a new vector
-;; not that lispy
-(defvar *unit-x* (vector 1.0 0.0 0.0))
-(defvar *unit-y* (vector 0.0 1.0 0.0))
-(defvar *unit-z* (vector 0.0 0.0 1.0))
-(defvar *unit-scale* (vector 1.0 1.0 1.0))
-(defvar *origin* (vector 0.0 0.0 0.0))
 
 ;;---------------------------------------------------------------
 

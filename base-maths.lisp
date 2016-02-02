@@ -41,18 +41,3 @@
 (defun degrees (radians)
   (declare (single-float radians))
   (the single-float (* radians +one-radian-in-degrees+)))
-
-;;----------------------------------------------------------------
-;; Helpers
-
-(defmacro case= (form &body cases)
-  (let ((g (gensym "val")))
-    (labels ((wrap-case (c) `((= ,g ,(first c)) ,@(rest c))))
-      (let* ((cases-but1 (mapcar #'wrap-case (butlast cases)))
-	     (last-case (car (last cases)))
-	     (last-case (if (eq (car last-case) 'otherwise)
-			    `(t ,@(rest last-case))
-			    (wrap-case last-case)))
-	     (cases (append cases-but1 (list last-case))))
-	`(let ((,g ,form))
-	   (cond ,@cases))))))
