@@ -105,11 +105,10 @@
 
 ;;----------------------------------------------------------------
 
-(declaim (inline *)
-         (ftype (function (vec4
-                           single-float)
-                          vec4) *))
-(defun * (vector-a a)
+(declaim (inline *s)
+         (ftype (function (vec4 single-float) vec4)
+		*s))
+(defun *s (vector-a a)
   "Multiply vector by scalar"
   (declare (vec4 vector-a)
            (single-float a))
@@ -145,11 +144,10 @@
 
 ;;----------------------------------------------------------------
 
-(declaim (inline /)
-         (ftype (function (vec4
-                           single-float)
-                          vec4) /))
-(defun / (vector-a a)
+(declaim (inline /s)
+         (ftype (function (vec4 single-float) vec4)
+		/s))
+(defun /s (vector-a a)
   "divide vector by scalar and return result as new vector"
   (declare (vec4 vector-a)
            (single-float a))

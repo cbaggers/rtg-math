@@ -223,14 +223,13 @@
 
 (declaim
  (inline =)
- (ftype (function (mat3 mat3)
-                  boolean)
+ (ftype (function (mat3 mat3) boolean)
         =))
 (defun = (mat-a mat-b)
   "Returns t if all elements of both matrices provided are
    equal"
   (declare (mat3 mat-a mat-b))
-  (loop :for i :below 9 :always (= (aref mat-a i) (aref mat-b i))))
+  (loop :for i :below 9 :always (cl:= (aref mat-a i) (aref mat-b i))))
 
 ;;----------------------------------------------------------------
 
@@ -470,8 +469,7 @@
 
 (declaim
  (inline get-fixed-angles)
- (ftype (function (mat3)
-                  vec3)
+ (ftype (function (mat3) vec3)
         get-fixed-angles))
 (defun get-fixed-angles (mat-a)
   "Gets one set of possible z-y-x fixed angles that will generate

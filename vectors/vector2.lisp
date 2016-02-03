@@ -98,10 +98,10 @@
 
 ;;----------------------------------------------------------------
 
-(declaim (inline *)
+(declaim (inline *s)
          (ftype (function (vec2
                            single-float)
-                          vec2) *))
+                          vec2) *s))
 (defun *s (vector-a a)
   "Multiply vector by scalar"
   (declare (vec2 vector-a)
