@@ -4,7 +4,7 @@
 
 (define-compiler-macro swizzle (&whole form vec pattern)
   (if (keywordp pattern)
-      (let* ((name (cl:symbol-name pattern))
+      (let* ((name (string-upcase (cl:symbol-name pattern)))
              (len (cl:length name))
              (arr (gensym "arr")))
         (if (or (> len 4) (< len 2))
@@ -13,19 +13,23 @@
                (cl:make-array
                 ,len :element-type 'single-float :initial-contents
                 (list ,@(loop :for char :across name
-                           :collect `(aref ,arr ,(or (position char '(#\X #\Y #\Z #\W))
+                           :collect `(aref ,arr ,(or (position char '"XYZW")
+						     (position char '"RGBA")
+						     (position char '"STPQ")
 						     (error "Vectors: swizzle: Pattern component was not X, Y, Z or W: ~a" char)))))))))
       form))
 
 (defun swizzle (vec pattern)
-  (let* ((name (cl:symbol-name pattern))
+  (let* ((name (string-upcase (cl:symbol-name pattern)))
          (len (cl:length name))
          (result (cl:make-array (cl:length name) :element-type 'single-float)))
     (if (or (> len 4) (< len 2))
         (error "Vectors: swizzle: Cepl vectors cannot have a length less that 2 or greater than 4")
         (loop :for char :across name :for i :from 0 :do
            (setf (aref result i)
-                 (aref vec (or (position char '(#\X #\Y #\Z #\W))
+                 (aref vec (or (position char '"XYZW")
+			       (position char '"RGBA")
+			       (position char '"STPQ")
 			       (error "Vectors: swizzle: Pattern component was not X, Y, Z or W: ~a" char))))))
     result))
 
