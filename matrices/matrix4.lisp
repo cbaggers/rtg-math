@@ -13,7 +13,7 @@
    to think in row major order which is how most mathematical
    texts and online tutorials choose to show matrices"
   (declare (mat4 mat-a)
-           ((integer 0 4) row col))
+           (type (integer 0 4) row col))
   (aref mat-a (cl:+ row (cl:* col 4))))
 
 (defun (setf melm) (value mat-a row col)
@@ -23,7 +23,7 @@
    to think in row major order which is how most mathematical
    texts and online tutorials choose to show matrices"
   (declare (mat4 mat-a)
-           ((integer 0 4) row col)
+           (type (integer 0 4) row col)
            (single-float value))
   (setf (aref mat-a (cl:+ row (cl:* col 4))) value))
 

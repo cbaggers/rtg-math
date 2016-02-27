@@ -16,7 +16,7 @@
    to think in row major order which is how most mathematical
    texts and online tutorials choose to show matrices"
   (declare (mat3 mat-a)
-           ((integer 0 3) row col))
+           (type (integer 0 3) row col))
   (aref mat-a (cl:+ row (cl:* col 3))))
 
 (defun (setf melm) (value mat-a row col)
@@ -26,7 +26,7 @@
    to think in row major order which is how most mathematical
    texts and online tutorials choose to show matrices"
   (declare (mat3 mat-a)
-           ((integer 0 3) row col)
+           (type (integer 0 3) row col)
            (single-float value))
   (setf (aref mat-a (cl:+ row (cl:* col 3))) value))
 
@@ -129,7 +129,7 @@
 (defun get-row (mat-a row-num)
   "Return the specified row of the matrix a vector3"
   (declare (mat3 mat-a)
-           ((integer 0 3) row-num))
+           (type (integer 0 3) row-num))
   (v3:make (melm mat-a row-num 0)
 	   (melm mat-a row-num 1)
 	   (melm mat-a row-num 2)))
@@ -177,7 +177,7 @@
 (defun get-column (mat-a col-num)
   "Return the specified column of the matrix a vector3"
   (declare (mat3 mat-a)
-           ((integer 0 3) col-num))
+           (type (integer 0 3) col-num))
   (v! (melm mat-a 0 col-num)
       (melm mat-a 1 col-num)
       (melm mat-a 2 col-num)))

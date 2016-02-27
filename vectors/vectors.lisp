@@ -293,22 +293,13 @@
 ;;----------------------------------------------------------------
 
 (declaim (inline lerp)
-         (ftype (function ((or vec2
-                               vec3
-                               vec4)
-                           (or vec2
-                               vec3
-                               vec4)
+         (ftype (function ((or vec2 vec3 vec4)
+                           (or vec2 vec3 vec4)
                            (or (integer) single-float))
-                          (or vec2
-                              vec3
-                              vec4))
+                          (or vec2 vec3 vec4))
                 lerp))
 (defun lerp (vector-a vector-b ammount)
-  (declare ((or vec2
-                vec3
-                vec4)
-            vector-a vector-b))
+  (declare (type (or vec2 vec3 vec4) vector-a vector-b))
   (case= (cl:length vector-a)
     (2 (v2:lerp vector-a vector-b (float ammount)))
     (3 (v3:lerp vector-a vector-b (float ammount)))
@@ -328,10 +319,7 @@
                               vec4))
                 mix))
 (defun mix (vector-a vector-b ammount)
-  (declare ((or vec2
-                vec3
-                vec4)
-            vector-a vector-b))
+  (declare (type (or vec2 vec3 vec4) vector-a vector-b))
   (lerp vector-a vector-b ammount))
 
 (defun bezier (a1 a2 b1 b2 ammount)
