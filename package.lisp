@@ -63,7 +63,7 @@
   (:nicknames :v3)
   (:import-from :rtg-math.base-vectors :x :y :z :w :v!)
   (:import-from :rtg-math.base-maths :inv-sqrt)
-  (:shadow :incf := :+ :- :* :/ :length)
+  (:shadow := :+ :- :* :/ :length)
   (:export :make
 	   :0p :unitp
 	   := :+ :- :* :/ :*s :/s
