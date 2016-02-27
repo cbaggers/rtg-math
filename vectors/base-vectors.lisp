@@ -40,7 +40,7 @@
            (t form))))))
 
 (def-v! v! single-float)
-(def-v! v!int fixnum)
+(def-v! v!int (signed-byte 32))
 (def-v! v!ubyte (unsigned-byte 8))
 (def-v! v!byte (signed-byte 8))
 (def-v! v!short (unsigned-byte 16))
