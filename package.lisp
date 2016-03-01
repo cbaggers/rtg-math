@@ -166,7 +166,7 @@
            :unitp :identity :identity-p
            :from-mat3
            :from-axis-angle
-           :from-look-at
+           :from-look-at :to-look-at :to-look-at-vec4
            :from-axies
            :from-fixed-angles
            :magnitude :norm := :/=
@@ -187,4 +187,4 @@
   (:import-from :rtg-math.base-matrices :m!)
   (:import-from :rtg-math.quaternions :q!)
   (:import-from :rtg-math.vectors :s~)
-  (:export :q! :m! :v! :v!byte :v!ubyte :v!int :s~))
+  (:export :q! :m! :v! :v!byte :v!ubyte :v!int :s~ :radians :degrees))

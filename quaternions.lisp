@@ -116,6 +116,14 @@
          (up (v3:cross n-dir n-right)))
     (q:from-axies n-right up n-dir)))
 
+(defun to-look-at (quat)
+  (let ((v (v3:make 0s0 0s0 -1s0)))
+    (m3:*v (to-mat3 quat) v)))
+
+(defun to-look-at-vec4 (quat)
+  (let ((v (v4:make 0s0 0s0 -1s0 0s0)))
+    (m4:*v (to-mat4 quat) v)))
+
 (defun from-fixed-angles (x-rot y-rot z-rot)
   (let ((x-rot (/ x-rot 2.0))
         (y-rot (/ y-rot 2.0))
@@ -223,9 +231,9 @@
             (yy (cl:* y y2))  (yz (cl:* y z2))
             (zz (cl:* z z2)))
         (m3:make
-         (cl:- 1.0 (cl:+ yy zz)) (cl:- xy wz)         (cl:+ xz wy)
-         (cl:+ xy wz)         (cl:- 1.0 (cl:+ xx zz)) (cl:- yz wx)
-         (cl:- xz wy)         (cl:+ yz wx)         (cl:- 1.0 (cl:+ xx yy)))))))
+         (cl:- 1.0 (cl:+ yy zz)) (cl:- xy wz)            (cl:+ xz wy)
+         (cl:+ xy wz)            (cl:- 1.0 (cl:+ xx zz)) (cl:- yz wx)
+         (cl:- xz wy)            (cl:+ yz wx)            (cl:- 1.0 (cl:+ xx yy)))))))
 
 (defun to-mat4 (quat)
   (let ((w (w quat))  (x (x quat))  (y (y quat))  (z (z quat)))
@@ -235,10 +243,10 @@
             (yy (cl:* y y2))  (yz (cl:* y z2))
             (zz (cl:* z z2)))
         (m4:make
-         (cl:- 1.0 (cl:+ yy zz)) (cl:- xy wz) (cl:+ xz wy) 0.0
-         (cl:+ xy wz) (cl:- 1.0 (cl:+ xx zz)) (cl:- yz wx) 0.0
-         (cl:- xz wy) (cl:+ yz wx) (cl:- 1.0 (cl:+ xx yy)) 0.0
-         0.0 0.0 0.0 1.0)))))
+         (cl:- 1.0 (cl:+ yy zz))  (cl:- xy wz)            (cl:+ xz wy)             0.0
+         (cl:+ xy wz)             (cl:- 1.0 (cl:+ xx zz)) (cl:- yz wx)             0.0
+         (cl:- xz wy)             (cl:+ yz wx)            (cl:- 1.0 (cl:+ xx yy))  0.0
+         0.0                      0.0                     0.0                      1.0)))))
 
 (defun dot (quat-a quat-b)
   (v4:dot quat-a quat-b))
