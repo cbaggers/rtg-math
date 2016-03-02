@@ -104,6 +104,18 @@
 
 ;;----------------------------------------------------------------
 
+(defun from-mat3 (m-a)
+  "Takes a 3x3 matrix and returns a 4x4 rotation matrix
+   with the same values. The 4th component is filled as an
+   identity matrix would be."
+  (make
+   (m3:melm m-a 0 0)  (m3:melm m-a 0 1)  (m3:melm m-a 0 2)  0f0
+   (m3:melm m-a 1 0)  (m3:melm m-a 1 1)  (m3:melm m-a 1 2)  0f0
+   (m3:melm m-a 2 0)  (m3:melm m-a 2 1)  (m3:melm m-a 2 2)  0f0
+   0f0                0f0                0f0                1f0))
+
+;;----------------------------------------------------------------
+
 (defun from-rows (row-1 row-2 row-3 row-4)
   "Make a 4x4 matrix using the data in the 4 vector4s provided
    to populate the rows"
