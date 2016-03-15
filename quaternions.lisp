@@ -203,7 +203,7 @@
   (reduce (lambda (a x) `(v4:- ,a ,x)) components))
 
 (defun *s (quat-a scalar)
-  (v4:* quat-a scalar))
+  (v:* quat-a scalar))
 
 (defun * (quat-a quat-b)
   (q! (cl:- (cl:* (w quat-a) (w quat-b))
@@ -282,10 +282,10 @@
   ;; get cos of 'angle' between quaternions
   (let ((cos-angle (v4:dot start-quat end-quat)))
     (if (>= cos-angle 0f0)
-        (+ (* end-quat pos)
-	   (* start-quat (cl:- 1.0 pos)))
-        (+ (* end-quat pos)
-	   (* start-quat (cl:- pos 1.0))))))
+        (+ (*s end-quat pos)
+	   (*s start-quat (cl:- 1.0 pos)))
+        (+ (*s end-quat pos)
+	   (*s start-quat (cl:- pos 1.0))))))
 
 (defun slerp (start-quat end-quat pos)
   "Spherically interpolate between two quaternions. Note that this
@@ -316,8 +316,8 @@
 			      recip-sin-angle)))
                 ;; angle is close to 180 degrees
                 (list (cl:- pos 1.0) pos))))
-    (+ (* start-quat start-mult)
-       (* end-quat end-mult))))
+    (+ (*s start-quat start-mult)
+       (*s end-quat end-mult))))
 
 (defun approx-slerp (start-quat end-quat pos)
   (let* ((cos-angle (v4:dot start-quat end-quat))
@@ -330,8 +330,8 @@
     ;; if angle is less than 90 degrees
     (if (> cos-angle 0f0)
         ;; use standard interp
-        (+ (* end-quat pos)
-	   (* start-quat (cl:- 1.0 pos)))
+        (+ (*s end-quat pos)
+	   (*s start-quat (cl:- 1.0 pos)))
         ;; take shorter path
-        (+ (* end-quat pos)
-	   (* start-quat (cl:- pos 1.0))))))
+        (+ (*s end-quat pos)
+	   (*s start-quat (cl:- pos 1.0))))))
