@@ -34,7 +34,7 @@
 (defpackage :rtg-math.base-vectors
   (:use :cl :%rtg-math :rtg-math.types)
   (:export :v! :x :y :z :w
-           :v!byte :v!ubyte :v!int))
+           :v!byte :v!ubyte :v!int :v!uint :v!bool :v!double))
 
 (defpackage :rtg-math.base-matrices
   (:use :cl :%rtg-math :rtg-math.types)
