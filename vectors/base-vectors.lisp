@@ -40,11 +40,50 @@
            (t form))))))
 
 (def-v! v! single-float)
+(def-v! v!double double-float)
 (def-v! v!int (signed-byte 32))
+(def-v! v!uint (unsigned-byte 32))
 (def-v! v!ubyte (unsigned-byte 8))
 (def-v! v!byte (signed-byte 8))
 (def-v! v!short (unsigned-byte 16))
 (def-v! v!ushort (signed-byte 16))
+
+(defun v!bool (&rest components)
+  (let* ((components
+	  (loop :for c :in components
+	     :if (typep c 'array)
+	     :append (loop :for e :across c
+			:collect (coerce e 'boolean))
+	     :else
+	     :collect (coerce c 'boolean)))
+	 (len (length components)))
+    (when (or (> len 4) (< len 2))
+      (error "incorrect number of components for a vector: ~a ~a" len
+	     components))
+    (make-array (length components) :element-type 'boolean :initial-contents
+		components)))
+
+(defun v!bool-one-arg (x)
+  (if (listp x)
+      (make-array (length x) :element-type 'boolean :initial-contents
+		  (mapcar (lambda (_) (not (null _))) x))
+      (make-array (length x) :element-type 'boolean :initial-contents
+		  (loop :for i :across x :collect (not (null i))))))
+
+(define-compiler-macro v!bool
+    (&whole form &rest components)
+  (cond
+    ((every (lambda (x) (funcall (lambda (y) (typep y 'boolean)) x))
+	    components)
+     (let ((components (loop :for c :in components :collect (not (null c))))
+	   (len (length components)))
+       (when (or (> len 4) (< len 2))
+	 (error "incorrect number of components for a vector: ~a ~a" len
+		components))
+       (list 'make-array len :element-type ''boolean :initial-contents
+	     (list 'quote components))))
+    ((= (length components) 1) (list 'v!bool-one-arg (first components)))
+    (t form)))
 
 ;;----------------------------------------------------------------
 
