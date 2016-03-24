@@ -43,8 +43,10 @@
 (def-v! v!double double-float)
 (def-v! v!int (signed-byte 32))
 (def-v! v!uint (unsigned-byte 32))
-(def-v! v!ubyte (unsigned-byte 8))
-(def-v! v!byte (signed-byte 8))
+(def-v! v!ubyte (unsigned-byte 8)) ;; deprecated
+(def-v! v!byte (signed-byte 8)) ;; deprecated
+(def-v! v!uint8 (unsigned-byte 8))
+(def-v! v!int8 (signed-byte 8))
 (def-v! v!short (unsigned-byte 16))
 (def-v! v!ushort (signed-byte 16))
 

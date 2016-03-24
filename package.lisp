@@ -34,7 +34,8 @@
 (defpackage :rtg-math.base-vectors
   (:use :cl :%rtg-math :rtg-math.types)
   (:export :v! :x :y :z :w
-           :v!byte :v!ubyte :v!int :v!uint :v!bool :v!double))
+           :v!byte :v!ubyte :v!int :v!uint :v!bool :v!double
+	   :v!int8 :v!uint8))
 
 (defpackage :rtg-math.base-matrices
   (:use :cl :%rtg-math :rtg-math.types)
@@ -183,8 +184,10 @@
 (defpackage #:rtg-math
   (:use #:cl)
   (:import-from :rtg-math.base-maths :radians :degrees)
-  (:import-from :rtg-math.base-vectors :v! :v!byte :v!ubyte :v!int :x :y :z :w)
+  (:import-from :rtg-math.base-vectors :v! :v!byte :v!ubyte :v!int8 :v!uint8
+		:v!int :x :y :z :w)
   (:import-from :rtg-math.base-matrices :m!)
   (:import-from :rtg-math.quaternions :q!)
   (:import-from :rtg-math.vectors :s~)
-  (:export :q! :m! :v! :v!byte :v!ubyte :v!int :s~ :radians :degrees))
+  (:export :q! :m! :v! :v!byte :v!ubyte :v!int8 :v!uint8 :v!int :s~
+	   :radians :degrees))
