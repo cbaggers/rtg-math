@@ -16,15 +16,9 @@
      0.0                             0.0                            (/ (- (+ far near)) (- far near)) -1.0
      0.0                             0.0                            (/ (* 2.0 far near) (- near far))  0.0)))
 
-(defun orthographic (frame-width frame-height near far)
-  (let ((left (- (/ frame-width 2.0)))
-        (right (/ frame-width 2.0))
-        (top (/ frame-height 2.0))
-        (bottom (- (/ frame-height 2.0)))
-        (near near )
-        (far far ))
-    (m4:make
-     (/ 2 (- right left)) 0.0 0.0 (- (/ (+ right left) (- left right)))
-     0.0 (/ 2 (- top bottom)) 0.0 (- (/ (+ top bottom) (- bottom top)))
-     0.0 0.0 (- (/ (- far near))) (- (/ (+ far near) (- far near)))
-     0.0 0.0 0.0 1.0)))
+(defun orthographic (width height near far)
+  "Create a raw CFFI orthogonal matrix."
+  (rtg-math:m! (/ 2 width) 0.0 0.0 0.0
+	       0.0 (/ 2 height) 0.0 0.0
+	       0.0 0.0 (/ -2 (- far near)) (- (/ (+ far near) (- far near)))
+	       0.0 0.0 0.0 1.0))
