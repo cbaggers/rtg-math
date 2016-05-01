@@ -310,6 +310,64 @@
 
 ;;----------------------------------------------------------------
 
+(declaim (ftype (function (mat4) mat4) inverse-matrix))
+(defun inverse (matrix)
+  (let ((det (m4:determinant matrix)))
+    (if (< (abs det) +default-epsilon+)
+        (error "Cannot invert matrix with zero determinant:~%  ~S"
+               matrix)
+        (macrolet ((a (x y z)
+                     (multiple-value-bind (r1 c1) (truncate (cl:- x 11) 10)
+                       (multiple-value-bind (r2 c2) (truncate (cl:- y 11) 10)
+                         (multiple-value-bind (r3 c3) (truncate (cl:- z 11) 10)
+                           `(cl:* (mref matrix ,r1 ,c1)
+				  (mref matrix ,r2 ,c2)
+				  (mref matrix ,r3 ,c3)))))))
+          (let ((m
+                 (rtg-math:m!
+                  ;; row 1
+                  (cl:- (cl:+ (a 22 33 44) (a 23 34 42) (a 24 32 43))
+			(a 22 34 43) (a 23 32 44) (a 24 33 42))
+                  (cl:- (cl:+ (a 12 34 43) (a 13 32 44) (a 14 33 42))
+			(a 12 33 44) (a 13 34 42) (a 14 32 43))
+                  (cl:- (cl:+ (a 12 23 44) (a 13 24 42) (a 14 22 43))
+			(a 12 24 43) (a 13 22 44) (a 14 23 42))
+                  (cl:- (cl:+ (a 12 24 33) (a 13 22 34) (a 14 23 32))
+			(a 12 23 34) (a 13 24 32) (a 14 22 33))
+                  ;; row 2
+                  (cl:- (cl:+ (a 21 34 43) (a 23 31 44) (a 24 33 41))
+			(a 21 33 44) (a 23 34 41) (a 24 31 43))
+                  (cl:- (cl:+ (a 11 33 44) (a 13 34 41) (a 14 31 43))
+			(a 11 34 43) (a 13 31 44) (a 14 33 41))
+                  (cl:- (cl:+ (a 11 24 43) (a 13 21 44) (a 14 23 41))
+			(a 11 23 44) (a 13 24 41) (a 14 21 43))
+                  (cl:- (cl:+ (a 11 23 34) (a 13 24 31) (a 14 21 33))
+			(a 11 24 33) (a 13 21 34) (a 14 23 31))
+                  ;; row 3
+                  (cl:- (cl:+ (a 21 32 44) (a 22 34 41) (a 24 31 42))
+			(a 21 34 42) (a 22 31 44) (a 24 32 41))
+                  (cl:- (cl:+ (a 11 34 42) (a 12 31 44) (a 14 32 41))
+			(a 11 32 44) (a 12 34 41) (a 14 31 42))
+                  (cl:- (cl:+ (a 11 22 44) (a 12 24 41) (a 14 21 42))
+			(a 11 24 42) (a 12 21 44) (a 14 22 41))
+                  (cl:- (cl:+ (a 11 24 32) (a 12 21 34) (a 14 22 31))
+			(a 11 22 34) (a 12 24 31) (a 14 21 32))
+                  ;; row 4
+                  (cl:- (cl:+ (a 21 33 42) (a 22 31 43) (a 23 32 41))
+			(a 21 32 43) (a 22 33 41) (a 23 31 42))
+                  (cl:- (cl:+ (a 11 32 43) (a 12 33 41) (a 13 31 42))
+			(a 11 33 42) (a 12 31 43) (a 13 32 41))
+                  (cl:- (cl:+ (a 11 23 42) (a 12 21 43) (a 13 22 41))
+			(a 11 22 43) (a 12 23 41) (a 13 21 42))
+                  (cl:- (cl:+ (a 11 22 33) (a 12 23 31) (a 13 21 32))
+			(a 11 23 32) (a 12 21 33) (a 13 22 31)))))
+            (dotimes (i 4)
+              (dotimes (j 4)
+                (setf (mref m i j) (cl:/ (mref m i j) det))))
+            m)))))
+
+;;----------------------------------------------------------------
+
 ;;this one is from 'Essential Maths'
 (declaim
  (inline affine-inverse)

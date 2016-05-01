@@ -167,13 +167,22 @@
   (let ((len (cl:length matrix-a)))
     (cond
       ((cl:= len 9)
-       (m3:affine-inverse matrix-a))
+       (error "Inverse for 3x3 matrices is not yet implemented!"))
       ((cl:= len 16)
-       (m4:affine-inverse matrix-a)))))
+       (m4:inverse matrix-a)))))
 
 
 ;;----------------------------------------------------------------
 
+(defun affine-inverse (matrix-a)
+  (let ((len (cl:length matrix-a)))
+    (cond
+      ((cl:= len 9)
+       (m3:affine-inverse matrix-a))
+      ((cl:= len 16)
+       (m4:affine-inverse matrix-a)))))
+
+;;----------------------------------------------------------------
 
 (defun transpose (matrix-a)
   (let ((len (cl:length matrix-a)))
