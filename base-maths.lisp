@@ -1,8 +1,8 @@
 (in-package :rtg-math.base-maths)
 
-(defconstant +pi+ (the single-float 3.1415926535897932384626433832795))
-(defconstant +one-degree-in-radians+ (the single-float (/ (* +pi+ 2.0) 360.0)))
-(defconstant +one-radian-in-degrees+ (the single-float (/ 180.0 +pi+)))
+(defconstant +pi+ 3.141592653589793s0)
+(defconstant +one-degree-in-radians+ 0.017453292519943295s0)
+(defconstant +one-radian-in-degrees+ 57.29577951308232s0)
 
 ;;----------------------------------------------------------------
 
