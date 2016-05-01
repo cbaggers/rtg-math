@@ -143,6 +143,7 @@
 	   :rotation-from-mat3 :rotation-from-euler :rotation-from-axis-angle
 	   :rotation-x :rotation-y :rotation-z
 	   :scale
+	   :inverse
 	   :affine-inverse
 	   :get-fixed-angles :get-axis-angle))
 
@@ -155,7 +156,7 @@
   (:export :0p :unitp :+ := :/= :1+ :1- :- :*
            :identityp :elt :elm :get-rows :get-row
            :get-columns :get-column :determinant
-           :inverse :transpose :trace :negate
+           :inverse :affine-inverse :transpose :trace :negate
            :to-string))
 
 (defpackage :rtg-math.quaternions
