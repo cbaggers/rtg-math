@@ -16,24 +16,6 @@
      0.0                             0.0                            (/ (- (+ far near)) (- far near)) -1.0
      0.0                             0.0                            (/ (* 2.0 far near) (- near far))  0.0)))
 
-(in-package :rtg-math.projection)
-
-(defun perspective (frame-width frame-height near far fov)
-  (let* ((aspect-ratio (/ frame-width frame-height))
-	 (near near )
-	 (far far )
-	 (fov fov )
-	 (range (tan (/ fov 2.0)))
-	 (left (- (* range aspect-ratio)))
-	 (right (* range aspect-ratio))
-	 (bottom (- range))
-	 (top range))
-    (m4:make
-     (/ (* near 2) (- right left))   0.0                            0.0                                0.0
-     0.0                             (/ (* near 2) (- top bottom))  0.0                                0.0
-     0.0                             0.0                            (/ (- (+ far near)) (- far near)) -1.0
-     0.0                             0.0                            (/ (* 2.0 far near) (- near far))  0.0)))
-
 (defun orthographic (frame-width frame-height near far)
   (let ((left (- (/ frame-width 2.0)))
 	(right (/ frame-width 2.0))
@@ -46,4 +28,3 @@
      0.0 (/ 2 (- top bottom)) 0.0 (- (/ (+ top bottom) (- bottom top)))
      0.0 0.0 (- (/ (- far near))) (- (/ (+ far near) (- far near)))
      0.0 0.0 0.0 1.0)))
-
