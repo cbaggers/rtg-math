@@ -117,9 +117,9 @@
   "Returns either t if the vectors are equal.
    Otherwise it returns nil."
   (let* ((vec-a (first vecs))
-	 (a-len (length vec-a)))
+	 (a-len (cl:length vec-a)))
     (loop :for vec :in (cdr vecs) :always
-       (and (= (length vec) a-len)
+       (and (cl:= (cl:length vec) a-len)
 	    (loop :for i :below a-len :always
 	       (cl:= (aref vec i) (aref vec-a i)))))))
 
@@ -129,9 +129,9 @@
   "Returns either t if the two vectors are equal.
    Otherwise it returns nil."
   (let* ((vec-a (first vecs))
-	 (a-len (length vec-a)))
+	 (a-len (cl:length vec-a)))
     (not (loop :for vec :in (cdr vecs) :always
-	    (and (= (length vec) a-len)
+	    (and (cl:= (cl:length vec) a-len)
 		 (loop :for i :below a-len :always
 		    (cl:= (aref vec i) (aref vec-a i))))))))
 
