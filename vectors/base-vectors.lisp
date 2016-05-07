@@ -1,7 +1,7 @@
 (in-package :rtg-math.base-vectors)
 
 (defmacro def-v! (name type)
-  (let ((one-arg (gensym "v!one-arg")))
+  (let ((one-arg (intern (format nil "V!ONE-ARG-~s" type))))
     `(labels ((convert (x) (coerce x ',type)))
        (defun ,name (&rest components)
          (let* ((components
