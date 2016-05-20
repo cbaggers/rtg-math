@@ -313,16 +313,16 @@
 (declaim (ftype (function (mat4) mat4) inverse-matrix))
 (defun inverse (matrix)
   (let ((det (m4:determinant matrix)))
-    (if (< (abs det) +default-epsilon+)
+    (if (= det 0s0)
         (error "Cannot invert matrix with zero determinant:~%  ~S"
                matrix)
         (macrolet ((a (x y z)
                      (multiple-value-bind (r1 c1) (truncate (cl:- x 11) 10)
                        (multiple-value-bind (r2 c2) (truncate (cl:- y 11) 10)
                          (multiple-value-bind (r3 c3) (truncate (cl:- z 11) 10)
-                           `(cl:* (mref matrix ,r1 ,c1)
-				  (mref matrix ,r2 ,c2)
-				  (mref matrix ,r3 ,c3)))))))
+                           `(cl:* (melm matrix ,r1 ,c1)
+				  (melm matrix ,r2 ,c2)
+				  (melm matrix ,r3 ,c3)))))))
           (let ((m
                  (rtg-math:m!
                   ;; row 1
@@ -363,7 +363,7 @@
 			(a 11 23 32) (a 12 21 33) (a 13 22 31)))))
             (dotimes (i 4)
               (dotimes (j 4)
-                (setf (mref m i j) (cl:/ (mref m i j) det))))
+                (setf (melm m i j) (cl:/ (melm m i j) det))))
             m)))))
 
 ;;----------------------------------------------------------------
