@@ -190,5 +190,9 @@
   (:import-from :rtg-math.base-matrices :m!)
   (:import-from :rtg-math.quaternions :q!)
   (:import-from :rtg-math.vectors :s~)
-  (:export :q! :m! :v! :v!byte :v!ubyte :v!int8 :v!uint8 :v!int :s~
-	   :radians :degrees))
+  (:export :radians :degrees
+	   :v! :v!byte :v!ubyte :v!int8 :v!uint8 :v!int
+	   :x :y :z :w
+	   :m!
+	   :q!
+	   :s~))
