@@ -280,7 +280,7 @@
 (defun cross (vec-a vec-b)
   "Calculates the cross-product of 2 vectors, i.e. the vector
    that lies perpendicular to them both. The resultign vector
-   will <b>NOT</b> be normalised, to maximise efficiency
+   will <b>NOT</b> be normalized, to maximise efficiency
    The returned vector will be on the side from which the arc
    from u to v is anticlockwise.
    This is because CEPL uses a right-handed coordinate system.
