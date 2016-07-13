@@ -20,4 +20,6 @@
                (:file "matrices/matrix4")
                (:file "matrices/matrices")
                (:file "quaternions")
-               (:file "projection")))
+               (:file "projection/camera")
+	       (:file "polar-coords/polar")
+	       (:file "spherical-coords/spherical")))

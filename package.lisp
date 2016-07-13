@@ -183,8 +183,16 @@
            :dot :rotate :lerp :slerp :approx-slerp
            :to-mat3 :to-mat4))
 
+(defpackage :rtg-math.polar
+  (:use :cl :%rtg-math :rtg-math.types :rtg-math.base-vectors)
+  (:export :polar->cartesian :cartesian->polar))
+
+(defpackage :rtg-math.spherical
+  (:use :cl :%rtg-math :rtg-math.types :rtg-math.base-vectors)
+  (:export :spherical->cartesian :cartesian->spherical))
+
 (defpackage :rtg-math.projection
-  (:use :cl :%rtg-math :rtg-math.types :rtg-math.base-maths)
+  (:use :cl :%rtg-math :rtg-math.types :rtg-math.base-maths )
   (:shadow :lerp)
   (:export :perspective :orthographic))
 
