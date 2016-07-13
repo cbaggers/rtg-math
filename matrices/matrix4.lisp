@@ -120,9 +120,17 @@
   "Make a 4x4 matrix using the data in the 4 vector4s provided
    to populate the rows"
   (make (x row-1) (y row-1) (z row-1) (w row-1)
-	(x row-2) (y row-2)	(z row-2) (w row-2)
+	(x row-2) (y row-2) (z row-2) (w row-2)
 	(x row-3) (y row-3) (z row-3) (w row-3)
 	(x row-4) (y row-4) (z row-4) (w row-4)))
+
+(defun from-rows-v3 (row-1 row-2 row-3)
+  "Make a 4x4 matrix using the data in the 4 vector4s provided
+   to populate the rows"
+  (make (x row-1) (y row-1) (z row-1) 0s0
+	(x row-2) (y row-2) (z row-2) 0s0
+	(x row-3) (y row-3) (z row-3) 0s0
+	0s0       0s0       0s0       1s0))
 
 ;;----------------------------------------------------------------
 
@@ -176,6 +184,26 @@
 	(w col-2)
 	(w col-3)
 	(w col-4)))
+
+(defun from-columns-v3 (col-1 col-2 col-3)
+  "Make a 4x4 matrix using the data in the 3 vector3s provided
+   to populate the columns"
+  (make (x col-1)
+	(x col-2)
+	(x col-3)
+	0s0
+	(y col-1)
+	(y col-2)
+	(y col-3)
+	0s0
+	(z col-1)
+	(z col-2)
+	(z col-3)
+	0s0
+	0s0
+	0s0
+	0s0
+	1s0))
 
 ;;----------------------------------------------------------------
 

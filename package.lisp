@@ -144,6 +144,7 @@
 	   := :+ :- :* :*s :*v :*v3 :negate :mrow*vec4
 	   :melm :to-mat3
 	   :from-rows :from-columns :get-rows :get-columns :get-row :get-column
+	   :from-rows-v3 :from-columns-v3
 	   :transpose :adjoint :determinant :minor :trace
            :2dclipspace-to-imagespace-matrix4
 	   :translation
