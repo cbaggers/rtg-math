@@ -41,3 +41,11 @@ Notes:
 	   (φ (atan (sqrt x²+y²) z))
 	   (θ (atan y x)))
       (v3:make θ φ ρ))))
+
+
+(defun unit-spherical->unit-cartesian (unit-spherical-coord)
+  (let ((θ (x unit-spherical-coord))
+	(φ (y unit-spherical-coord)))
+    (v3:make (* (sin φ) (cos θ))
+	     (* (sin φ) (sin θ))
+	     (cos φ))))

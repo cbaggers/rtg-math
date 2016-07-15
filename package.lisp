@@ -22,6 +22,7 @@
            :clampf
            :+one-degree-in-radians+
            :+pi+
+	   :+inv-pi+
            :inv-sqrt
            :degrees
            :radians))
@@ -193,9 +194,10 @@
   (:export :spherical->cartesian :cartesian->spherical))
 
 (defpackage :rtg-math.projection
-  (:use :cl :%rtg-math :rtg-math.types :rtg-math.base-maths )
+  (:use :cl :%rtg-math :rtg-math.types :rtg-math.base-maths
+	:rtg-math.base-vectors)
   (:shadow :lerp)
-  (:export :perspective :orthographic))
+  (:export :perspective :orthographic :blinn-newell-env-map :spherical-env-map))
 
 (defpackage #:rtg-math
   (:use #:cl)

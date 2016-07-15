@@ -1,6 +1,7 @@
 (in-package :rtg-math.base-maths)
 
 (defconstant +pi+ 3.141592653589793s0)
+(defconstant +inv-pi+ 0.3183098862s0)
 (defconstant +one-degree-in-radians+ 0.017453292519943295s0)
 (defconstant +one-radian-in-degrees+ 57.29577951308232s0)
 
