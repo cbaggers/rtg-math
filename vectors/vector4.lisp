@@ -183,6 +183,21 @@
 
 ;;----------------------------------------------------------------
 
+(declaim (inline dot)
+         (ftype (function (vec4
+                           vec4)
+                          single-float)
+                dot))
+(defun dot (vector-a vector-b)
+  "return the dot product of the vector-a and vector-b."
+  (declare (vec4 vector-a vector-b))
+  (cl:+ (cl:* (aref vector-a 0) (aref vector-b 0))
+        (cl:* (aref vector-a 1) (aref vector-b 1))
+        (cl:* (aref vector-a 2) (aref vector-b 2))
+        (cl:* (aref vector-a 3) (aref vector-b 3))))
+
+;;----------------------------------------------------------------
+
 (declaim (inline face-foreward)
          (ftype (function (vec4
                            vec4)
@@ -251,20 +266,6 @@
   (declare (vec4 vector-a vector-b))
   (sqrt (distance-squared vector-a vector-b)))
 
-;;----------------------------------------------------------------
-
-(declaim (inline dot)
-         (ftype (function (vec4
-                           vec4)
-                          single-float)
-                dot))
-(defun dot (vector-a vector-b)
-  "return the dot product of the vector-a and vector-b."
-  (declare (vec4 vector-a vector-b))
-  (cl:+ (cl:* (aref vector-a 0) (aref vector-b 0))
-        (cl:* (aref vector-a 1) (aref vector-b 1))
-        (cl:* (aref vector-a 2) (aref vector-b 2))
-        (cl:* (aref vector-a 3) (aref vector-b 3))))
 
 ;;----------------------------------------------------------------
 

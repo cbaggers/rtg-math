@@ -162,6 +162,19 @@
 
 ;;----------------------------------------------------------------
 
+(declaim (inline dot)
+         (ftype (function (vec2
+                           vec2)
+                          single-float)
+                dot))
+(defun dot (vector-a vector-b)
+  "Return the dot product of the vector-a and vector-b."
+  (declare (vec2 vector-a vector-b))
+  (cl:+ (cl:* (AREF VECTOR-A 0) (AREF VECTOR-B 0))
+        (cl:* (AREF VECTOR-A 1) (AREF VECTOR-B 1))))
+
+;;----------------------------------------------------------------
+
 (declaim (inline face-foreward)
          (ftype (function (vec2
                            vec2)
@@ -227,19 +240,6 @@
    faster."
   (declare (vec2 vector-a vector-b))
   (sqrt (distance-squared vector-a vector-b)))
-
-;;----------------------------------------------------------------
-
-(declaim (inline dot)
-         (ftype (function (vec2
-                           vec2)
-                          single-float)
-                dot))
-(defun dot (vector-a vector-b)
-  "Return the dot product of the vector-a and vector-b."
-  (declare (vec2 vector-a vector-b))
-  (cl:+ (cl:* (AREF VECTOR-A 0) (AREF VECTOR-B 0))
-        (cl:* (AREF VECTOR-A 1) (AREF VECTOR-B 1))))
 
 ;;----------------------------------------------------------------
 

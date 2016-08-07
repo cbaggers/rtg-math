@@ -45,17 +45,6 @@
 ;;----------------------------------------------------------------
 
 (declaim
- (inline identity)
- (ftype (function () mat3)
-        identity))
-(defun identity ()
-  "Return a 3x3 identity matrix"
-  (make
-   1.0 0.0 0.0
-   0.0 1.0 0.0
-   0.0 0.0 1.0))
-
-(declaim
  (inline 0!)
  (ftype (function () mat3)
         0!))
@@ -86,6 +75,19 @@
     (setf (melm result 2 1) h)
     (setf (melm result 2 2) i)
     result))
+
+;;----------------------------------------------------------------
+
+(declaim
+ (inline identity)
+ (ftype (function () mat3)
+        identity))
+(defun identity ()
+  "Return a 3x3 identity matrix"
+  (make
+   1.0 0.0 0.0
+   0.0 1.0 0.0
+   0.0 0.0 1.0))
 
 ;;----------------------------------------------------------------
 
@@ -122,7 +124,7 @@
 ;;----------------------------------------------------------------
 
 (declaim
- (inline get-rows)
+ (inline get-row)
  (ftype (function (mat3 (integer 0 3))
                   vec3)
         get-row))
@@ -376,33 +378,6 @@
 ;;----------------------------------------------------------------
 
 (declaim
- (inline rotation-from-axis-angle)
- (ftype (function (vec3 single-float)
-                  mat3)
-        rotation-from-axis-angle))
-(defun rotation-from-axis-angle (axis3 angle)
-  "Returns a matrix which will rotate a point about the axis
-   specified by the angle provided"
-  (cond ((v3:= axis3 (v! 1f0 0f0 0f0)) (rotation-x angle))
-        ((v3:= axis3 (v! 0f0 1f0 0f0)) (rotation-y angle))
-        ((v3:= axis3 (v! 0f0 0f0 1f0)) (rotation-z angle))
-        (t
-         (let ((c (cos angle))
-               (s (sin angle))
-               (g (cl:- 1f0 (cos angle))))
-           (let* ((x (x axis3))
-                  (y (y axis3))
-                  (z (z axis3))
-                  (gxx (cl:* g x x)) (gxy (cl:* g x y)) (gxz (cl:* g x z))
-                  (gyy (cl:* g y y)) (gyz (cl:* g y z)) (gzz (cl:* g z z)))
-             (make
-              (cl:+ gxx c)        (cl:- gxy (cl:* s z))  (cl:+ gxz (cl:* s y))
-              (cl:+ gxy (cl:* s z))  (cl:+ gyy c)        (cl:- gyz (cl:* s x))
-              (cl:- gxz (cl:* s y))  (cl:+ gyz (cl:* s x))  (cl:+ gzz c)))))))
-
-;;----------------------------------------------------------------
-
-(declaim
  (inline scale)
  (ftype (function (vec3)
                   mat3)
@@ -464,6 +439,33 @@
     (make c-a  (cl:- s-a)  0.0
 	  s-a  c-a      0.0
 	  0.0  0.0      1.0)))
+
+;;----------------------------------------------------------------
+
+(declaim
+ (inline rotation-from-axis-angle)
+ (ftype (function (vec3 single-float)
+                  mat3)
+        rotation-from-axis-angle))
+(defun rotation-from-axis-angle (axis3 angle)
+  "Returns a matrix which will rotate a point about the axis
+   specified by the angle provided"
+  (cond ((v3:= axis3 (v! 1f0 0f0 0f0)) (rotation-x angle))
+        ((v3:= axis3 (v! 0f0 1f0 0f0)) (rotation-y angle))
+        ((v3:= axis3 (v! 0f0 0f0 1f0)) (rotation-z angle))
+        (t
+         (let ((c (cos angle))
+               (s (sin angle))
+               (g (cl:- 1f0 (cos angle))))
+           (let* ((x (x axis3))
+                  (y (y axis3))
+                  (z (z axis3))
+                  (gxx (cl:* g x x)) (gxy (cl:* g x y)) (gxz (cl:* g x z))
+                  (gyy (cl:* g y y)) (gyz (cl:* g y z)) (gzz (cl:* g z z)))
+             (make
+              (cl:+ gxx c)        (cl:- gxy (cl:* s z))  (cl:+ gxz (cl:* s y))
+              (cl:+ gxy (cl:* s z))  (cl:+ gyy c)        (cl:- gyz (cl:* s x))
+              (cl:- gxz (cl:* s y))  (cl:+ gyz (cl:* s x))  (cl:+ gzz c)))))))
 
 ;;----------------------------------------------------------------
 

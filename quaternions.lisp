@@ -20,26 +20,6 @@
 
 ;;----------------------------------------------------------------;;
 
-(defun 0! ()
-  (q! 0.0 0.0 0.0 0.0))
-
-(defun 0p (quat)
-  (let ((w (w quat)) (x (x quat)) (y (y quat)) (z (z quat)))
-    (cl:= 0f0 (cl:+ (cl:* w w) (cl:* x x) (cl:* y y) (cl:* z z)))))
-
-(defun unitp (quat)
-  (let ((w (w quat)) (x (x quat)) (y (y quat)) (z (z quat)))
-    (cl:= 0f0 (cl:- 1.0 (cl:* w w) (cl:* x x) (cl:* y y) (cl:* z z)))))
-
-(defun identity ()
-  (q! 1.0 0.0 0.0 0.0))
-
-(defun identity-p (quat)
-  (and (cl:= 0f0 (cl:- 1.0 (w quat)))
-       (cl:= 0f0 (x quat))
-       (cl:= 0f0 (y quat))
-       (cl:= 0f0 (z quat))))
-
 (declaim (inline q!)
          (ftype (function (single-float
                            single-float
@@ -59,6 +39,26 @@
           (aref q 2) y
           (aref q 3) z)
     q))
+
+(defun 0! ()
+  (q! 0.0 0.0 0.0 0.0))
+
+(defun 0p (quat)
+  (let ((w (w quat)) (x (x quat)) (y (y quat)) (z (z quat)))
+    (cl:= 0f0 (cl:+ (cl:* w w) (cl:* x x) (cl:* y y) (cl:* z z)))))
+
+(defun unitp (quat)
+  (let ((w (w quat)) (x (x quat)) (y (y quat)) (z (z quat)))
+    (cl:= 0f0 (cl:- 1.0 (cl:* w w) (cl:* x x) (cl:* y y) (cl:* z z)))))
+
+(defun identity ()
+  (q! 1.0 0.0 0.0 0.0))
+
+(defun identity-p (quat)
+  (and (cl:= 0f0 (cl:- 1.0 (w quat)))
+       (cl:= 0f0 (x quat))
+       (cl:= 0f0 (y quat))
+       (cl:= 0f0 (z quat))))
 
 (defun from-mat3 (mat3)
   (let ((trace (m3:trace mat3)))
