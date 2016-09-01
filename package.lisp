@@ -53,12 +53,13 @@
   (:nicknames :v2)
   (:import-from :rtg-math.base-vectors :x :y :z :w :v!)
   (:import-from :rtg-math.base-maths :inv-sqrt)
-  (:shadow := :+ :- :* :/ :length)
+  (:shadow := :+ :- :* :/ :length :abs)
   (:export :make
 	   :0p :unitp
 	   := :+ :- :* :/ :*s :/s
 	   :negate
 	   :length-squared :length :distance-squared :distance
+       :abs
 	   :dot :absolute-dot :perp-dot
 	   :normalize
 	   :cross
@@ -71,11 +72,12 @@
   (:nicknames :v3)
   (:import-from :rtg-math.base-vectors :x :y :z :w :v!)
   (:import-from :rtg-math.base-maths :inv-sqrt)
-  (:shadow := :+ :- :* :/ :length)
+  (:shadow := :+ :- :* :/ :length :abs)
   (:export :make
 	   :0p :unitp
 	   := :+ :- :* :/ :*s :/s
-           :negate
+       :negate
+       :abs
 	   :length-squared :length :distance-squared :distance
 	   :dot :absolute-dot
 	   :normalize
@@ -88,11 +90,12 @@
   (:nicknames :v4)
   (:import-from :rtg-math.base-vectors :x :y :z :w :v!)
   (:import-from :rtg-math.base-maths :inv-sqrt)
-  (:shadow := :+ :- :* :/ :length)
+  (:shadow := :+ :- :* :/ :length :abs)
   (:export :make
 	   :0p :unitp
 	   := :+ :- :* :/ :*s :/s :*v3
 	   :negate
+       :abs
 	   :length-squared :length :distance-squared :distance
 	   :dot :absolute-dot
 	   :normalize

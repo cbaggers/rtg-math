@@ -241,6 +241,15 @@
 
 ;;---------------------------------------------------------------
 
+(declaim (inline abs)
+         (ftype (function (vec3) vec3) abs))
+(defun abs (vector-a)
+  "Return the vec3 containing the abs of the original vec3's components."
+  (declare (vec3 vector-a))
+  (make (cl:abs (x vector-a)) (cl:abs (y vector-a)) (cl:abs (y vector-a))))
+
+;;---------------------------------------------------------------
+
 (declaim (inline absolute-dot)
          (ftype (function (vec3
                            vec3)
@@ -249,9 +258,9 @@
 (defun absolute-dot (vector-a vector-b)
   "Return the absolute dot product of the vector-a and vector-b."
   (declare (vec3 vector-a vector-b))
-  (cl:+ (ABS (cl:* (AREF VECTOR-A 0) (AREF VECTOR-B 0)))
-        (ABS (cl:* (AREF VECTOR-A 1) (AREF VECTOR-B 1)))
-        (ABS (cl:* (AREF VECTOR-A 2) (AREF VECTOR-B 2)))))
+  (cl:+ (CL:ABS (cl:* (AREF VECTOR-A 0) (AREF VECTOR-B 0)))
+        (CL:ABS (cl:* (AREF VECTOR-A 1) (AREF VECTOR-B 1)))
+        (CL:ABS (cl:* (AREF VECTOR-A 2) (AREF VECTOR-B 2)))))
 
 ;;---------------------------------------------------------------
 
