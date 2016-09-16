@@ -341,7 +341,7 @@
 (declaim (ftype (function (mat4) mat4) inverse-matrix))
 (defun inverse (matrix)
   (let ((det (m4:determinant matrix)))
-    (if (= det 0s0)
+    (if (cl:= det 0s0)
         (error "Cannot invert matrix with zero determinant:~%  ~S"
                matrix)
         (macrolet ((a (x y z)
