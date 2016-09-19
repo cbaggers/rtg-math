@@ -62,7 +62,8 @@
        do (loop for i below len
              do (cl:setf (cl:aref matrix-a i)
                          (cl:+ (cl:aref matrix-a i)
-                               (cl:aref matrix i)))))))
+                               (cl:aref matrix i))))
+       finally (return matrix-a))))
 
 ;;----------------------------------------------------------------
 
