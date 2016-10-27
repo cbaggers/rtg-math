@@ -57,6 +57,18 @@
 
 ;;----------------------------------------------------------------
 
+(defun +s (vec2 scalar)
+  (v! (cl:+ (x vec2) scalar)
+      (cl:+ (y vec2) scalar)))
+
+;;----------------------------------------------------------------
+
+(defun -s (vec2 scalar)
+  (v! (cl:- (x vec2) scalar)
+      (cl:- (y vec2) scalar)))
+
+;;----------------------------------------------------------------
+
 ;; Not sure how to optomise this
 (defun + (&rest vec2s)
   "takes any number of vectors and add them all together

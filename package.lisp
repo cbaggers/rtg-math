@@ -56,7 +56,7 @@
   (:shadow := :+ :- :* :/ :length :abs)
   (:export :make
 	   :0p :unitp
-	   := :+ :- :* :/ :*s :/s
+	   := :+ :- :* :/ :*s :/s :+s :-s
 	   :negate
 	   :length-squared :length :distance-squared :distance
        :abs
@@ -75,7 +75,7 @@
   (:shadow := :+ :- :* :/ :length :abs)
   (:export :make
 	   :0p :unitp
-	   := :+ :- :* :/ :*s :/s
+	   := :+ :- :* :/ :*s :/s :+s :-s
        :negate
        :abs
 	   :length-squared :length :distance-squared :distance
@@ -93,7 +93,7 @@
   (:shadow := :+ :- :* :/ :length :abs)
   (:export :make
 	   :0p :unitp
-	   := :+ :- :* :/ :*s :/s :*v3
+	   := :+ :- :* :/ :*s :/s :*v3 :+s :-s
 	   :negate
        :abs
 	   :length-squared :length :distance-squared :distance
@@ -109,7 +109,7 @@
   (:import-from :rtg-math.base-vectors :x :y :z :w :v!)
   (:shadow :+ := :/= :1+ :1- :- :* :/ :length)
   (:export :0p :unitp
-	   := :+ :/= :1+ :1- :- :* :/
+	   := :+ :/= :1+ :1- :- :* :/ :+s :-s
 	   :negate
 	   :length :length-squared :distance :distance-squared
            :dot :absolute-dot :perp-dot

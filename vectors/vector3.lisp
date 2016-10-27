@@ -50,6 +50,20 @@
        (cl:= (AREF VECTOR-A 1) (AREF VECTOR-B 1))
        (cl:= (AREF VECTOR-A 2) (AREF VECTOR-B 2))))
 
+;;----------------------------------------------------------------
+
+(defun +s (vec2 scalar)
+  (v! (cl:+ (x vec2) scalar)
+      (cl:+ (y vec2) scalar)
+      (cl:+ (z vec2) scalar)))
+
+;;----------------------------------------------------------------
+
+(defun -s (vec2 scalar)
+  (v! (cl:- (x vec2) scalar)
+      (cl:- (y vec2) scalar)
+      (cl:- (z vec2) scalar)))
+
 ;;---------------------------------------------------------------
 
 ;; Not sure how to optomise this
@@ -346,6 +360,23 @@
 (defun lerp (vector-a vector-b ammount)
   (declare (vec3 vector-a vector-b))
   (%+ vector-a (*s (%- vector-b vector-a) ammount)))
+
+
+;; read this for details: (+ (* (- 1.0 v) a) (* v b))
+;; https://gitlab.common-lisp.net/alexandria/alexandria/commit/926a066611b7b11cb71e26c827a271e500888c30
+;; thanks to axion for the heads-up
+(declaim (inline stable-lerp)
+         (ftype (function (vec3
+                           vec3
+                           single-float)
+                          vec3)
+                stable-lerp))
+(defun stable-lerp (vector-a vector-b ammount)
+  (declare (vec3 vector-a vector-b))
+  (%+ (*s vector-a (cl:- 1s0 ammount))
+      (*s vector-b ammount)))
+
+
 
 ;; (declaim (inline slerp)
 ;;          (ftype (function (vec3

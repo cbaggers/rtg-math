@@ -62,6 +62,22 @@
 
 ;;----------------------------------------------------------------
 
+(defun +s (vec2 scalar)
+  (v! (cl:+ (x vec2) scalar)
+      (cl:+ (y vec2) scalar)
+      (cl:+ (z vec2) scalar)
+      (cl:+ (w vec2) scalar)))
+
+;;----------------------------------------------------------------
+
+(defun -s (vec2 scalar)
+  (v! (cl:- (x vec2) scalar)
+      (cl:- (y vec2) scalar)
+      (cl:- (z vec2) scalar)
+      (cl:- (w vec2) scalar)))
+
+;;----------------------------------------------------------------
+
 (defun + (&rest vec4s)
   "takes any number of vectors and add them all together
    returning a new vector"

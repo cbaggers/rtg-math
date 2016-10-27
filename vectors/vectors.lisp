@@ -137,6 +137,26 @@
 
 ;;----------------------------------------------------------------
 
+(defun +s (vec scalar)
+  (let ((vec (floatify vec))
+        (scalar (float scalar)))
+    (case= (cl:length vec)
+      (2 (v2:+s vec scalar))
+      (3 (v3:+s vec scalar))
+      (4 (v4:+s vec scalar)))))
+
+;;----------------------------------------------------------------
+
+(defun -s (vec scalar)
+  (let ((vec (floatify vec))
+        (scalar (float scalar)))
+    (case= (cl:length vec)
+      (2 (v2:-s vec scalar))
+      (3 (v3:-s vec scalar))
+      (4 (v4:-s vec scalar)))))
+
+;;----------------------------------------------------------------
+
 (defun + (&rest vecs)
   (let ((vecs (mapcar #'floatify vecs)))
     (case= (cl:length (first vecs))
