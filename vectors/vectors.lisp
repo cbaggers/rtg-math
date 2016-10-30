@@ -13,7 +13,7 @@
                (cl:make-array
                 ,len :element-type 'single-float :initial-contents
                 (list ,@(loop :for char :across name
-                           :collect `(aref ,arr ,(or (position char '(#\X #\Y #\Z #\W))
+                           :collect `(aref ,arr ,(or (position char "XYZW")
 						     (error "Vectors: swizzle: Pattern component was not X, Y, Z or W: ~a" char)))))))))
       form))
 
@@ -25,12 +25,52 @@
         (error "Vectors: swizzle: Cepl vectors cannot have a length less that 2 or greater than 4")
         (loop :for char :across name :for i :from 0 :do
            (setf (aref result i)
-                 (aref vec (or (position char '(#\X #\Y #\Z #\W))
+                 (aref vec (or (position char "XYZW")
 			       (error "Vectors: swizzle: Pattern component was not X, Y, Z or W: ~a" char))))))
     result))
 
-(defun s~ (vec pattern) (swizzle vec pattern))
-(define-compiler-macro s~ (vec pattern) `(swizzle ,vec ,pattern))
+(defun (setf swizzle) (value vec pattern)
+  (let* ((name (cl:symbol-name pattern))
+         (len (cl:length name)))
+    (if (or (> len 4) (< len 2))
+        (error "Vectors: swizzle: Cepl vectors cannot have a length less that 2 or greater than 4")
+        (loop :for char :across name :for i :from 0 :do
+           (setf (aref vec (position char "XYZW"))
+                 (aref value i))))
+    vec))
+
+(define-compiler-macro (setf swizzle) (&whole form value vec pattern)
+  (labels ((get-pos (char)
+             (or (position char "XYZW")
+                 (error "Vectors: swizzle: Pattern component was not X, Y, Z or W: ~a" char))))
+    (if (keywordp pattern)
+        (let* ((name (cl:symbol-name pattern))
+               (len (cl:length name))
+               (val (gensym "val"))
+               (dst (gensym "vec")))
+          (if (or (> len 4) (< len 2))
+              (error "Vectors: swizzle: Cepl vectors cannot have a length less that 2 or greater than 4")
+              `(let ((,dst ,vec)
+                     (,val ,value))
+                 ,@(loop :for char :across name :for i :from 0
+                      :collect `(setf (aref ,dst ,(get-pos char))
+                                      (aref ,val ,i)))
+                 ,dst)))
+        form)))
+
+(defun s~ (vec pattern)
+  (swizzle vec pattern))
+
+(define-compiler-macro s~ (vec pattern)
+  `(swizzle ,vec ,pattern))
+
+(defun (setf s~) (value vec pattern)
+  (setf (swizzle vec pattern) value))
+
+(define-compiler-macro (setf s~) (value vec pattern)
+  `(setf (swizzle ,vec ,pattern) ,value))
+
+;;----------------------------------------------------------------
 
 (defmacro dvec (var-list expression &body body)
   (when (or (not (listp var-list))
