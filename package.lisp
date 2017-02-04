@@ -25,7 +25,9 @@
 	   :+inv-pi+
            :inv-sqrt
            :degrees
-           :radians))
+           :radians
+           :degrees-f
+           :radians-f))
 
 (defpackage :rtg-math.maths
   (:use :cl :%rtg-math :rtg-math.types)

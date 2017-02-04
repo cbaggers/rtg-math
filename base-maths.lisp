@@ -32,13 +32,25 @@
 ;;----------------------------------------------------------------
 
 (declaim (inline radians)
-	 (ftype (function (single-float) single-float) radians))
+	 (ftype (function ((or integer single-float)) single-float)
+                radians))
 (defun radians (degrees)
+  (radians-f (the single-float (float degrees))))
+
+(declaim (inline degrees)
+	 (ftype (function ((or integer single-float)) single-float)
+                degrees))
+(defun degrees (radians)
+  (degrees-f (the single-float (float radians))))
+
+(declaim (inline radians-f)
+	 (ftype (function (single-float) single-float) radians-f))
+(defun radians-f (degrees)
   (declare (single-float degrees))
   (the single-float (* degrees +one-degree-in-radians+)))
 
-(declaim (inline degrees)
-	 (ftype (function (single-float) single-float) degrees))
-(defun degrees (radians)
+(declaim (inline degrees-f)
+	 (ftype (function (single-float) single-float) degrees-f))
+(defun degrees-f (radians)
   (declare (single-float radians))
   (the single-float (* radians +one-radian-in-degrees+)))
