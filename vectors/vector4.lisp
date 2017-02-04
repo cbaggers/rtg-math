@@ -31,7 +31,7 @@
    below a threshold set in the base-maths package"
   (declare (vec4 vector-a))
   (cl:= 0f0 (cl:+ (EXPT (AREF VECTOR-A 0) 2) (EXPT (AREF VECTOR-A 1) 2)
-		  (EXPT (AREF VECTOR-A 2) 2) (EXPT (AREF VECTOR-A 3) 2))))
+                  (EXPT (AREF VECTOR-A 2) 2) (EXPT (AREF VECTOR-A 3) 2))))
 
 ;;----------------------------------------------------------------
 
@@ -44,7 +44,7 @@
    within the range of 1 + or - and threshold set in base-maths"
   (declare (vec4 vector-a))
   (cl:= 0f0 (cl:- 1.0 (cl:+ (EXPT (AREF VECTOR-A 0) 2) (EXPT (AREF VECTOR-A 1) 2)
-			    (EXPT (AREF VECTOR-A 2) 2) (EXPT (AREF VECTOR-A 3) 2)))))
+                            (EXPT (AREF VECTOR-A 2) 2) (EXPT (AREF VECTOR-A 3) 2)))))
 ;;----------------------------------------------------------------
 
 (declaim (inline =)
@@ -81,55 +81,78 @@
 (defun + (&rest vec4s)
   "takes any number of vectors and add them all together
    returning a new vector"
-  (reduce #'%+ vec4s))
+  (if vec4s
+      (loop :for vec :in vec4s
+         :summing (x vec) :into x
+         :summing (y vec) :into y
+         :summing (z vec) :into z
+         :summing (w vec) :into w
+         :finally (return (make x y z w)))
+      (make 0s0 0s0 0s0 0s0)))
 
-;;----------------------------------------------------------------
+(define-compiler-macro + (&whole whole &rest vec4s)
+  (case= (cl:length vec4s)
+    (0 (make 0s0 0s0 0s0 0s0))
+    (1 (first vec4s))
+    (2 `(%+ ,@vec4s))
+    (otherwise whole)))
 
 (declaim (inline %+)
-         (ftype (function (vec4
-                           vec4)
-                          vec4) %+))
+         (ftype (function (vec4 vec4) vec4)
+                %+))
 (defun %+ (vector-a vector-b)
   "Add two vectors and return a new vector containing the result"
   (declare (vec4 vector-a vector-b))
-  (MAKE (cl:+ (AREF VECTOR-A 0) (AREF VECTOR-B 0))
-	(cl:+ (AREF VECTOR-A 1) (AREF VECTOR-B 1))
-	(cl:+ (AREF VECTOR-A 2) (AREF VECTOR-B 2))
-	(cl:+ (AREF VECTOR-A 3) (AREF VECTOR-B 3))))
+  (make (cl:+ (aref vector-a 0) (aref vector-b 0))
+        (cl:+ (aref vector-a 1) (aref vector-b 1))
+        (cl:+ (aref vector-a 2) (aref vector-b 2))
+        (cl:+ (aref vector-a 3) (aref vector-b 3))))
 
 ;;----------------------------------------------------------------
 
-(defun - (&rest vec4s)
-  "takes any number of vectors and subtract them and return
-   a new vector4"
-  (reduce #'%- vec4s))
+(defun - (vec4 &rest vec4s)
+  "takes any number of vectors and add them all together
+   returning a new vector"
+  (assert vec4)
+  (let ((x (x vec4))
+        (y (y vec4))
+        (z (z vec4))
+        (w (w vec4)))
+    (loop :for vec :in vec4s :do
+       (cl:decf x (x vec))
+       (cl:decf y (y vec))
+       (cl:decf z (z vec))
+       (cl:decf w (w vec)))
+    (make x y z w)))
 
-;;----------------------------------------------------------------
+(define-compiler-macro - (&whole whole &rest vec4s)
+  (case= (cl:length vec4s)
+    (2 `(%- ,@vec4s))
+    (otherwise whole)))
 
 (declaim (inline %-)
-         (ftype (function (vec4
-                           vec4)
-                          vec4) %-))
+         (ftype (function (vec4 vec4) vec4)
+                %-))
 (defun %- (vector-a vector-b)
   "Subtract two vectors and return a new vector containing
    the result"
   (declare (vec4 vector-a vector-b))
-  (MAKE (cl:- (AREF VECTOR-A 0) (AREF VECTOR-B 0))
-	(cl:- (AREF VECTOR-A 1) (AREF VECTOR-B 1))
-	(cl:- (AREF VECTOR-A 2) (AREF VECTOR-B 2))
-	(cl:- (AREF VECTOR-A 3) (AREF VECTOR-B 3))))
+  (make (cl:- (aref vector-a 0) (aref vector-b 0))
+        (cl:- (aref vector-a 1) (aref vector-b 1))
+        (cl:- (aref vector-a 2) (aref vector-b 2))
+        (cl:- (aref vector-a 3) (aref vector-b 3))))
 
 ;;----------------------------------------------------------------
 
 (declaim (inline *s)
          (ftype (function (vec4 single-float) vec4)
-		*s))
+                *s))
 (defun *s (vector-a a)
   "Multiply vector by scalar"
   (declare (vec4 vector-a)
            (single-float a))
   (MAKE (cl:* (AREF VECTOR-A 0) A) (cl:* (AREF VECTOR-A 1) A)
-	(cl:* (AREF VECTOR-A 2) A) (cl:* (AREF VECTOR-A 3) A)))
+        (cl:* (AREF VECTOR-A 2) A) (cl:* (AREF VECTOR-A 3) A)))
 
 ;;----------------------------------------------------------------
 
@@ -142,21 +165,33 @@
   (declare (vec4 vector-a)
            (single-float a))
   (make (cl:* (aref vector-a 0) a) (cl:* (aref vector-a 1) a)
-	(cl:* (aref vector-a 2) a) (aref vector-a 3)))
+        (cl:* (aref vector-a 2) a) (aref vector-a 3)))
 
 ;;----------------------------------------------------------------
 
-(defun * (&rest vectors)
-  (if vectors
-      (reduce #'*v vectors)
-      (v! 1 1 1 1)))
+(defun * (&rest vec4s)
+  "takes any number of vectors and multiply them all together
+   returning a new vector"
+  (if vec4s
+      (destructuring-bind (vec4 . vec4s) vec4s
+        (let ((x (x vec4))
+              (y (y vec4))
+              (z (z vec4))
+              (w (w vec4)))
+          (loop :for vec :in vec4s :do
+             (setf x (cl:* x (x vec)))
+             (setf y (cl:* y (y vec)))
+             (setf z (cl:* z (z vec)))
+             (setf w (cl:* w (w vec))))
+          (make x y z w)))
+      (make 1s0 1s0 1s0 1s0)))
 
-(define-compiler-macro * (&rest vectors)
-  (let ((vectors (or vectors `(v! 1 1 1 1))))
-    (reduce (lambda (accum form) `(*v ,form ,accum))
-            vectors)))
-
-;;----------------------------------------------------------------
+(define-compiler-macro * (&whole whole &rest vec4s)
+  (case= (cl:length vec4s)
+    (0 `(make 1s0 1s0 1s0 1s0))
+    (1 (first vec4s))
+    (2 `(*v ,@vec4s))
+    (otherwise whole)))
 
 (declaim (inline *v)
          (ftype (function (vec4 vec4) vec4)
@@ -165,23 +200,23 @@
   "Multiplies components, is not dot product, not sure what
    i'll need this for yet but hey!"
   (declare (vec4 vector-a vector-b))
-  (MAKE (cl:* (AREF VECTOR-A 0) (AREF VECTOR-B 0))
-	(cl:* (AREF VECTOR-A 1) (AREF VECTOR-B 1))
-	(cl:* (AREF VECTOR-A 2) (AREF VECTOR-B 2))
-	(cl:* (AREF VECTOR-A 3) (AREF VECTOR-B 3))))
+  (make (cl:* (aref vector-a 0) (aref vector-b 0))
+        (cl:* (aref vector-a 1) (aref vector-b 1))
+        (cl:* (aref vector-a 2) (aref vector-b 2))
+        (cl:* (aref vector-a 3) (aref vector-b 3))))
 
 ;;----------------------------------------------------------------
 
 (declaim (inline /s)
          (ftype (function (vec4 single-float) vec4)
-		/s))
+                /s))
 (defun /s (vector-a a)
   "divide vector by scalar and return result as new vector"
   (declare (vec4 vector-a)
            (single-float a))
   (let ((b (cl:/ 1 a)))
     (MAKE (cl:* (AREF VECTOR-A 0) B) (cl:* (AREF VECTOR-A 1) B)
-	  (cl:* (AREF VECTOR-A 2) B) (cl:* (AREF VECTOR-A 3) B))))
+          (cl:* (AREF VECTOR-A 2) B) (cl:* (AREF VECTOR-A 3) B))))
 
 ;;----------------------------------------------------------------
 
@@ -193,9 +228,9 @@
    yet but hey!"
   (declare (vec4 vector-a vector-b))
   (make (cl:/ (aref vector-a 0) (aref vector-b 0))
-	(cl:/ (aref vector-a 1) (aref vector-b 1))
-	(cl:/ (aref vector-a 2) (aref vector-b 2))
-	(cl:/ (aref vector-a 3) (aref vector-b 3))))
+        (cl:/ (aref vector-a 1) (aref vector-b 1))
+        (cl:/ (aref vector-a 2) (aref vector-b 2))
+        (cl:/ (aref vector-a 3) (aref vector-b 3))))
 
 ;;----------------------------------------------------------------
 
@@ -207,7 +242,7 @@
   "Return a vector that is the negative of the vector passed in"
   (declare (vec4 vector-a))
   (MAKE (cl:- (AREF VECTOR-A 0)) (cl:- (AREF VECTOR-A 1)) (cl:- (AREF VECTOR-A 2))
-	(cl:- (AREF VECTOR-A 3))))
+        (cl:- (AREF VECTOR-A 3))))
 
 ;;----------------------------------------------------------------
 
@@ -370,6 +405,6 @@
 
 (defun spline (x knots)
   (make (rtg-math.maths:spline x (mapcar #'x knots))
-	(rtg-math.maths:spline x (mapcar #'y knots))
-	(rtg-math.maths:spline x (mapcar #'z knots))
-	(rtg-math.maths:spline x (mapcar #'w knots))))
+        (rtg-math.maths:spline x (mapcar #'y knots))
+        (rtg-math.maths:spline x (mapcar #'z knots))
+        (rtg-math.maths:spline x (mapcar #'w knots))))

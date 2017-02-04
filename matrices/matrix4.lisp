@@ -3,9 +3,9 @@
 ;;----------------------------------------------------------------
 
 (declaim (inline melm)
-	 (ftype (function (mat4 (integer 0 4) (integer 0 4))
-			  single-float)
-		melm))
+         (ftype (function (mat4 (integer 0 4) (integer 0 4))
+                          single-float)
+                melm))
 (defun melm (mat-a row col)
   "Provides access to data in the matrix by row
    and column number. The actual data is stored in a 1d list in
@@ -42,9 +42,9 @@
 ;;----------------------------------------------------------------
 
 (declaim (inline identity)
-	 (ftype (function ()
-			  mat4)
-		identity))
+         (ftype (function ()
+                          mat4)
+                identity))
 (defun identity ()
   "Return a 4x4 identity matrix"
   (make-array 16 :element-type 'single-float
@@ -96,11 +96,11 @@
 (declaim
  (inline to-mat3)
  (ftype (function (mat4) mat3)
-	to-mat3))
+        to-mat3))
 (defun to-mat3 (mat4)
   (m3:make (melm mat4 0 0) (melm mat4 0 1) (melm mat4 0 2)
-	   (melm mat4 1 0) (melm mat4 1 1) (melm mat4 1 2)
-	   (melm mat4 2 0) (melm mat4 2 1) (melm mat4 2 2)))
+           (melm mat4 1 0) (melm mat4 1 1) (melm mat4 1 2)
+           (melm mat4 2 0) (melm mat4 2 1) (melm mat4 2 2)))
 
 ;;----------------------------------------------------------------
 
@@ -120,38 +120,38 @@
   "Make a 4x4 matrix using the data in the 4 vector4s provided
    to populate the rows"
   (make (x row-1) (y row-1) (z row-1) (w row-1)
-	(x row-2) (y row-2) (z row-2) (w row-2)
-	(x row-3) (y row-3) (z row-3) (w row-3)
-	(x row-4) (y row-4) (z row-4) (w row-4)))
+        (x row-2) (y row-2) (z row-2) (w row-2)
+        (x row-3) (y row-3) (z row-3) (w row-3)
+        (x row-4) (y row-4) (z row-4) (w row-4)))
 
 (defun from-rows-v3 (row-1 row-2 row-3)
   "Make a 4x4 matrix using the data in the 4 vector4s provided
    to populate the rows"
   (make (x row-1) (y row-1) (z row-1) 0s0
-	(x row-2) (y row-2) (z row-2) 0s0
-	(x row-3) (y row-3) (z row-3) 0s0
-	0s0       0s0       0s0       1s0))
+        (x row-2) (y row-2) (z row-2) 0s0
+        (x row-3) (y row-3) (z row-3) 0s0
+        0s0       0s0       0s0       1s0))
 
 ;;----------------------------------------------------------------
 
 (defun get-rows (mat-a)
   "Return the rows of the matrix as 4 vector4s"
   (list (v! (melm mat-a 0 0)
-	    (melm mat-a 0 1)
-	    (melm mat-a 0 2)
-	    (melm mat-a 0 3))
+            (melm mat-a 0 1)
+            (melm mat-a 0 2)
+            (melm mat-a 0 3))
         (v! (melm mat-a 1 0)
-	    (melm mat-a 1 1)
-	    (melm mat-a 1 2)
-	    (melm mat-a 1 3))
+            (melm mat-a 1 1)
+            (melm mat-a 1 2)
+            (melm mat-a 1 3))
         (v! (melm mat-a 2 0)
-	    (melm mat-a 2 1)
-	    (melm mat-a 2 2)
-	    (melm mat-a 2 3))
+            (melm mat-a 2 1)
+            (melm mat-a 2 2)
+            (melm mat-a 2 3))
         (v! (melm mat-a 3 0)
-	    (melm mat-a 3 1)
-	    (melm mat-a 3 2)
-	    (melm mat-a 3 3))))
+            (melm mat-a 3 1)
+            (melm mat-a 3 2)
+            (melm mat-a 3 3))))
 
 ;;----------------------------------------------------------------
 
@@ -169,62 +169,62 @@
   "Make a 4x4 matrix using the data in the 4 vector4s provided
    to populate the columns"
   (make (x col-1)
-	(x col-2)
-	(x col-3)
-	(x col-4)
-	(y col-1)
-	(y col-2)
-	(y col-3)
-	(y col-4)
-	(z col-1)
-	(z col-2)
-	(z col-3)
-	(z col-4)
-	(w col-1)
-	(w col-2)
-	(w col-3)
-	(w col-4)))
+        (x col-2)
+        (x col-3)
+        (x col-4)
+        (y col-1)
+        (y col-2)
+        (y col-3)
+        (y col-4)
+        (z col-1)
+        (z col-2)
+        (z col-3)
+        (z col-4)
+        (w col-1)
+        (w col-2)
+        (w col-3)
+        (w col-4)))
 
 (defun from-columns-v3 (col-1 col-2 col-3)
   "Make a 4x4 matrix using the data in the 3 vector3s provided
    to populate the columns"
   (make (x col-1)
-	(x col-2)
-	(x col-3)
-	0s0
-	(y col-1)
-	(y col-2)
-	(y col-3)
-	0s0
-	(z col-1)
-	(z col-2)
-	(z col-3)
-	0s0
-	0s0
-	0s0
-	0s0
-	1s0))
+        (x col-2)
+        (x col-3)
+        0s0
+        (y col-1)
+        (y col-2)
+        (y col-3)
+        0s0
+        (z col-1)
+        (z col-2)
+        (z col-3)
+        0s0
+        0s0
+        0s0
+        0s0
+        1s0))
 
 ;;----------------------------------------------------------------
 
 (defun get-columns (mat-a)
   "Return the columns of the matrix as 4 vector4s"
   (list (v! (melm mat-a 0 0)
-	    (melm mat-a 1 0)
-	    (melm mat-a 2 0)
-	    (melm mat-a 3 0))
+            (melm mat-a 1 0)
+            (melm mat-a 2 0)
+            (melm mat-a 3 0))
         (v! (melm mat-a 0 1)
-	    (melm mat-a 1 1)
-	    (melm mat-a 2 1)
-	    (melm mat-a 3 1))
+            (melm mat-a 1 1)
+            (melm mat-a 2 1)
+            (melm mat-a 3 1))
         (v! (melm mat-a 0 2)
-	    (melm mat-a 1 2)
-	    (melm mat-a 2 2)
-	    (melm mat-a 3 2))
+            (melm mat-a 1 2)
+            (melm mat-a 2 2)
+            (melm mat-a 3 2))
         (v! (melm mat-a 0 3)
-	    (melm mat-a 1 3)
-	    (melm mat-a 2 3)
-	    (melm mat-a 3 3))))
+            (melm mat-a 1 3)
+            (melm mat-a 2 3)
+            (melm mat-a 3 3))))
 
 ;;----------------------------------------------------------------
 
@@ -292,49 +292,49 @@
 
 (defun minor (mat-a row-0 row-1 row-2 col-0 col-1 col-2)
   (cl:+ (cl:* (melm mat-a row-0 col-0)
-	      (cl:- (cl:* (melm mat-a row-1 col-1) (melm mat-a row-2 col-2))
-		    (cl:* (melm mat-a row-2 col-1) (melm mat-a row-1 col-2))))
+              (cl:- (cl:* (melm mat-a row-1 col-1) (melm mat-a row-2 col-2))
+                    (cl:* (melm mat-a row-2 col-1) (melm mat-a row-1 col-2))))
 
-	(cl:* (melm mat-a row-0 col-2)
-	      (cl:- (cl:* (melm mat-a row-1 col-0) (melm mat-a row-2 col-1))
-		    (cl:* (melm mat-a row-2 col-0) (melm mat-a row-1 col-1))))
+        (cl:* (melm mat-a row-0 col-2)
+              (cl:- (cl:* (melm mat-a row-1 col-0) (melm mat-a row-2 col-1))
+                    (cl:* (melm mat-a row-2 col-0) (melm mat-a row-1 col-1))))
 
-	(cl:- (cl:* (melm mat-a row-0 col-1)
-		    (cl:- (cl:* (melm mat-a row-1 col-0) (melm mat-a row-2 col-2))
-			  (cl:* (melm mat-a row-2 col-0) (melm mat-a row-1 col-2)))))))
+        (cl:- (cl:* (melm mat-a row-0 col-1)
+                    (cl:- (cl:* (melm mat-a row-1 col-0) (melm mat-a row-2 col-2))
+                          (cl:* (melm mat-a row-2 col-0) (melm mat-a row-1 col-2)))))))
 
 ;;----------------------------------------------------------------
 
 (defun adjoint (mat-a)
   "Returns the adjoint of the matrix"
   (make (minor mat-a 1 2 3 1 2 3)
-	(cl:- (minor mat-a 0 2 3 1 2 3))
-	(minor mat-a 0 1 3 1 2 3)
-	(cl:- (minor mat-a 0 1 2 1 2 3))
+        (cl:- (minor mat-a 0 2 3 1 2 3))
+        (minor mat-a 0 1 3 1 2 3)
+        (cl:- (minor mat-a 0 1 2 1 2 3))
 
-	(cl:- (minor mat-a 1 2 3 0 2 3))
-	(minor mat-a 0 2 3 0 2 3)
-	(cl:- (minor mat-a 0 1 3 0 2 3))
-	(minor mat-a 0 1 2 0 2 3)
+        (cl:- (minor mat-a 1 2 3 0 2 3))
+        (minor mat-a 0 2 3 0 2 3)
+        (cl:- (minor mat-a 0 1 3 0 2 3))
+        (minor mat-a 0 1 2 0 2 3)
 
-	(minor mat-a 1 2 3 0 1 3)
-	(cl:- (minor mat-a 0 2 3 0 1 3))
-	(minor mat-a 0 1 3 0 1 3)
-	(cl:- (minor mat-a 0 1 2 0 1 3))
+        (minor mat-a 1 2 3 0 1 3)
+        (cl:- (minor mat-a 0 2 3 0 1 3))
+        (minor mat-a 0 1 3 0 1 3)
+        (cl:- (minor mat-a 0 1 2 0 1 3))
 
-	(cl:- (minor mat-a 1 2 3 0 1 2))
-	(minor mat-a 0 2 3 0 1 2)
-	(cl:- (minor mat-a 0 1 3 0 1 2))
-	(minor mat-a 0 1 2 0 1 2)))
+        (cl:- (minor mat-a 1 2 3 0 1 2))
+        (minor mat-a 0 2 3 0 1 2)
+        (cl:- (minor mat-a 0 1 3 0 1 2))
+        (minor mat-a 0 1 2 0 1 2)))
 
 ;;----------------------------------------------------------------
 
 (defun determinant (mat-a)
   "Returns the determinant of the matrix"
   (cl:+ (cl:* (melm mat-a 0 0) (minor mat-a 1 2 3 1 2 3))
-	(cl:- (cl:* (melm mat-a 0 1) (minor mat-a 1 2 3 0 2 3)))
-	(cl:* (melm mat-a 0 2) (minor mat-a 1 2 3 0 1 3))
-	(cl:- (cl:* (melm mat-a 0 3) (minor mat-a 1 2 3 0 1 2)))))
+        (cl:- (cl:* (melm mat-a 0 1) (minor mat-a 1 2 3 0 2 3)))
+        (cl:* (melm mat-a 0 2) (minor mat-a 1 2 3 0 1 3))
+        (cl:- (cl:* (melm mat-a 0 3) (minor mat-a 1 2 3 0 1 2)))))
 
 ;;----------------------------------------------------------------
 
@@ -349,46 +349,46 @@
                        (multiple-value-bind (r2 c2) (truncate (cl:- y 11) 10)
                          (multiple-value-bind (r3 c3) (truncate (cl:- z 11) 10)
                            `(cl:* (melm matrix ,r1 ,c1)
-				  (melm matrix ,r2 ,c2)
-				  (melm matrix ,r3 ,c3)))))))
+                                  (melm matrix ,r2 ,c2)
+                                  (melm matrix ,r3 ,c3)))))))
           (let ((m
                  (rtg-math:m!
                   ;; row 1
                   (cl:- (cl:+ (a 22 33 44) (a 23 34 42) (a 24 32 43))
-			(a 22 34 43) (a 23 32 44) (a 24 33 42))
+                        (a 22 34 43) (a 23 32 44) (a 24 33 42))
                   (cl:- (cl:+ (a 12 34 43) (a 13 32 44) (a 14 33 42))
-			(a 12 33 44) (a 13 34 42) (a 14 32 43))
+                        (a 12 33 44) (a 13 34 42) (a 14 32 43))
                   (cl:- (cl:+ (a 12 23 44) (a 13 24 42) (a 14 22 43))
-			(a 12 24 43) (a 13 22 44) (a 14 23 42))
+                        (a 12 24 43) (a 13 22 44) (a 14 23 42))
                   (cl:- (cl:+ (a 12 24 33) (a 13 22 34) (a 14 23 32))
-			(a 12 23 34) (a 13 24 32) (a 14 22 33))
+                        (a 12 23 34) (a 13 24 32) (a 14 22 33))
                   ;; row 2
                   (cl:- (cl:+ (a 21 34 43) (a 23 31 44) (a 24 33 41))
-			(a 21 33 44) (a 23 34 41) (a 24 31 43))
+                        (a 21 33 44) (a 23 34 41) (a 24 31 43))
                   (cl:- (cl:+ (a 11 33 44) (a 13 34 41) (a 14 31 43))
-			(a 11 34 43) (a 13 31 44) (a 14 33 41))
+                        (a 11 34 43) (a 13 31 44) (a 14 33 41))
                   (cl:- (cl:+ (a 11 24 43) (a 13 21 44) (a 14 23 41))
-			(a 11 23 44) (a 13 24 41) (a 14 21 43))
+                        (a 11 23 44) (a 13 24 41) (a 14 21 43))
                   (cl:- (cl:+ (a 11 23 34) (a 13 24 31) (a 14 21 33))
-			(a 11 24 33) (a 13 21 34) (a 14 23 31))
+                        (a 11 24 33) (a 13 21 34) (a 14 23 31))
                   ;; row 3
                   (cl:- (cl:+ (a 21 32 44) (a 22 34 41) (a 24 31 42))
-			(a 21 34 42) (a 22 31 44) (a 24 32 41))
+                        (a 21 34 42) (a 22 31 44) (a 24 32 41))
                   (cl:- (cl:+ (a 11 34 42) (a 12 31 44) (a 14 32 41))
-			(a 11 32 44) (a 12 34 41) (a 14 31 42))
+                        (a 11 32 44) (a 12 34 41) (a 14 31 42))
                   (cl:- (cl:+ (a 11 22 44) (a 12 24 41) (a 14 21 42))
-			(a 11 24 42) (a 12 21 44) (a 14 22 41))
+                        (a 11 24 42) (a 12 21 44) (a 14 22 41))
                   (cl:- (cl:+ (a 11 24 32) (a 12 21 34) (a 14 22 31))
-			(a 11 22 34) (a 12 24 31) (a 14 21 32))
+                        (a 11 22 34) (a 12 24 31) (a 14 21 32))
                   ;; row 4
                   (cl:- (cl:+ (a 21 33 42) (a 22 31 43) (a 23 32 41))
-			(a 21 32 43) (a 22 33 41) (a 23 31 42))
+                        (a 21 32 43) (a 22 33 41) (a 23 31 42))
                   (cl:- (cl:+ (a 11 32 43) (a 12 33 41) (a 13 31 42))
-			(a 11 33 42) (a 12 31 43) (a 13 32 41))
+                        (a 11 33 42) (a 12 31 43) (a 13 32 41))
                   (cl:- (cl:+ (a 11 23 42) (a 12 21 43) (a 13 22 41))
-			(a 11 22 43) (a 12 23 41) (a 13 21 42))
+                        (a 11 22 43) (a 12 23 41) (a 13 21 42))
                   (cl:- (cl:+ (a 11 22 33) (a 12 23 31) (a 13 21 32))
-			(a 11 23 32) (a 12 21 33) (a 13 22 31)))))
+                        (a 11 23 32) (a 12 21 33) (a 13 22 31)))))
             (dotimes (i 4)
               (dotimes (j 4)
                 (setf (melm m i j) (cl:/ (melm m i j) det))))
@@ -407,16 +407,16 @@
   (declare (mat4 mat-a))
   ;;calculate upper left 3x3 matrix determinant
   (let* ((cofac-0 (cl:- (cl:* (melm mat-a 1 1) (melm mat-a 2 2))
-			(cl:* (melm mat-a 2 1) (melm mat-a 1 2))))
+                        (cl:* (melm mat-a 2 1) (melm mat-a 1 2))))
 
          (cofac-4 (cl:- (cl:* (melm mat-a 2 0) (melm mat-a 1 2))
-			(cl:* (melm mat-a 1 0) (melm mat-a 2 2))))
+                        (cl:* (melm mat-a 1 0) (melm mat-a 2 2))))
 
          (cofac-8 (cl:- (cl:* (melm mat-a 1 0) (melm mat-a 2 1))
-			(cl:* (melm mat-a 2 0) (melm mat-a 1 1))))
+                        (cl:* (melm mat-a 2 0) (melm mat-a 1 1))))
          (det (cl:+ (cl:* (melm mat-a 0 0) cofac-0)
-		    (cl:* (melm mat-a 0 1) cofac-4)
-		    (cl:* (melm mat-a 0 2) cofac-8))))
+                    (cl:* (melm mat-a 0 1) cofac-4)
+                    (cl:* (melm mat-a 0 2) cofac-8))))
     (if
      (cl:= 0f0 det)
      (error "Matrix4 Inverse: Singular Matrix")
@@ -426,33 +426,33 @@
           (r10 (cl:* inv-det cofac-4))
           (r20 (cl:* inv-det cofac-8))
           (r01 (cl:* inv-det (cl:- (cl:* (melm mat-a 2 1) (melm mat-a 0 2))
-				   (cl:* (melm mat-a 0 1) (melm mat-a 2 2)))))
+                                   (cl:* (melm mat-a 0 1) (melm mat-a 2 2)))))
           (r11 (cl:* inv-det (cl:- (cl:* (melm mat-a 0 0) (melm mat-a 2 2))
-				   (cl:* (melm mat-a 2 0) (melm mat-a 0 2)))))
+                                   (cl:* (melm mat-a 2 0) (melm mat-a 0 2)))))
           (r21 (cl:* inv-det (cl:- (cl:* (melm mat-a 2 0) (melm mat-a 0 1))
-				   (cl:* (melm mat-a 0 0) (melm mat-a 2 1)))))
+                                   (cl:* (melm mat-a 0 0) (melm mat-a 2 1)))))
           (r02 (cl:* inv-det (cl:- (cl:* (melm mat-a 0 1) (melm mat-a 1 2))
-				   (cl:* (melm mat-a 1 1) (melm mat-a 0 2)))))
+                                   (cl:* (melm mat-a 1 1) (melm mat-a 0 2)))))
           (r12 (cl:* inv-det (cl:- (cl:* (melm mat-a 1 0) (melm mat-a 0 2))
-				   (cl:* (melm mat-a 0 0) (melm mat-a 1 2)))))
+                                   (cl:* (melm mat-a 0 0) (melm mat-a 1 2)))))
           (r22 (cl:* inv-det (cl:- (cl:* (melm mat-a 0 0) (melm mat-a 1 1))
-				   (cl:* (melm mat-a 1 0) (melm mat-a 0 1))))))
+                                   (cl:* (melm mat-a 1 0) (melm mat-a 0 1))))))
        (make r00 r01 r02
-	     (cl:- 0f0
-		   (cl:* (melm mat-a 0 0) (melm mat-a 0 3))
-		   (cl:* (melm mat-a 0 1) (melm mat-a 1 3))
-		   (cl:* (melm mat-a 0 2) (melm mat-a 2 3)))
-	     r10 r11 r12
-	     (cl:- 0f0
-		   (cl:* (melm mat-a 1 0) (melm mat-a 0 3))
-		   (cl:* (melm mat-a 1 1) (melm mat-a 1 3))
-		   (cl:* (melm mat-a 1 2) (melm mat-a 2 3)))
-	     r20 r21 r22
-	     (cl:- 0f0
-		   (cl:* (melm mat-a 2 0) (melm mat-a 0 3))
-		   (cl:* (melm mat-a 2 1) (melm mat-a 1 3))
-		   (cl:* (melm mat-a 2 2) (melm mat-a 2 3)))
-	     0f0 0f0 0f0 1f0)))))
+             (cl:- 0f0
+                   (cl:* (melm mat-a 0 0) (melm mat-a 0 3))
+                   (cl:* (melm mat-a 0 1) (melm mat-a 1 3))
+                   (cl:* (melm mat-a 0 2) (melm mat-a 2 3)))
+             r10 r11 r12
+             (cl:- 0f0
+                   (cl:* (melm mat-a 1 0) (melm mat-a 0 3))
+                   (cl:* (melm mat-a 1 1) (melm mat-a 1 3))
+                   (cl:* (melm mat-a 1 2) (melm mat-a 2 3)))
+             r20 r21 r22
+             (cl:- 0f0
+                   (cl:* (melm mat-a 2 0) (melm mat-a 0 3))
+                   (cl:* (melm mat-a 2 1) (melm mat-a 1 3))
+                   (cl:* (melm mat-a 2 2) (melm mat-a 2 3)))
+             0f0 0f0 0f0 1f0)))))
 
 ;;----------------------------------------------------------------
 ;; could just feed straight from array into make
@@ -502,20 +502,20 @@
           (sy (sin y)) (cy (cos y))
           (sz (sin z)) (cz (cos z)))
       (make (cl:* cy cz)
-	    (cl:- (cl:* cy sz))
-	    sy
-	    0f0
+            (cl:- (cl:* cy sz))
+            sy
+            0f0
 
-	    (cl:+ (cl:* sx sy cz) (cl:* cx sz))
-	    (cl:- (cl:* cx cz) (cl:* sx sy sz))
-	    (cl:- (cl:* sx cy))
-	    0f0
+            (cl:+ (cl:* sx sy cz) (cl:* cx sz))
+            (cl:- (cl:* cx cz) (cl:* sx sy sz))
+            (cl:- (cl:* sx cy))
+            0f0
 
-	    (cl:- (cl:* sx sz) (cl:* cx sy cz))
-	    (cl:+ (cl:* cx sy sz) (cl:* sx cz))
-	    (cl:* cx cy)
+            (cl:- (cl:* sx sz) (cl:* cx sy cz))
+            (cl:+ (cl:* cx sy sz) (cl:* sx cz))
+            (cl:* cx cy)
 
-	    0f0 0f0 0f0 0f0 1f0))))
+            0f0 0f0 0f0 0f0 1f0))))
 
 ;;----------------------------------------------------------------
 
@@ -558,9 +558,9 @@
   (let ((s-a (sin angle))
         (c-a (cos angle)))
     (make 1f0  0f0  0f0     0f0
-	  0f0  c-a  (cl:- s-a) 0f0
-	  0f0  s-a  c-a     0f0
-	  0f0  0f0  0f0     1f0)))
+          0f0  c-a  (cl:- s-a) 0f0
+          0f0  s-a  c-a     0f0
+          0f0  0f0  0f0     1f0)))
 
 ;;----------------------------------------------------------------
 
@@ -570,9 +570,9 @@
   (let ((s-a (sin angle))
         (c-a (cos angle)))
     (make c-a      0f0  s-a  0f0
-	  0f0      1f0  0f0  0f0
-	  (cl:- s-a)  0f0  c-a  0f0
-	  0f0      0f0  0f0  1f0)))
+          0f0      1f0  0f0  0f0
+          (cl:- s-a)  0f0  c-a  0f0
+          0f0      0f0  0f0  1f0)))
 
 ;;----------------------------------------------------------------
 
@@ -582,9 +582,9 @@
   (let ((s-a (sin angle))
         (c-a (cos angle)))
     (make c-a  (cl:- s-a)  0f0  0f0
-	  s-a  c-a      0f0  0f0
-	  0f0  0f0      1f0  0f0
-	  0f0  0f0      0f0  1f0)))
+          s-a  c-a      0f0  0f0
+          0f0  0f0      1f0  0f0
+          0f0  0f0      0f0  1f0)))
 
 ;;----------------------------------------------------------------
 
@@ -614,7 +614,7 @@
 (defun trace (mat-a)
   "Returns the trace of the matrix (That is the diagonal values)"
   (cl:+ (melm mat-a 0 0) (melm mat-a 1 1)
-	(melm mat-a 2 2) (melm mat-a 3 3)))
+        (melm mat-a 2 2) (melm mat-a 3 3)))
 
 ;;----------------------------------------------------------------
 
@@ -625,7 +625,7 @@
   "Gets one possible axis-angle pair that will generate this
    matrix. Assumes that this is a rotation matrix"
   (let* ((trace-a (cl:+ (melm mat-a 0 0) (melm mat-a 1 1)
-			(melm mat-a 2 2)))
+                        (melm mat-a 2 2)))
          (cos-theta (cl:* 0.5 (cl:- trace-a 1f0)))
          (angle (acos cos-theta)))
     (cond ((cl:= 0f0 angle) (values (v! 1f0 0f0 0f0) angle))
@@ -633,8 +633,8 @@
            (values
             (v3:normalize
              (v! (cl:- (melm mat-a 2 1) (melm mat-a 1 2))
-		 (cl:- (melm mat-a 0 2) (melm mat-a 2 0))
-		 (cl:- (melm mat-a 1 0) (melm mat-a 0 1))))
+                 (cl:- (melm mat-a 0 2) (melm mat-a 2 0))
+                 (cl:- (melm mat-a 1 0) (melm mat-a 0 1))))
             angle))
           (t (labels ((biggest-trace (matr)
                         (let ((x 0))
@@ -647,12 +647,12 @@
                       (j (mod (cl:+ i 1) 3))
                       (k (mod (cl:+ i 1) 3))
                       (s (sqrt (cl:+ 1f0 (cl:- (melm mat-a i i)
-					       (melm mat-a j j)
-					       (melm mat-a k k)))))
+                                               (melm mat-a j j)
+                                               (melm mat-a k k)))))
                       (recip (cl:/ 1f0 s)))
                  (values (v! (cl:* 0.5 s)
-			     (cl:* recip (aref mat-a (cl:+ i (cl:* 4 j))))
-			     (cl:* recip (aref mat-a (cl:+ k (cl:* 4 i)))))
+                             (cl:* recip (aref mat-a (cl:+ i (cl:* 4 j))))
+                             (cl:* recip (aref mat-a (cl:+ k (cl:* 4 i)))))
                          angle)))))))
 
 
@@ -698,59 +698,59 @@
 
 (defun *v (mat-a vec)
   (v! (cl:+ (cl:* (x vec) (melm mat-a 0 0))
-	    (cl:* (y vec) (melm mat-a 0 1))
-	    (cl:* (z vec) (melm mat-a 0 2))
-	    (cl:* (w vec) (melm mat-a 0 3)))
+            (cl:* (y vec) (melm mat-a 0 1))
+            (cl:* (z vec) (melm mat-a 0 2))
+            (cl:* (w vec) (melm mat-a 0 3)))
       (cl:+ (cl:* (x vec) (melm mat-a 1 0))
-	    (cl:* (y vec) (melm mat-a 1 1))
-	    (cl:* (z vec) (melm mat-a 1 2))
-	    (cl:* (w vec) (melm mat-a 1 3)))
+            (cl:* (y vec) (melm mat-a 1 1))
+            (cl:* (z vec) (melm mat-a 1 2))
+            (cl:* (w vec) (melm mat-a 1 3)))
       (cl:+ (cl:* (x vec) (melm mat-a 2 0))
-	    (cl:* (y vec) (melm mat-a 2 1))
-	    (cl:* (z vec) (melm mat-a 2 2))
-	    (cl:* (w vec) (melm mat-a 2 3)))
+            (cl:* (y vec) (melm mat-a 2 1))
+            (cl:* (z vec) (melm mat-a 2 2))
+            (cl:* (w vec) (melm mat-a 2 3)))
       (cl:+ (cl:* (x vec) (melm mat-a 3 0))
-	    (cl:* (y vec) (melm mat-a 3 1))
-	    (cl:* (z vec) (melm mat-a 3 2))
-	    (cl:* (w vec) (melm mat-a 3 3)))))
+            (cl:* (y vec) (melm mat-a 3 1))
+            (cl:* (z vec) (melm mat-a 3 2))
+            (cl:* (w vec) (melm mat-a 3 3)))))
 
 (defun *v3 (mat-a vec)
   "Returns the transform of a matrix"
   (v3:make (cl:+ (cl:* (melm mat-a 0 0) (x vec))
-		 (cl:* (melm mat-a 0 1) (y vec))
-		 (cl:* (melm mat-a 0 2) (z vec))
-		 (melm mat-a 0 3))
-	   (cl:+ (cl:* (melm mat-a 1 0) (x vec))
-		 (cl:* (melm mat-a 1 1) (y vec))
-		 (cl:* (melm mat-a 1 2) (z vec))
-		 (melm mat-a 1 3))
-	   (cl:+ (cl:* (melm mat-a 2 0) (x vec))
-		 (cl:* (melm mat-a 2 1) (y vec))
-		 (cl:* (melm mat-a 2 2) (z vec))
-		 (melm mat-a 2 3))))
+                 (cl:* (melm mat-a 0 1) (y vec))
+                 (cl:* (melm mat-a 0 2) (z vec))
+                 (melm mat-a 0 3))
+           (cl:+ (cl:* (melm mat-a 1 0) (x vec))
+                 (cl:* (melm mat-a 1 1) (y vec))
+                 (cl:* (melm mat-a 1 2) (z vec))
+                 (melm mat-a 1 3))
+           (cl:+ (cl:* (melm mat-a 2 0) (x vec))
+                 (cl:* (melm mat-a 2 1) (y vec))
+                 (cl:* (melm mat-a 2 2) (z vec))
+                 (melm mat-a 2 3))))
 
 ;;----------------------------------------------------------------
 
 (defun mrow*vec4 (vec mat-a)
   (v! (cl:+ (cl:* (x vec) (melm mat-a 0 0))
-	    (cl:* (y vec) (melm mat-a 1 0))
-	    (cl:* (z vec) (melm mat-a 2 0))
-	    (cl:* (w vec) (melm mat-a 3 0)))
+            (cl:* (y vec) (melm mat-a 1 0))
+            (cl:* (z vec) (melm mat-a 2 0))
+            (cl:* (w vec) (melm mat-a 3 0)))
 
       (cl:+ (cl:* (x vec) (melm mat-a 0 1))
-	    (cl:* (y vec) (melm mat-a 1 1))
-	    (cl:* (z vec) (melm mat-a 2 1))
-	    (cl:* (w vec) (melm mat-a 3 1)))
+            (cl:* (y vec) (melm mat-a 1 1))
+            (cl:* (z vec) (melm mat-a 2 1))
+            (cl:* (w vec) (melm mat-a 3 1)))
 
       (cl:+ (cl:* (x vec) (melm mat-a 0 2))
-	    (cl:* (y vec) (melm mat-a 1 2))
-	    (cl:* (z vec) (melm mat-a 2 2))
-	    (cl:* (w vec) (melm mat-a 3 2)))
+            (cl:* (y vec) (melm mat-a 1 2))
+            (cl:* (z vec) (melm mat-a 2 2))
+            (cl:* (w vec) (melm mat-a 3 2)))
 
       (cl:+ (cl:* (x vec) (melm mat-a 0 3))
-	    (cl:* (y vec) (melm mat-a 1 3))
-	    (cl:* (z vec) (melm mat-a 2 3))
-	    (cl:* (w vec) (melm mat-a 3 3)))))
+            (cl:* (y vec) (melm mat-a 1 3))
+            (cl:* (z vec) (melm mat-a 2 3))
+            (cl:* (w vec) (melm mat-a 3 3)))))
 
 ;;----------------------------------------------------------------
 
@@ -771,75 +771,75 @@
   "Multiplies 2 matrices and returns the result as a new
    matrix"
   (make (cl:+ (cl:* (melm mat-a 0 0) (melm mat-b 0 0))
-	      (cl:* (melm mat-a 0 1) (melm mat-b 1 0))
-	      (cl:* (melm mat-a 0 2) (melm mat-b 2 0))
-	      (cl:* (melm mat-a 0 3) (melm mat-b 3 0)))
-	(cl:+ (cl:* (melm mat-a 0 0) (melm mat-b 0 1))
-	      (cl:* (melm mat-a 0 1) (melm mat-b 1 1))
-	      (cl:* (melm mat-a 0 2) (melm mat-b 2 1))
-	      (cl:* (melm mat-a 0 3) (melm mat-b 3 1)))
-	(cl:+ (cl:* (melm mat-a 0 0) (melm mat-b 0 2))
-	      (cl:* (melm mat-a 0 1) (melm mat-b 1 2))
-	      (cl:* (melm mat-a 0 2) (melm mat-b 2 2))
-	      (cl:* (melm mat-a 0 3) (melm mat-b 3 2)))
-	(cl:+ (cl:* (melm mat-a 0 0) (melm mat-b 0 3))
-	      (cl:* (melm mat-a 0 1) (melm mat-b 1 3))
-	      (cl:* (melm mat-a 0 2) (melm mat-b 2 3))
-	      (cl:* (melm mat-a 0 3) (melm mat-b 3 3)))
-	(cl:+ (cl:* (melm mat-a 1 0) (melm mat-b 0 0))
-	      (cl:* (melm mat-a 1 1) (melm mat-b 1 0))
-	      (cl:* (melm mat-a 1 2) (melm mat-b 2 0))
-	      (cl:* (melm mat-a 1 3) (melm mat-b 3 0)))
-	(cl:+ (cl:* (melm mat-a 1 0) (melm mat-b 0 1))
-	      (cl:* (melm mat-a 1 1) (melm mat-b 1 1))
-	      (cl:* (melm mat-a 1 2) (melm mat-b 2 1))
-	      (cl:* (melm mat-a 1 3) (melm mat-b 3 1)))
-	(cl:+ (cl:* (melm mat-a 1 0) (melm mat-b 0 2))
-	      (cl:* (melm mat-a 1 1) (melm mat-b 1 2))
-	      (cl:* (melm mat-a 1 2) (melm mat-b 2 2))
-	      (cl:* (melm mat-a 1 3) (melm mat-b 3 2)))
-	(cl:+ (cl:* (melm mat-a 1 0) (melm mat-b 0 3))
-	      (cl:* (melm mat-a 1 1) (melm mat-b 1 3))
-	      (cl:* (melm mat-a 1 2) (melm mat-b 2 3))
-	      (cl:* (melm mat-a 1 3) (melm mat-b 3 3)))
-	(cl:+ (cl:* (melm mat-a 2 0) (melm mat-b 0 0))
-	      (cl:* (melm mat-a 2 1) (melm mat-b 1 0))
-	      (cl:* (melm mat-a 2 2) (melm mat-b 2 0))
-	      (cl:* (melm mat-a 2 3) (melm mat-b 3 0)))
-	(cl:+ (cl:* (melm mat-a 2 0) (melm mat-b 0 1))
-	      (cl:* (melm mat-a 2 1) (melm mat-b 1 1))
-	      (cl:* (melm mat-a 2 2) (melm mat-b 2 1))
-	      (cl:* (melm mat-a 2 3) (melm mat-b 3 1)))
-	(cl:+ (cl:* (melm mat-a 2 0) (melm mat-b 0 2))
-	      (cl:* (melm mat-a 2 1) (melm mat-b 1 2))
-	      (cl:* (melm mat-a 2 2) (melm mat-b 2 2))
-	      (cl:* (melm mat-a 2 3) (melm mat-b 3 2)))
-	(cl:+ (cl:* (melm mat-a 2 0) (melm mat-b 0 3))
-	      (cl:* (melm mat-a 2 1) (melm mat-b 1 3))
-	      (cl:* (melm mat-a 2 2) (melm mat-b 2 3))
-	      (cl:* (melm mat-a 2 3) (melm mat-b 3 3)))
-	(cl:+ (cl:* (melm mat-a 3 0) (melm mat-b 0 0))
-	      (cl:* (melm mat-a 3 1) (melm mat-b 1 0))
-	      (cl:* (melm mat-a 3 2) (melm mat-b 2 0))
-	      (cl:* (melm mat-a 3 3) (melm mat-b 3 0)))
-	(cl:+ (cl:* (melm mat-a 3 0) (melm mat-b 0 1))
-	      (cl:* (melm mat-a 3 1) (melm mat-b 1 1))
-	      (cl:* (melm mat-a 3 2) (melm mat-b 2 1))
-	      (cl:* (melm mat-a 3 3) (melm mat-b 3 1)))
-	(cl:+ (cl:* (melm mat-a 3 0) (melm mat-b 0 2))
-	      (cl:* (melm mat-a 3 1) (melm mat-b 1 2))
-	      (cl:* (melm mat-a 3 2) (melm mat-b 2 2))
-	      (cl:* (melm mat-a 3 3) (melm mat-b 3 2)))
-	(cl:+ (cl:* (melm mat-a 3 0) (melm mat-b 0 3))
-	      (cl:* (melm mat-a 3 1) (melm mat-b 1 3))
-	      (cl:* (melm mat-a 3 2) (melm mat-b 2 3))
-	      (cl:* (melm mat-a 3 3) (melm mat-b 3 3)))))
+              (cl:* (melm mat-a 0 1) (melm mat-b 1 0))
+              (cl:* (melm mat-a 0 2) (melm mat-b 2 0))
+              (cl:* (melm mat-a 0 3) (melm mat-b 3 0)))
+        (cl:+ (cl:* (melm mat-a 0 0) (melm mat-b 0 1))
+              (cl:* (melm mat-a 0 1) (melm mat-b 1 1))
+              (cl:* (melm mat-a 0 2) (melm mat-b 2 1))
+              (cl:* (melm mat-a 0 3) (melm mat-b 3 1)))
+        (cl:+ (cl:* (melm mat-a 0 0) (melm mat-b 0 2))
+              (cl:* (melm mat-a 0 1) (melm mat-b 1 2))
+              (cl:* (melm mat-a 0 2) (melm mat-b 2 2))
+              (cl:* (melm mat-a 0 3) (melm mat-b 3 2)))
+        (cl:+ (cl:* (melm mat-a 0 0) (melm mat-b 0 3))
+              (cl:* (melm mat-a 0 1) (melm mat-b 1 3))
+              (cl:* (melm mat-a 0 2) (melm mat-b 2 3))
+              (cl:* (melm mat-a 0 3) (melm mat-b 3 3)))
+        (cl:+ (cl:* (melm mat-a 1 0) (melm mat-b 0 0))
+              (cl:* (melm mat-a 1 1) (melm mat-b 1 0))
+              (cl:* (melm mat-a 1 2) (melm mat-b 2 0))
+              (cl:* (melm mat-a 1 3) (melm mat-b 3 0)))
+        (cl:+ (cl:* (melm mat-a 1 0) (melm mat-b 0 1))
+              (cl:* (melm mat-a 1 1) (melm mat-b 1 1))
+              (cl:* (melm mat-a 1 2) (melm mat-b 2 1))
+              (cl:* (melm mat-a 1 3) (melm mat-b 3 1)))
+        (cl:+ (cl:* (melm mat-a 1 0) (melm mat-b 0 2))
+              (cl:* (melm mat-a 1 1) (melm mat-b 1 2))
+              (cl:* (melm mat-a 1 2) (melm mat-b 2 2))
+              (cl:* (melm mat-a 1 3) (melm mat-b 3 2)))
+        (cl:+ (cl:* (melm mat-a 1 0) (melm mat-b 0 3))
+              (cl:* (melm mat-a 1 1) (melm mat-b 1 3))
+              (cl:* (melm mat-a 1 2) (melm mat-b 2 3))
+              (cl:* (melm mat-a 1 3) (melm mat-b 3 3)))
+        (cl:+ (cl:* (melm mat-a 2 0) (melm mat-b 0 0))
+              (cl:* (melm mat-a 2 1) (melm mat-b 1 0))
+              (cl:* (melm mat-a 2 2) (melm mat-b 2 0))
+              (cl:* (melm mat-a 2 3) (melm mat-b 3 0)))
+        (cl:+ (cl:* (melm mat-a 2 0) (melm mat-b 0 1))
+              (cl:* (melm mat-a 2 1) (melm mat-b 1 1))
+              (cl:* (melm mat-a 2 2) (melm mat-b 2 1))
+              (cl:* (melm mat-a 2 3) (melm mat-b 3 1)))
+        (cl:+ (cl:* (melm mat-a 2 0) (melm mat-b 0 2))
+              (cl:* (melm mat-a 2 1) (melm mat-b 1 2))
+              (cl:* (melm mat-a 2 2) (melm mat-b 2 2))
+              (cl:* (melm mat-a 2 3) (melm mat-b 3 2)))
+        (cl:+ (cl:* (melm mat-a 2 0) (melm mat-b 0 3))
+              (cl:* (melm mat-a 2 1) (melm mat-b 1 3))
+              (cl:* (melm mat-a 2 2) (melm mat-b 2 3))
+              (cl:* (melm mat-a 2 3) (melm mat-b 3 3)))
+        (cl:+ (cl:* (melm mat-a 3 0) (melm mat-b 0 0))
+              (cl:* (melm mat-a 3 1) (melm mat-b 1 0))
+              (cl:* (melm mat-a 3 2) (melm mat-b 2 0))
+              (cl:* (melm mat-a 3 3) (melm mat-b 3 0)))
+        (cl:+ (cl:* (melm mat-a 3 0) (melm mat-b 0 1))
+              (cl:* (melm mat-a 3 1) (melm mat-b 1 1))
+              (cl:* (melm mat-a 3 2) (melm mat-b 2 1))
+              (cl:* (melm mat-a 3 3) (melm mat-b 3 1)))
+        (cl:+ (cl:* (melm mat-a 3 0) (melm mat-b 0 2))
+              (cl:* (melm mat-a 3 1) (melm mat-b 1 2))
+              (cl:* (melm mat-a 3 2) (melm mat-b 2 2))
+              (cl:* (melm mat-a 3 3) (melm mat-b 3 2)))
+        (cl:+ (cl:* (melm mat-a 3 0) (melm mat-b 0 3))
+              (cl:* (melm mat-a 3 1) (melm mat-b 1 3))
+              (cl:* (melm mat-a 3 2) (melm mat-b 2 3))
+              (cl:* (melm mat-a 3 3) (melm mat-b 3 3)))))
 
 ;;----------------------------------------------------------------
 
 
 (defun print-m4 (m4)
   (apply #'format t
-	 "~%(m! ~s ~s ~s ~s~%    ~s ~s ~s ~s~%    ~s ~s ~s ~s~%    ~s ~s ~s ~s)"
-	 (concatenate 'list (transpose m4)))
+         "~%(m! ~s ~s ~s ~s~%    ~s ~s ~s ~s~%    ~s ~s ~s ~s~%    ~s ~s ~s ~s)"
+         (concatenate 'list (transpose m4)))
   m4)

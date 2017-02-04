@@ -2,10 +2,10 @@
 
 (defmacro def-v! (name type)
   (let* ((one-arg (intern (format nil "V!ONE-ARG-~s" name)))
-	 (name-string (symbol-name name))
-	 (v2name (intern (format nil "V2!~a" (subseq name-string 2))))
-	 (v3name (intern (format nil "V3!~a" (subseq name-string 2))))
-	 (v4name (intern (format nil "V4!~a" (subseq name-string 2)))))
+         (name-string (symbol-name name))
+         (v2name (intern (format nil "V2!~a" (subseq name-string 2))))
+         (v3name (intern (format nil "V3!~a" (subseq name-string 2))))
+         (v4name (intern (format nil "V4!~a" (subseq name-string 2)))))
     `(labels ((convert (x) (coerce x ',type)))
        (defun ,name (&rest components)
          (let* ((components
@@ -44,13 +44,13 @@
            (t form)))
        (declaim )
        (defun ,v2name (x &optional y)
-	 (if y (,name x y) (,name x x)))
+         (if y (,name x y) (,name x x)))
        (defun ,v3name (x &optional y z)
-	 (if z (,name x y z) (if y (,name x y 0) (,name x x x))))
+         (if z (,name x y z) (if y (,name x y 0) (,name x x x))))
        (defun ,v4name (x &optional y z w)
-	 (if w (,name x y z w)
-	     (if z (,name x y z 0)
-		 (if y (,name x y 0 0) (,name x x x 0))))))))
+         (if w (,name x y z w)
+             (if z (,name x y z 0)
+                 (if y (,name x y 0 0) (,name x x x 0))))))))
 
 (def-v! v! single-float)
 (def-v! v!double double-float)
@@ -65,44 +65,46 @@
 
 (defun v!bool (&rest components)
   (let* ((components
-	  (loop :for c :in components
-	     :if (typep c 'array)
-	     :append (loop :for e :across c
-			:collect (coerce e 'boolean))
-	     :else
-	     :collect (coerce c 'boolean)))
-	 (len (length components)))
+          (loop :for c :in components
+             :if (typep c 'array)
+             :append (loop :for e :across c
+                        :collect (coerce e 'boolean))
+             :else
+             :collect (coerce c 'boolean)))
+         (len (length components)))
     (when (or (> len 4) (< len 2))
       (error "incorrect number of components for a vector: ~a ~a" len
-	     components))
+             components))
     (make-array (length components) :element-type 'boolean :initial-contents
-		components)))
+                components)))
 
 (defun v!bool-one-arg (x)
   (if (listp x)
       (make-array (length x) :element-type 'boolean :initial-contents
-		  (mapcar (lambda (_) (not (null _))) x))
+                  (mapcar (lambda (_) (not (null _))) x))
       (make-array (length x) :element-type 'boolean :initial-contents
-		  (loop :for i :across x :collect (not (null i))))))
+                  (loop :for i :across x :collect (not (null i))))))
 
 (define-compiler-macro v!bool
     (&whole form &rest components)
   (cond
     ((every (lambda (x) (funcall (lambda (y) (typep y 'boolean)) x))
-	    components)
+            components)
      (let ((components (loop :for c :in components :collect (not (null c))))
-	   (len (length components)))
+           (len (length components)))
        (when (or (> len 4) (< len 2))
-	 (error "incorrect number of components for a vector: ~a ~a" len
-		components))
+         (error "incorrect number of components for a vector: ~a ~a" len
+                components))
        (list 'make-array len :element-type ''boolean :initial-contents
-	     (list 'quote components))))
+             (list 'quote components))))
     ((= (length components) 1) (list 'v!bool-one-arg (first components)))
     (t form)))
 
 ;;----------------------------------------------------------------
 
-;; {TODO} compiler macro these
+(declaim (inline x y z w)
+         (ftype (function ((array single-float (*))) single-float)
+                x y z w))
 (defun x (vec)
   "Returns the x component of the vector"
   (aref vec 0))

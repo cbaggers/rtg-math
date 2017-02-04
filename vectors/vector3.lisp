@@ -6,8 +6,8 @@
     ((x single-float) (y single-float) (z single-float)) -> vec3
   (let (( vec (make-array 3 :element-type `single-float)))
     (setf (aref vec 0) x
-	  (aref vec 1) y
-	  (aref vec 2) z)
+          (aref vec 1) y
+          (aref vec 2) z)
     vec))
 
 ;;---------------------------------------------------------------
@@ -22,7 +22,7 @@
    below a threshold set in the base-maths package"
   (declare (vec3 vector-a))
   (cl:= 0f0 (cl:+ (EXPT (AREF VECTOR-A 0) 2) (EXPT (AREF VECTOR-A 1) 2)
-		  (EXPT (AREF VECTOR-A 2) 2))))
+                  (EXPT (AREF VECTOR-A 2) 2))))
 
 ;;---------------------------------------------------------------
 
@@ -35,7 +35,7 @@
    within the range of 1 + or - and threshold set in base-maths"
   (declare (vec3 vector-a))
   (cl:= 0f0 (cl:- 1.0 (cl:+ (EXPT (AREF VECTOR-A 0) 2) (EXPT (AREF VECTOR-A 1) 2)
-			    (EXPT (AREF VECTOR-A 2) 2)))))
+                            (EXPT (AREF VECTOR-A 2) 2)))))
 ;;---------------------------------------------------------------
 
 (declaim (inline =)
@@ -53,59 +53,77 @@
 ;;----------------------------------------------------------------
 
 (defun +s (vec2 scalar)
-  (v! (cl:+ (x vec2) scalar)
-      (cl:+ (y vec2) scalar)
-      (cl:+ (z vec2) scalar)))
+  (make (cl:+ (x vec2) scalar)
+        (cl:+ (y vec2) scalar)
+        (cl:+ (z vec2) scalar)))
 
 ;;----------------------------------------------------------------
 
 (defun -s (vec2 scalar)
-  (v! (cl:- (x vec2) scalar)
-      (cl:- (y vec2) scalar)
-      (cl:- (z vec2) scalar)))
+  (make (cl:- (x vec2) scalar)
+        (cl:- (y vec2) scalar)
+        (cl:- (z vec2) scalar)))
 
 ;;---------------------------------------------------------------
 
-;; Not sure how to optomise this
 (defun + (&rest vec3s)
   "takes any number of vectors and add them all together
    returning a new vector"
-  (reduce #'%+ vec3s))
+  (if vec3s
+      (loop :for vec :in vec3s
+         :summing (x vec) :into x
+         :summing (y vec) :into y
+         :summing (z vec) :into z
+         :finally (return (make x y z)))
+      (make 0s0 0s0 0s0)))
 
-;;---------------------------------------------------------------
+(define-compiler-macro + (&whole whole &rest vec3s)
+  (case= (cl:length vec3s)
+    (0 (make 0s0 0s0 0s0))
+    (1 (first vec3s))
+    (2 `(%+ ,@vec3s))
+    (otherwise whole)))
 
 (declaim (inline %+)
-         (ftype (function (vec3
-                           vec3)
-                          vec3) %+))
+         (ftype (function (vec3 vec3) vec3)
+                %+))
 (defun %+ (vector-a vector-b)
   "Add two vectors and return a new vector containing the result"
   (declare (vec3 vector-a vector-b))
-  (MAKE (cl:+ (AREF VECTOR-A 0) (AREF VECTOR-B 0))
-	(cl:+ (AREF VECTOR-A 1) (AREF VECTOR-B 1))
-	(cl:+ (AREF VECTOR-A 2) (AREF VECTOR-B 2))))
+  (make (cl:+ (aref vector-a 0) (aref vector-b 0))
+        (cl:+ (aref vector-a 1) (aref vector-b 1))
+        (cl:+ (aref vector-a 2) (aref vector-b 2))))
 
 ;;---------------------------------------------------------------
 
-;; Not sure how to optomise this
-(defun - (&rest vec3s)
-  "takes any number of vectors and subtract them and return
-   a new vector4"
-  (reduce #'%- vec3s))
+(defun - (vec3 &rest vec3s)
+  "takes any number of vectors and add them all together
+   returning a new vector"
+  (assert vec3)
+  (let ((x (x vec3))
+        (y (y vec3))
+        (z (z vec3)))
+    (loop :for vec :in vec3s :do
+       (cl:decf x (x vec))
+       (cl:decf y (y vec))
+       (cl:decf z (z vec)))
+    (make x y z)))
 
-;;---------------------------------------------------------------
+(define-compiler-macro - (&whole whole &rest vec3s)
+  (case= (cl:length vec3s)
+    (2 `(%- ,@vec3s))
+    (otherwise whole)))
 
 (declaim (inline %-)
-         (ftype (function (vec3
-                           vec3)
-                          vec3) %-))
+         (ftype (function (vec3 vec3) vec3)
+                %-))
 (defun %- (vector-a vector-b)
   "Subtract two vectors and return a new vector containing
    the result"
   (declare (vec3 vector-a vector-b))
-  (MAKE (cl:- (AREF VECTOR-A 0) (AREF VECTOR-B 0))
-	(cl:- (AREF VECTOR-A 1) (AREF VECTOR-B 1))
-	(cl:- (AREF VECTOR-A 2) (AREF VECTOR-B 2))))
+  (make (cl:- (aref vector-a 0) (aref vector-b 0))
+        (cl:- (aref vector-a 1) (aref vector-b 1))
+        (cl:- (aref vector-a 2) (aref vector-b 2))))
 
 ;;---------------------------------------------------------------
 
@@ -115,48 +133,56 @@
   "Multiply vector by scalar"
   (declare (vec3 vector-a)
            (single-float a))
-  (MAKE (cl:* (AREF VECTOR-A 0) A) (cl:* (AREF VECTOR-A 1) A)
-	(cl:* (AREF VECTOR-A 2) A)))
+  (make (cl:* (aref vector-a 0) a) (cl:* (aref vector-a 1) a)
+        (cl:* (aref vector-a 2) a)))
 
 ;;---------------------------------------------------------------
 
+(defun * (&rest vec3s)
+  "takes any number of vectors and multiply them all together
+   returning a new vector"
+  (if vec3s
+      (destructuring-bind (vec3 . vec3s) vec3s
+        (let ((x (x vec3))
+              (y (y vec3))
+              (z (z vec3)))
+          (loop :for vec :in vec3s :do
+             (setf x (cl:* x (x vec)))
+             (setf y (cl:* y (y vec)))
+             (setf z (cl:* z (z vec))))
+          (make x y z)))
+      (make 1s0 1s0 1s0)))
+
+(define-compiler-macro * (&whole whole &rest vec3s)
+  (case= (cl:length vec3s)
+    (0 `(make 1s0 1s0 1s0))
+    (1 (first vec3s))
+    (2 `(*v ,@vec3s))
+    (otherwise whole)))
+
 (declaim (inline *v)
-         (ftype (function (vec3
-                           vec3)
-                          vec3)
+         (ftype (function (vec3 vec3) vec3)
                 *v))
 (defun *v (vector-a vector-b)
   "Multiplies components, is not dot product, not sure what
    i'll need this for yet but hey!"
   (declare (vec3 vector-a vector-b))
-  (MAKE (cl:* (AREF VECTOR-A 0) (AREF VECTOR-B 0))
-	(cl:* (AREF VECTOR-A 1) (AREF VECTOR-B 1))
-	(cl:* (AREF VECTOR-A 2) (AREF VECTOR-B 2))))
-
-;;----------------------------------------------------------------
-
-(defun * (&rest vectors)
-  (if vectors
-      (reduce #'*v vectors)
-      (v! 1 1 1)))
-
-(define-compiler-macro * (&rest vectors)
-  (let ((vectors (or vectors `(v! 1 1 1))))
-    (reduce (lambda (accum form) `(*v ,form ,accum))
-            vectors)))
+  (make (cl:* (aref vector-a 0) (aref vector-b 0))
+        (cl:* (aref vector-a 1) (aref vector-b 1))
+        (cl:* (aref vector-a 2) (aref vector-b 2))))
 
 ;;---------------------------------------------------------------
 
 (declaim (inline /s)
          (ftype (function (vec3 single-float) vec3)
-		/s))
+                /s))
 (defun /s (vector-a a)
   "divide vector by scalar and return result as new vector"
   (declare (vec3 vector-a)
            (single-float a))
   (let ((b (cl:/ 1 a)))
     (MAKE (cl:* (AREF VECTOR-A 0) B) (cl:* (AREF VECTOR-A 1) B)
-	  (cl:* (AREF VECTOR-A 2) B))))
+          (cl:* (AREF VECTOR-A 2) B))))
 
 ;;---------------------------------------------------------------
 
@@ -168,8 +194,8 @@
    yet but hey!"
   (declare (vec3 vector-a vector-b))
   (MAKE (cl:/ (AREF VECTOR-A 0) (AREF VECTOR-B 0))
-	(cl:/ (AREF VECTOR-A 1) (AREF VECTOR-B 1))
-	(cl:/ (AREF VECTOR-A 2) (AREF VECTOR-B 2))))
+        (cl:/ (AREF VECTOR-A 1) (AREF VECTOR-B 1))
+        (cl:/ (AREF VECTOR-A 2) (AREF VECTOR-B 2))))
 
 ;;---------------------------------------------------------------
 
@@ -422,5 +448,5 @@
 
 (defun spline (x knots)
   (make (rtg-math.maths:spline x (mapcar #'x knots))
-	(rtg-math.maths:spline x (mapcar #'y knots))
-	(rtg-math.maths:spline x (mapcar #'z knots))))
+        (rtg-math.maths:spline x (mapcar #'y knots))
+        (rtg-math.maths:spline x (mapcar #'z knots))))

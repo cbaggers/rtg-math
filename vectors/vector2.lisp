@@ -69,13 +69,22 @@
 
 ;;----------------------------------------------------------------
 
-;; Not sure how to optomise this
 (defun + (&rest vec2s)
   "takes any number of vectors and add them all together
-   returning a new vector2"
-  (reduce #'%+ vec2s))
+   returning a new vector"
+  (if vec2s
+      (loop :for vec :in vec2s
+         :summing (x vec) :into x
+         :summing (y vec) :into y
+         :finally (return (make x y)))
+      (make 0s0 0s0)))
 
-;;----------------------------------------------------------------
+(define-compiler-macro + (&whole whole &rest vec2s)
+  (case= (cl:length vec2s)
+    (0 (make 0s0 0s0))
+    (1 (first vec2s))
+    (2 `(%+ ,@vec2s))
+    (otherwise whole)))
 
 (declaim (inline %+)
          (ftype (function (vec2
@@ -84,29 +93,36 @@
 (defun %+ (vector-a vector-b)
   "Add two vectors and return a new vector containing the result"
   (declare (vec2 vector-a vector-b))
-  (MAKE (cl:+ (AREF VECTOR-A 0) (AREF VECTOR-B 0))
-	(cl:+ (AREF VECTOR-A 1) (AREF VECTOR-B 1))))
+  (make (cl:+ (aref vector-a 0) (aref vector-b 0))
+        (cl:+ (aref vector-a 1) (aref vector-b 1))))
 
 ;;----------------------------------------------------------------
 
-;; Not sure how to optomise this
-(defun - (&rest vec2s)
-  "takes any number of vectors and subtract them and return
-   a new vector4"
-  (reduce #'%- vec2s))
+(defun - (vec2 &rest vec2s)
+  "takes any number of vectors and add them all together
+   returning a new vector"
+  (assert vec2)
+  (let ((x (x vec2))
+        (y (y vec2)))
+    (loop :for vec :in vec2s :do
+       (cl:decf x (x vec))
+       (cl:decf y (y vec)))
+    (make x y)))
 
-;;----------------------------------------------------------------
+(define-compiler-macro - (&whole whole &rest vec2s)
+  (case= (cl:length vec2s)
+    (2 `(%- ,@vec2s))
+    (otherwise whole)))
 
 (declaim (inline %-)
-         (ftype (function (vec2
-                           vec2)
-                          vec2) %-))
+         (ftype (function (vec2 vec2) vec2)
+                %-))
 (defun %- (vector-a vector-b)
   "Subtract two vectors and return a new vector containing
    the result"
   (declare (vec2 vector-a vector-b))
-  (MAKE (cl:- (AREF VECTOR-A 0) (AREF VECTOR-B 0))
-	(cl:- (AREF VECTOR-A 1) (AREF VECTOR-B 1))))
+  (make (cl:- (aref vector-a 0) (aref vector-b 0))
+        (cl:- (aref vector-a 1) (aref vector-b 1))))
 
 ;;----------------------------------------------------------------
 
@@ -118,21 +134,30 @@
   "Multiply vector by scalar"
   (declare (vec2 vector-a)
            (single-float a))
-  (MAKE (cl:* (AREF VECTOR-A 0) A) (cl:* (AREF VECTOR-A 1) A)))
+  (make (cl:* (aref vector-a 0) a)
+        (cl:* (aref vector-a 1) a)))
 
 ;;----------------------------------------------------------------
 
-(defun * (&rest vectors)
-  (if vectors
-      (reduce #'*v vectors)
-      (v! 1 1)))
+(defun * (&rest vec2s)
+  "takes any number of vectors and multiply them all together
+   returning a new vector"
+  (if vec2s
+      (destructuring-bind (vec2 . vec2s) vec2s
+        (let ((x (x vec2))
+              (y (y vec2)))
+          (loop :for vec :in vec2s :do
+             (setf x (cl:* x (x vec)))
+             (setf y (cl:* y (y vec))))
+          (make x y)))
+      (make 1s0 1s0)))
 
-(define-compiler-macro * (&rest vectors)
-  (let ((vectors (or vectors `(v! 1 1))))
-    (reduce (lambda (accum form) `(*v ,form ,accum))
-            vectors)))
-
-;;----------------------------------------------------------------
+(define-compiler-macro * (&whole whole &rest vec2s)
+  (case= (cl:length vec2s)
+    (0 `(make 1s0 1s0))
+    (1 (first vec2s))
+    (2 `(*v ,@vec2s))
+    (otherwise whole)))
 
 (declaim (inline *v)
          (ftype (function (vec2 vec2) vec2)
@@ -141,8 +166,8 @@
   "Multiplies components, is not dot product, not sure what
    i'll need this for yet but hey!"
   (declare (vec2 vector-a vector-b))
-  (MAKE (cl:* (AREF VECTOR-A 0) (AREF VECTOR-B 0))
-	(cl:* (AREF VECTOR-A 1) (AREF VECTOR-B 1))))
+  (make (cl:* (aref vector-a 0) (aref vector-b 0))
+        (cl:* (aref vector-a 1) (aref vector-b 1))))
 
 ;;----------------------------------------------------------------
 
@@ -169,20 +194,19 @@
    yet but hey!"
   (declare (vec2 vector-a vector-b))
   (make (cl:/ (aref vector-a 0)
-	      (aref vector-b 0))
-	(cl:/ (aref vector-a 1)
-	      (aref vector-b 1))))
+              (aref vector-b 0))
+        (cl:/ (aref vector-a 1)
+              (aref vector-b 1))))
 
 ;;----------------------------------------------------------------
 
 (declaim (inline negate)
-         (ftype (function (vec2)
-                          vec2)
+         (ftype (function (vec2) vec2)
                 negate))
 (defun negate (vector-a)
   "Return a vector that is the negative of the vector passed in"
   (declare (vec2 vector-a))
-  (MAKE (cl:- (AREF VECTOR-A 0)) (- (AREF VECTOR-A 1))))
+  (make (cl:- (aref vector-a 0)) (cl:- (aref vector-a 1))))
 
 ;;----------------------------------------------------------------
 
@@ -318,15 +342,15 @@
 ;;----------------------------------------------------------------
 
 (declaim (inline cross)
-         (ftype (function (vec3
-                           vec3)
+         (ftype (function (vec2
+                           vec2)
                           float)
                 cross))
 (defun cross (vec-a vec-b)
   "Calculates the 2 dimensional cross-product of 2 vectors,
    which results in a single floating point value which is
    2 times the area of the triangle."
-  (declare (vec3 vec-a vec-b))
+  (declare (vec2 vec-a vec-b))
   (cl:- (cl:* (x vec-a) (y vec-b)) (cl:* (y vec-a) (x vec-b))))
 
 ;;----------------------------------------------------------------
@@ -359,10 +383,10 @@
 
 (defun spline (x knots)
   (make (rtg-math.maths:spline x (mapcar #'x knots))
-	(rtg-math.maths:spline x (mapcar #'y knots))))
+        (rtg-math.maths:spline x (mapcar #'y knots))))
 
 ;;----------------------------------------------------------------
 
 (defun from-complex (c)
   (make (coerce (realpart c) 'single-float)
-	(coerce (imagpart c) 'single-float)))
+        (coerce (imagpart c) 'single-float)))
