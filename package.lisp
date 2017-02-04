@@ -147,11 +147,27 @@
            :lerp :bezier :mix
            :x :y :z :w))
 
+(defpackage :rtg-math.matrix3.destructive
+  (:use :cl :%rtg-math :rtg-math.types)
+  ;;(:nicknames :m3)
+  (:shadow :identity :trace :+ := :/= :- :* :/)
+  (:import-from :rtg-math.base-vectors :x :y :z :w :v!)
+  (:export :melm :*))
+
+(defpackage :rtg-math.matrix4.destructive
+  (:use :cl :%rtg-math :rtg-math.types)
+  ;;(:nicknames :m3)
+  (:shadow :identity :trace :+ := :/= :- :* :/)
+  (:import-from :rtg-math.base-vectors :x :y :z :w :v!)
+  (:export :melm :*))
+
 (defpackage :rtg-math.matrix3
   (:use :cl :%rtg-math :rtg-math.types)
   (:nicknames :m3)
   (:shadow :identity :trace :+ := :/= :- :* :/)
   (:import-from :rtg-math.base-vectors :x :y :z :w :v!)
+  (:import-from :rtg-math.matrix3.destructive
+                :melm)
   (:export :0p :identityp
            :make :0! :identity
            := :+ :- :* :*s :*v :mrow*vec3 :negate
@@ -167,8 +183,10 @@
 (defpackage :rtg-math.matrix4
   (:use :cl :%rtg-math :rtg-math.types)
   (:nicknames :m4)
-  (:import-from :rtg-math.base-vectors :x :y :z :w :v!)
   (:shadow :identity :trace :+ := :/= :- :* :/)
+  (:import-from :rtg-math.base-vectors :x :y :z :w :v!)
+  (:import-from :rtg-math.matrix4.destructive
+                :melm)
   (:export :0p :identityp
            :make :0! :identity :from-mat3
            := :+ :- :* :*s :*v :*v3 :negate :mrow*vec4

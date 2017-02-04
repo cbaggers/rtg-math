@@ -1,46 +1,7 @@
 (in-package :rtg-math.matrix3)
 
-;; All matrices are stored in column-major format, but these functions
-;; expect row major format. The reason is that row-major is easier to
-;; read in code and matches with lots of examples in maths text books.
-
-
-(declaim (inline melm)
-	 (ftype (function (mat3 (integer 0 3) (integer 0 3))
-			  single-float)
-		melm))
-(defun melm (mat-a row col)
-  "Provides access to data in the matrix by row
-   and column number. The actual data is stored in a 1d list in
-   column major order, but this abstraction means we only have
-   to think in row major order which is how most mathematical
-   texts and online tutorials choose to show matrices"
-  (declare (mat3 mat-a)
-           (type (integer 0 3) row col))
-  (aref mat-a (cl:+ row (cl:* col 3))))
-
-(defun (setf melm) (value mat-a row col)
-  "Provides access to data in the matrix by row
-   and column number. The actual data is stored in a 1d list in
-   column major order, but this abstraction means we only have
-   to think in row major order which is how most mathematical
-   texts and online tutorials choose to show matrices"
-  (declare (mat3 mat-a)
-           (type (integer 0 3) row col)
-           (single-float value))
-  (setf (aref mat-a (cl:+ row (cl:* col 3))) value))
-
-(define-compiler-macro melm (mat-a row col)
-  "Provide access to data in the matrix by row
-   and column number. The actual data is stored in a 1d list in
-   column major order, but this abstraction means we only have
-   to think in row major order which is how most mathematical
-   texts and online tutorials choose to show matrices"
-  (cond ((and (numberp row) (numberp col))
-         `(aref ,mat-a ,(cl:+ row (cl:* col 3))))
-        ((numberp col)
-         `(aref ,mat-a (cl:+ ,row ,(cl:* col 3))))
-        (t `(aref ,mat-a (cl:+ ,row (cl:* ,col 3))))))
+;; All matrices are stored in column-major format, but when you
+;; write them (like in m!) then you write them in row-major format.
 
 ;;----------------------------------------------------------------
 
@@ -93,10 +54,7 @@
 
 (declaim
  (inline from-rows)
- (ftype (function (vec3
-                   vec3
-                   vec3)
-                  mat3)
+ (ftype (function (vec3 vec3 vec3) mat3)
         from-rows))
 (defun from-rows (row-1 row-2 row-3)
   "Make a 3x3 matrix using the data in the 3 vector3s provided
@@ -140,10 +98,7 @@
 
 (declaim
  (inline from-columns)
- (ftype (function (vec3
-                   vec3
-                   vec3)
-                  mat3)
+ (ftype (function (vec3 vec3 vec3) mat3)
         from-columns))
 (defun from-columns (col-1 col-2 col-3)
   "Make a 3x3 matrix using the data in the 3 vector3s provided
@@ -173,8 +128,7 @@
 
 (declaim
  (inline get-column)
- (ftype (function (mat3 (integer 0 3))
-                  vec3)
+ (ftype (function (mat3 (integer 0 3)) vec3)
         get-column))
 (defun get-column (mat-a col-num)
   "Return the specified column of the matrix a vector3"
@@ -188,8 +142,7 @@
 
 (declaim
  (inline 0p)
- (ftype (function (mat3)
-                  boolean)
+ (ftype (function (mat3) boolean)
         0p))
 (defun 0p (mat-a)
   "Returns 't' if this is a zero matrix (as contents of the
@@ -203,8 +156,7 @@
 ;;[TODO] should the checks for '1.0' also have the error bounds?
 (declaim
  (inline identityp)
- (ftype (function (mat3)
-                  boolean)
+ (ftype (function (mat3) boolean)
         identityp))
 (defun identityp (mat-a)
   "Returns 't' if this is an identity matrix (as contents of the
@@ -254,8 +206,7 @@
 
 (declaim
  (inline affine-inverse)
- (ftype (function (mat3)
-                  mat3)
+ (ftype (function (mat3) mat3)
         affine-inverse))
 (defun affine-inverse (mat-a)
   "returns the inverse of the matrix"
@@ -298,8 +249,7 @@
 
 (declaim
  (inline transpose)
- (ftype (function (mat3)
-                  mat3)
+ (ftype (function (mat3) mat3)
         transpose))
 (defun transpose (mat-a)
   "Returns the transpose of the provided matrix"
@@ -314,8 +264,7 @@
 ;;This is taken straight from 'Essential Mathematics for Game..'
 (declaim
  (inline adjoint)
- (ftype (function (mat3)
-                  mat3)
+ (ftype (function (mat3) mat3)
         adjoint))
 (defun adjoint (mat-a)
   "Returns the adjoint of the matrix"
@@ -354,8 +303,7 @@
 
 (declaim
  (inline rotation-from-euler)
- (ftype (function (vec3)
-                  mat3)
+ (ftype (function (vec3) mat3)
         rotation-from-euler))
 (defun rotation-from-euler (vec3-a)
   (declare (vec3 vec3-a))
@@ -379,8 +327,7 @@
 
 (declaim
  (inline scale)
- (ftype (function (vec3)
-                  mat3)
+ (ftype (function (vec3) mat3)
         scale))
 (defun scale (scale-vec3)
   "Returns a matrix which will scale by the amounts specified"
@@ -393,8 +340,7 @@
 
 (declaim
  (inline rotation-x)
- (ftype (function (single-float)
-                  mat3)
+ (ftype (function (single-float) mat3)
         rotation-x))
 (defun rotation-x (angle)
   "Returns a matrix which would rotate a point around the x axis
@@ -410,8 +356,7 @@
 
 (declaim
  (inline rotation-y)
- (ftype (function (single-float)
-                  mat3)
+ (ftype (function (single-float) mat3)
         rotation-y))
 (defun rotation-y (angle)
   "Returns a matrix which would rotate a point around the y axis
@@ -427,8 +372,7 @@
 
 (declaim
  (inline rotation-z)
- (ftype (function (single-float)
-                  mat3)
+ (ftype (function (single-float) mat3)
         rotation-z))
 (defun rotation-z (angle)
   "Returns a matrix which would rotate a point around the z axis
@@ -444,8 +388,7 @@
 
 (declaim
  (inline rotation-from-axis-angle)
- (ftype (function (vec3 single-float)
-                  mat3)
+ (ftype (function (vec3 single-float) mat3)
         rotation-from-axis-angle))
 (defun rotation-from-axis-angle (axis3 angle)
   "Returns a matrix which will rotate a point about the axis
@@ -498,8 +441,7 @@
 ;; [TODO] Comment the fuck out of this and work out how it works
 (declaim
  (inline get-axis-angle)
- (ftype (function (mat3)
-                  vec3)
+ (ftype (function (mat3) vec3)
         get-axis-angle))
 (defun get-axis-angle (mat-a)
   "Gets one possible axis-angle pair that will generate this
@@ -537,9 +479,7 @@
 
 (declaim
  (inline +)
- (ftype (function (mat3
-                   mat3)
-                  mat3)
+ (ftype (function (mat3 mat3) mat3)
         +))
 (defun + (mat-a mat-b)
   "Adds the 2 matrices component wise and returns the result as
@@ -555,8 +495,7 @@
 
 (declaim
  (inline -)
- (ftype (function (mat3 mat3) mat3)
-        -))
+ (ftype (function (mat3 mat3) mat3) -))
 (defun - (mat-a mat-b)
   "Subtracts the 2 matrices component wise and returns the result
    as a new matrix"
@@ -613,14 +552,16 @@
 
 (defun * (&rest matrices)
   (if matrices
-      (reduce #'*m (reverse matrices))
+      (reduce #'rtg-math.matrix3.destructive:* matrices
+              :initial-value (identity))
       (identity)))
 
-(define-compiler-macro * (&rest matrices)
-  (let ((matrices (or (reverse matrices)
-                      `(identity))))
-    (reduce (lambda (accum form) `(*m ,form ,accum))
-            matrices)))
+(define-compiler-macro * (&whole whole &rest matrices)
+  (case= (length matrices)
+    (0 `(identity))
+    (1 (first matrices))
+    (2 `(*m ,@matrices))
+    (otherwise whole)))
 
 ;;----------------------------------------------------------------
 

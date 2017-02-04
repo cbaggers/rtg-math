@@ -2,45 +2,6 @@
 
 ;;----------------------------------------------------------------
 
-(declaim (inline melm)
-         (ftype (function (mat4 (integer 0 4) (integer 0 4))
-                          single-float)
-                melm))
-(defun melm (mat-a row col)
-  "Provides access to data in the matrix by row
-   and column number. The actual data is stored in a 1d list in
-   column major order, but this abstraction means we only have
-   to think in row major order which is how most mathematical
-   texts and online tutorials choose to show matrices"
-  (declare (mat4 mat-a)
-           (type (integer 0 4) row col))
-  (aref mat-a (cl:+ row (cl:* col 4))))
-
-(defun (setf melm) (value mat-a row col)
-  "Provides access to data in the matrix by row
-   and column number. The actual data is stored in a 1d list in
-   column major order, but this abstraction means we only have
-   to think in row major order which is how most mathematical
-   texts and online tutorials choose to show matrices"
-  (declare (mat4 mat-a)
-           (type (integer 0 4) row col)
-           (single-float value))
-  (setf (aref mat-a (cl:+ row (cl:* col 4))) value))
-
-(define-compiler-macro melm (mat-a row col)
-  "Provide access to data in the matrix by row
-   and column number. The actual data is stored in a 1d list in
-   column major order, but this abstraction means we only have
-   to think in row major order which is how most mathematical
-   texts and online tutorials choose to show matrices"
-  (cond ((and (numberp row) (numberp col))
-         `(aref ,mat-a ,(cl:+ row (cl:* col 4))))
-        ((numberp col)
-         `(aref ,mat-a (cl:+ ,row ,(cl:* col 4))))
-        (t `(aref ,mat-a (cl:+ ,row (cl:* ,col 4))))))
-
-;;----------------------------------------------------------------
-
 (declaim (inline identity)
          (ftype (function ()
                           mat4)
@@ -756,14 +717,16 @@
 
 (defun * (&rest matrices)
   (if matrices
-      (reduce #'*m (reverse matrices))
+      (reduce #'rtg-math.matrix4.destructive:* matrices
+              :initial-value (identity))
       (identity)))
 
-(define-compiler-macro * (&rest matrices)
-  (let ((matrices (or (reverse matrices)
-                      `(identity))))
-    (reduce (lambda (accum form) `(*m ,form ,accum))
-            matrices)))
+(define-compiler-macro * (&whole whole &rest matrices)
+  (case= (length matrices)
+    (0 `(identity))
+    (1 (first matrices))
+    (2 `(*m ,@matrices))
+    (otherwise whole)))
 
 ;;----------------------------------------------------------------
 
