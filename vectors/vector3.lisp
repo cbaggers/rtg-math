@@ -120,18 +120,30 @@
 
 ;;---------------------------------------------------------------
 
-(declaim (inline *)
+(declaim (inline *v)
          (ftype (function (vec3
                            vec3)
                           vec3)
-                *))
-(defun * (vector-a vector-b)
+                *v))
+(defun *v (vector-a vector-b)
   "Multiplies components, is not dot product, not sure what
    i'll need this for yet but hey!"
   (declare (vec3 vector-a vector-b))
   (MAKE (cl:* (AREF VECTOR-A 0) (AREF VECTOR-B 0))
 	(cl:* (AREF VECTOR-A 1) (AREF VECTOR-B 1))
 	(cl:* (AREF VECTOR-A 2) (AREF VECTOR-B 2))))
+
+;;----------------------------------------------------------------
+
+(defun * (&rest vectors)
+  (if vectors
+      (reduce #'*v vectors)
+      (v! 1 1 1)))
+
+(define-compiler-macro * (&rest vectors)
+  (let ((vectors (or vectors `(v! 1 1 1))))
+    (reduce (lambda (accum form) `(*v ,form ,accum))
+            vectors)))
 
 ;;---------------------------------------------------------------
 

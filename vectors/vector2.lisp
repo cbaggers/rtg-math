@@ -122,10 +122,22 @@
 
 ;;----------------------------------------------------------------
 
-(declaim (inline *)
+(defun * (&rest vectors)
+  (if vectors
+      (reduce #'*v vectors)
+      (v! 1 1)))
+
+(define-compiler-macro * (&rest vectors)
+  (let ((vectors (or vectors `(v! 1 1))))
+    (reduce (lambda (accum form) `(*v ,form ,accum))
+            vectors)))
+
+;;----------------------------------------------------------------
+
+(declaim (inline *v)
          (ftype (function (vec2 vec2) vec2)
-                *))
-(defun * (vector-a vector-b)
+                *v))
+(defun *v (vector-a vector-b)
   "Multiplies components, is not dot product, not sure what
    i'll need this for yet but hey!"
   (declare (vec2 vector-a vector-b))

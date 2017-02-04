@@ -610,7 +610,21 @@
 	    (cl:* (z vec) (melm mat-a 2 2)))))
 
 ;;----------------------------------------------------------------
-(defun * (mat-a mat-b)
+
+(defun * (&rest matrices)
+  (if matrices
+      (reduce #'*m (reverse matrices))
+      (identity)))
+
+(define-compiler-macro * (&rest matrices)
+  (let ((matrices (or (reverse matrices)
+                      `(identity))))
+    (reduce (lambda (accum form) `(*m ,form ,accum))
+            matrices)))
+
+;;----------------------------------------------------------------
+
+(defun *m (mat-a mat-b)
   "Multiplies 2 matrices and returns the result as a new
    matrix"
   (make (cl:+ (cl:* (melm mat-a 0 0) (melm mat-b 0 0))
