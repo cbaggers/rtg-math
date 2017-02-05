@@ -456,9 +456,10 @@
 ;;----------------------------------------------------------------
 
 (defun rotation-from-euler (vec3-a)
-  "This is an unrolled contatenation of rotation matrices x
-   y & z. The arguments in the originl were in reverse order"
-  (let ((x (x vec3-a)) (y (y vec3-a)) (z (z vec3-a)))
+  "This is an unrolled contatenation of rotation matrices x y & z."
+  (let ((x (x vec3-a))
+        (y (y vec3-a))
+        (z (z vec3-a)))
     (let ((sx (sin x)) (cx (cos x))
           (sy (sin y)) (cy (cos y))
           (sz (sin z)) (cz (cos z)))
@@ -475,8 +476,9 @@
             (cl:- (cl:* sx sz) (cl:* cx sy cz))
             (cl:+ (cl:* cx sy sz) (cl:* sx cz))
             (cl:* cx cy)
+            0f0
 
-            0f0 0f0 0f0 0f0 1f0))))
+            0f0 0f0 0f0 1f0))))
 
 ;;----------------------------------------------------------------
 
