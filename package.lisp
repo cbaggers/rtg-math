@@ -56,7 +56,7 @@
   (:import-from :rtg-math.base-vectors :x :y :z :w :v!)
   (:import-from :rtg-math.base-maths :inv-sqrt)
   (:shadow := :+ :- :* :/ :length :abs)
-  (:export :+ :- :*))
+  (:export :+ :- :* :*s :+s :-s))
 
 (uiop:define-package :rtg-math.vector3.destructive
     (:use :cl :%rtg-math :rtg-math.types)
@@ -64,7 +64,7 @@
   (:import-from :rtg-math.base-vectors :x :y :z :w :v!)
   (:import-from :rtg-math.base-maths :inv-sqrt)
   (:shadow := :+ :- :* :/ :length :abs)
-  (:export :+ :- :*))
+  (:export :+ :- :* :*s :+s :-s))
 
 (uiop:define-package :rtg-math.vector4.destructive
     (:use :cl :%rtg-math :rtg-math.types)
@@ -72,7 +72,7 @@
   (:import-from :rtg-math.base-vectors :x :y :z :w :v!)
   (:import-from :rtg-math.base-maths :inv-sqrt)
   (:shadow := :+ :- :* :/ :length :abs)
-  (:export :+ :- :*))
+  (:export :+ :- :* :*s :+s :-s))
 
 (uiop:define-package :rtg-math.vector2
     (:use :cl :%rtg-math :rtg-math.types)

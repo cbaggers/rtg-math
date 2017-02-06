@@ -99,3 +99,17 @@
     (otherwise whole)))
 
 ;;---------------------------------------------------------------
+
+(declaim (inline *s)
+         (ftype (function (vec4 single-float) vec4)
+                *s))
+(defun *s (vec4 a)
+  "Multiply vector by scalar"
+  (declare (vec4 vec4) (single-float a))
+  (setf (x vec4) (cl:* (x vec4) a))
+  (setf (y vec4) (cl:* (y vec4) a))
+  (setf (z vec4) (cl:* (z vec4) a))
+  (setf (w vec4) (cl:* (w vec4) a))
+  vec4)
+
+;;---------------------------------------------------------------

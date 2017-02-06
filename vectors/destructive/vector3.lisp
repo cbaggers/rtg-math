@@ -95,3 +95,16 @@
     (otherwise whole)))
 
 ;;---------------------------------------------------------------
+
+(declaim (inline *s)
+         (ftype (function (vec3 single-float) vec3)
+                *s))
+(defun *s (vec3 a)
+  "Multiply vector by scalar"
+  (declare (vec3 vec3) (single-float a))
+  (setf (x vec3) (cl:* (x vec3) a))
+  (setf (y vec3) (cl:* (y vec3) a))
+  (setf (z vec3) (cl:* (z vec3) a))
+  vec3)
+
+;;---------------------------------------------------------------
