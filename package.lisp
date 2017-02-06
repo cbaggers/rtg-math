@@ -50,6 +50,30 @@
     (:use :cl :%rtg-math :rtg-math.types)
   (:export :m!))
 
+(uiop:define-package :rtg-math.vector2.destructive
+    (:use :cl :%rtg-math :rtg-math.types)
+  (:nicknames :v2-n)
+  (:import-from :rtg-math.base-vectors :x :y :z :w :v!)
+  (:import-from :rtg-math.base-maths :inv-sqrt)
+  (:shadow := :+ :- :* :/ :length :abs)
+  (:export :+ :- :*))
+
+(uiop:define-package :rtg-math.vector3.destructive
+    (:use :cl :%rtg-math :rtg-math.types)
+  (:nicknames :v3-n)
+  (:import-from :rtg-math.base-vectors :x :y :z :w :v!)
+  (:import-from :rtg-math.base-maths :inv-sqrt)
+  (:shadow := :+ :- :* :/ :length :abs)
+  (:export :+ :- :*))
+
+(uiop:define-package :rtg-math.vector4.destructive
+    (:use :cl :%rtg-math :rtg-math.types)
+  (:nicknames :v4-n)
+  (:import-from :rtg-math.base-vectors :x :y :z :w :v!)
+  (:import-from :rtg-math.base-maths :inv-sqrt)
+  (:shadow := :+ :- :* :/ :length :abs)
+  (:export :+ :- :*))
+
 (uiop:define-package :rtg-math.vector2
     (:use :cl :%rtg-math :rtg-math.types)
   (:nicknames :v2)
@@ -68,30 +92,6 @@
            :face-foreward
            :lerp :bezier :spline
            :from-complex))
-
-(uiop:define-package :rtg-math.vector2.destructive
-    (:use :cl :%rtg-math :rtg-math.types)
-  ;;(:nicknames :v2-destructive)
-  (:import-from :rtg-math.base-vectors :x :y :z :w :v!)
-  (:import-from :rtg-math.base-maths :inv-sqrt)
-  (:shadow := :+ :- :* :/ :length :abs)
-  (:export :+ :- :*))
-
-(uiop:define-package :rtg-math.vector3.destructive
-    (:use :cl :%rtg-math :rtg-math.types)
-  ;;(:nicknames :v3-destructive)
-  (:import-from :rtg-math.base-vectors :x :y :z :w :v!)
-  (:import-from :rtg-math.base-maths :inv-sqrt)
-  (:shadow := :+ :- :* :/ :length :abs)
-  (:export :+ :- :*))
-
-(uiop:define-package :rtg-math.vector4.destructive
-    (:use :cl :%rtg-math :rtg-math.types)
-  ;;(:nicknames :v4-destructive)
-  (:import-from :rtg-math.base-vectors :x :y :z :w :v!)
-  (:import-from :rtg-math.base-maths :inv-sqrt)
-  (:shadow := :+ :- :* :/ :length :abs)
-  (:export :+ :- :*))
 
 (uiop:define-package :rtg-math.vector3
     (:use :cl :%rtg-math :rtg-math.types)
@@ -149,14 +149,14 @@
 
 (uiop:define-package :rtg-math.matrix3.destructive
     (:use :cl :%rtg-math :rtg-math.types)
-  ;;(:nicknames :m3)
+  (:nicknames :m3-n)
   (:shadow :identity :trace :+ := :/= :- :* :/)
   (:import-from :rtg-math.base-vectors :x :y :z :w :v!)
   (:export :melm :*))
 
 (uiop:define-package :rtg-math.matrix4.destructive
     (:use :cl :%rtg-math :rtg-math.types)
-  ;;(:nicknames :m3)
+  (:nicknames :m4-n)
   (:shadow :identity :trace :+ := :/= :- :* :/)
   (:import-from :rtg-math.base-vectors :x :y :z :w :v!)
   (:export :melm :*))
