@@ -1,11 +1,11 @@
 ;;;; package.lisp
 
-(defpackage #:%rtg-math
-  (:use #:cl)
+(uiop:define-package #:%rtg-math
+    (:use #:cl)
   (:export :case= :defun-typed :defun-typed-inline))
 
-(defpackage #:rtg-math.types
-  (:use #:cl :%rtg-math)
+(uiop:define-package #:rtg-math.types
+    (:use #:cl :%rtg-math)
   (:export :quaternion
            :mat3 :mat4
            :vec2 :vec3 :vec4
@@ -16,8 +16,8 @@
            :int8-vec2 :int8-vec3 :int8-vec4
            :uint8-vec2 :uint8-vec3 :uint8-vec4))
 
-(defpackage :rtg-math.base-maths
-  (:use :cl :%rtg-math :rtg-math.types)
+(uiop:define-package :rtg-math.base-maths
+    (:use :cl :%rtg-math :rtg-math.types)
   (:export :clamp
            :clampf
            :+one-degree-in-radians+
@@ -29,13 +29,13 @@
            :degrees-f
            :radians-f))
 
-(defpackage :rtg-math.maths
-  (:use :cl :%rtg-math :rtg-math.types)
+(uiop:define-package :rtg-math.maths
+    (:use :cl :%rtg-math :rtg-math.types)
   (:export :lerp :mix :stepv :clamp :smoothstep :pulse
            :spline))
 
-(defpackage :rtg-math.base-vectors
-  (:use :cl :%rtg-math :rtg-math.types)
+(uiop:define-package :rtg-math.base-vectors
+    (:use :cl :%rtg-math :rtg-math.types)
   (:export :v! :x :y :z :w
            :v!byte :v!ubyte :v!int :v!uint :v!bool :v!double
            :v!int8 :v!uint8
@@ -46,12 +46,12 @@
            :v4! :v4!double :v4!int :v4!uint :v4!ubyte
            :v4!byte :v4!uint8 :v4!int8 :v4!short :v4!ushort))
 
-(defpackage :rtg-math.base-matrices
-  (:use :cl :%rtg-math :rtg-math.types)
+(uiop:define-package :rtg-math.base-matrices
+    (:use :cl :%rtg-math :rtg-math.types)
   (:export :m!))
 
-(defpackage :rtg-math.vector2
-  (:use :cl :%rtg-math :rtg-math.types)
+(uiop:define-package :rtg-math.vector2
+    (:use :cl :%rtg-math :rtg-math.types)
   (:nicknames :v2)
   (:import-from :rtg-math.base-vectors :x :y :z :w :v!)
   (:import-from :rtg-math.base-maths :inv-sqrt)
@@ -69,32 +69,32 @@
            :lerp :bezier :spline
            :from-complex))
 
-(defpackage :rtg-math.vector2.destructive
-  (:use :cl :%rtg-math :rtg-math.types)
+(uiop:define-package :rtg-math.vector2.destructive
+    (:use :cl :%rtg-math :rtg-math.types)
   ;;(:nicknames :v2-destructive)
   (:import-from :rtg-math.base-vectors :x :y :z :w :v!)
   (:import-from :rtg-math.base-maths :inv-sqrt)
   (:shadow := :+ :- :* :/ :length :abs)
   (:export :+ :- :*))
 
-(defpackage :rtg-math.vector3.destructive
-  (:use :cl :%rtg-math :rtg-math.types)
+(uiop:define-package :rtg-math.vector3.destructive
+    (:use :cl :%rtg-math :rtg-math.types)
   ;;(:nicknames :v3-destructive)
   (:import-from :rtg-math.base-vectors :x :y :z :w :v!)
   (:import-from :rtg-math.base-maths :inv-sqrt)
   (:shadow := :+ :- :* :/ :length :abs)
   (:export :+ :- :*))
 
-(defpackage :rtg-math.vector4.destructive
-  (:use :cl :%rtg-math :rtg-math.types)
+(uiop:define-package :rtg-math.vector4.destructive
+    (:use :cl :%rtg-math :rtg-math.types)
   ;;(:nicknames :v4-destructive)
   (:import-from :rtg-math.base-vectors :x :y :z :w :v!)
   (:import-from :rtg-math.base-maths :inv-sqrt)
   (:shadow := :+ :- :* :/ :length :abs)
   (:export :+ :- :*))
 
-(defpackage :rtg-math.vector3
-  (:use :cl :%rtg-math :rtg-math.types)
+(uiop:define-package :rtg-math.vector3
+    (:use :cl :%rtg-math :rtg-math.types)
   (:nicknames :v3)
   (:import-from :rtg-math.base-vectors :x :y :z :w :v!)
   (:import-from :rtg-math.base-maths :inv-sqrt)
@@ -111,8 +111,8 @@
            :face-foreward
            :lerp :bezier :spline))
 
-(defpackage :rtg-math.vector4
-  (:use :cl :%rtg-math :rtg-math.types)
+(uiop:define-package :rtg-math.vector4
+    (:use :cl :%rtg-math :rtg-math.types)
   (:nicknames :v4)
   (:import-from :rtg-math.base-vectors :x :y :z :w :v!)
   (:import-from :rtg-math.base-maths :inv-sqrt)
@@ -129,8 +129,8 @@
            :face-foreward
            :lerp :bezier :spline))
 
-(defpackage :rtg-math.vectors
-  (:use :cl :%rtg-math :rtg-math.types)
+(uiop:define-package :rtg-math.vectors
+    (:use :cl :%rtg-math :rtg-math.types)
   (:nicknames :v)
   (:import-from :rtg-math.base-vectors :x :y :z :w :v!)
   (:shadow :+ := :/= :1+ :1- :- :* :/ :length)
@@ -147,22 +147,22 @@
            :lerp :bezier :mix
            :x :y :z :w))
 
-(defpackage :rtg-math.matrix3.destructive
-  (:use :cl :%rtg-math :rtg-math.types)
+(uiop:define-package :rtg-math.matrix3.destructive
+    (:use :cl :%rtg-math :rtg-math.types)
   ;;(:nicknames :m3)
   (:shadow :identity :trace :+ := :/= :- :* :/)
   (:import-from :rtg-math.base-vectors :x :y :z :w :v!)
   (:export :melm :*))
 
-(defpackage :rtg-math.matrix4.destructive
-  (:use :cl :%rtg-math :rtg-math.types)
+(uiop:define-package :rtg-math.matrix4.destructive
+    (:use :cl :%rtg-math :rtg-math.types)
   ;;(:nicknames :m3)
   (:shadow :identity :trace :+ := :/= :- :* :/)
   (:import-from :rtg-math.base-vectors :x :y :z :w :v!)
   (:export :melm :*))
 
-(defpackage :rtg-math.matrix3
-  (:use :cl :%rtg-math :rtg-math.types)
+(uiop:define-package :rtg-math.matrix3
+    (:use :cl :%rtg-math :rtg-math.types)
   (:nicknames :m3)
   (:shadow :identity :trace :+ := :/= :- :* :/)
   (:import-from :rtg-math.base-vectors :x :y :z :w :v!)
@@ -180,8 +180,8 @@
            :affine-inverse
            :get-fixed-angles :get-axis-angle))
 
-(defpackage :rtg-math.matrix4
-  (:use :cl :%rtg-math :rtg-math.types)
+(uiop:define-package :rtg-math.matrix4
+    (:use :cl :%rtg-math :rtg-math.types)
   (:nicknames :m4)
   (:shadow :identity :trace :+ := :/= :- :* :/)
   (:import-from :rtg-math.base-vectors :x :y :z :w :v!)
@@ -204,8 +204,8 @@
            :get-fixed-angles :get-axis-angle))
 
 
-(defpackage :rtg-math.matrices
-  (:use :cl :%rtg-math :rtg-math.types)
+(uiop:define-package :rtg-math.matrices
+    (:use :cl :%rtg-math :rtg-math.types)
   (:nicknames :m)
   (:import-from :rtg-math.base-vectors :x :y :z :w :v!)
   (:shadow :0p :unitp :+ := :/= :1+ :1- :- :* :elt :trace)
@@ -215,10 +215,10 @@
            :inverse :affine-inverse :transpose :trace :negate
            :to-string))
 
-(defpackage :rtg-math.quaternions
-  (:use :cl :%rtg-math :rtg-math.types :rtg-math.base-maths)
+(uiop:define-package :rtg-math.quaternions
+    (:use :cl :%rtg-math :rtg-math.types :rtg-math.base-maths)
   (:nicknames :q)
-  (:shadow :lerp :/= := :+ :- :* :identity)
+  (:shadow :lerp :/= := :+ :- :* :identity :conjugate)
   (:export :w :x :y :z :q! :0! :0p
            :unitp :identity :identity-p
            :from-mat3
@@ -227,27 +227,27 @@
            :from-axies
            :from-fixed-angles
            :magnitude :norm := :/=
-           :copy :get-axis-angle :normalize :qconjugate
+           :copy :get-axis-angle :normalize :qconjugate :conjugate
            :inverse :+ :- :* :*v :*s
            :dot :rotate :lerp :slerp :approx-slerp
            :to-mat3 :to-mat4))
 
-(defpackage :rtg-math.polar
-  (:use :cl :%rtg-math :rtg-math.types :rtg-math.base-vectors)
+(uiop:define-package :rtg-math.polar
+    (:use :cl :%rtg-math :rtg-math.types :rtg-math.base-vectors)
   (:export :polar->cartesian :cartesian->polar))
 
-(defpackage :rtg-math.spherical
-  (:use :cl :%rtg-math :rtg-math.types :rtg-math.base-vectors)
+(uiop:define-package :rtg-math.spherical
+    (:use :cl :%rtg-math :rtg-math.types :rtg-math.base-vectors)
   (:export :spherical->cartesian :cartesian->spherical))
 
-(defpackage :rtg-math.projection
-  (:use :cl :%rtg-math :rtg-math.types :rtg-math.base-maths
-        :rtg-math.base-vectors)
+(uiop:define-package :rtg-math.projection
+    (:use :cl :%rtg-math :rtg-math.types :rtg-math.base-maths
+          :rtg-math.base-vectors)
   (:shadow :lerp)
   (:export :perspective :orthographic :blinn-newell-env-map :spherical-env-map))
 
-(defpackage #:rtg-math
-  (:use #:cl)
+(uiop:define-package #:rtg-math
+    (:use #:cl)
   (:import-from :rtg-math.base-maths :radians :degrees)
   (:import-from :rtg-math.base-vectors :v! :v!byte :v!ubyte :v!int8 :v!uint8
                 :v!int :x :y :z :w :v2! :v3! :v4!)
