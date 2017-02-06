@@ -14,8 +14,8 @@
 
 ;;[TODO] What is faster (cl:* x x) or (expt x 2) ?
 (declaim (inline 0p)
-         (ftype (function (vec3)
-                          (boolean)) 0p))
+         (ftype (function (vec3) (boolean))
+                0p))
 (defun 0p (vector-a)
   "Checks if the length of the vector is zero. As this is a
    floating point number it checks to see if the length is
@@ -27,8 +27,8 @@
 ;;---------------------------------------------------------------
 
 (declaim (inline unitp)
-         (ftype (function (vec3)
-                          (boolean)) unitp))
+         (ftype (function (vec3) (boolean))
+                unitp))
 (defun unitp (vector-a)
   "Checks if the vector is of unit length. As this is a
    floating point number it checks to see if the length is
@@ -39,9 +39,8 @@
 ;;---------------------------------------------------------------
 
 (declaim (inline =)
-         (ftype (function (vec3
-                           vec3)
-                          (boolean)) =))
+         (ftype (function (vec3 vec3) (boolean))
+                =))
 (defun = (vector-a vector-b)
   "Returns either t if the two vectors are equal.
    Otherwise it returns nil."
@@ -128,7 +127,8 @@
 ;;---------------------------------------------------------------
 
 (declaim (inline *s)
-         (ftype (function (vec3 single-float) vec3) *s))
+         (ftype (function (vec3 single-float) vec3)
+                *s))
 (defun *s (vector-a a)
   "Multiply vector by scalar"
   (declare (vec3 vector-a)
@@ -200,8 +200,7 @@
 ;;---------------------------------------------------------------
 
 (declaim (inline negate)
-         (ftype (function (vec3)
-                          vec3)
+         (ftype (function (vec3) vec3)
                 negate))
 (defun negate (vector-a)
   "Return a vector that is the negative of the vector passed in"
@@ -211,9 +210,7 @@
 ;;----------------------------------------------------------------
 
 (declaim (inline dot)
-         (ftype (function (vec3
-                           vec3)
-                          single-float)
+         (ftype (function (vec3 vec3) single-float)
                 dot))
 (defun dot (vector-a vector-b)
   "Return the dot product of the vector-a and vector-b."
@@ -225,9 +222,7 @@
 ;;---------------------------------------------------------------
 
 (declaim (inline face-foreward)
-         (ftype (function (vec3
-                           vec3)
-                          vec3)
+         (ftype (function (vec3 vec3) vec3)
                 face-foreward))
 (defun face-foreward (vector-a vector-b)
   (declare (vec3 vector-a vector-b))
@@ -238,8 +233,8 @@
 ;;---------------------------------------------------------------
 
 (declaim (inline length-squared)
-         (ftype (function (vec3)
-                          single-float) length-squared))
+         (ftype (function (vec3) single-float)
+                length-squared))
 (defun length-squared (vector-a)
   "Return the squared length of the vector. A regular length
    is the square root of this value. The sqrt function is slow
@@ -254,8 +249,8 @@
 ;;---------------------------------------------------------------
 
 (declaim (inline length)
-         (ftype (function (vec3)
-                          single-float) length))
+         (ftype (function (vec3) single-float)
+                length))
 (defun length (vector-a)
   "Returns the length of a vector
    If you only need to compare relative lengths then definately
@@ -266,9 +261,7 @@
 ;;---------------------------------------------------------------
 
 (declaim (inline distance-squared)
-         (ftype (function (vec3
-                           vec3)
-                          single-float)
+         (ftype (function (vec3 vec3) single-float)
                 distance-squared))
 (defun distance-squared (vector-a vector-b)
   "finds the squared distance between 2 points defined by vectors
@@ -279,9 +272,7 @@
 ;;---------------------------------------------------------------
 
 (declaim (inline distance)
-         (ftype (function (vec3
-                           vec3)
-                          single-float)
+         (ftype (function (vec3 vec3) single-float)
                 distance))
 (defun distance (vector-a vector-b)
   "Return the distance between 2 points defined by vectors
@@ -303,9 +294,7 @@
 ;;---------------------------------------------------------------
 
 (declaim (inline absolute-dot)
-         (ftype (function (vec3
-                           vec3)
-                          single-float)
+         (ftype (function (vec3 vec3) single-float)
                 absolute-dot))
 (defun absolute-dot (vector-a vector-b)
   "Return the absolute dot product of the vector-a and vector-b."
@@ -319,8 +308,7 @@
 ;; [TODO] shouldnt this return a zero vector in event of zero
 ;; length? does it matter?
 (declaim (inline normalize)
-         (ftype (function (vec3)
-                          vec3)
+         (ftype (function (vec3) vec3)
                 normalize))
 (defun normalize (vector-a)
   "This normalizes the vector, it makes sure a zero length
@@ -334,9 +322,7 @@
 ;;---------------------------------------------------------------
 
 (declaim (inline cross)
-         (ftype (function (vec3
-                           vec3)
-                          vec3)
+         (ftype (function (vec3 vec3) vec3)
                 cross))
 (defun cross (vec-a vec-b)
   "Calculates the cross-product of 2 vectors, i.e. the vector
@@ -390,10 +376,7 @@
 ;;----------------------------------------------------------------
 
 (declaim (inline lerp)
-         (ftype (function (vec3
-                           vec3
-                           single-float)
-                          vec3)
+         (ftype (function (vec3 vec3 single-float) vec3)
                 lerp))
 (defun lerp (vector-a vector-b ammount)
   (declare (vec3 vector-a vector-b))
@@ -404,10 +387,7 @@
 ;; https://gitlab.common-lisp.net/alexandria/alexandria/commit/926a066611b7b11cb71e26c827a271e500888c30
 ;; thanks to axion for the heads-up
 (declaim (inline stable-lerp)
-         (ftype (function (vec3
-                           vec3
-                           single-float)
-                          vec3)
+         (ftype (function (vec3 vec3 single-float) vec3)
                 stable-lerp))
 (defun stable-lerp (vector-a vector-b ammount)
   (declare (vec3 vector-a vector-b))
@@ -430,12 +410,7 @@
 ;;----------------------------------------------------------------
 
 (declaim (inline bezier)
-         (ftype (function (vec3
-                           vec3
-                           vec3
-                           vec3
-                           single-float)
-                          vec3)
+         (ftype (function (vec3 vec3 vec3 vec3 single-float) vec3)
                 bezier))
 (defun bezier (a1 a2 b1 b2 ammount)
   (declare (vec3 a1 a2 b1 b2)
