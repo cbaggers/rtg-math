@@ -1,5 +1,21 @@
 (in-package #:rtg-math.vector3.destructive)
 
+;;----------------------------------------------------------------
+
+(defun +s (vec3 scalar)
+  (cl:incf (x vec3) scalar)
+  (cl:incf (y vec3) scalar)
+  (cl:incf (z vec3) scalar)
+  vec3)
+
+;;----------------------------------------------------------------
+
+(defun -s (vec3 scalar)
+  (cl:decf (x vec3) scalar)
+  (cl:decf (y vec3) scalar)
+  (cl:decf (z vec3) scalar)
+  vec3)
+
 ;;---------------------------------------------------------------
 
 (declaim (inline %+)

@@ -1,5 +1,19 @@
 (in-package #:rtg-math.vector2.destructive)
 
+;;----------------------------------------------------------------
+
+(defun +s (vec2 scalar)
+  (cl:incf (x vec2) scalar)
+  (cl:incf (y vec2) scalar)
+  vec2)
+
+;;----------------------------------------------------------------
+
+(defun -s (vec2 scalar)
+  (cl:decf (x vec2) scalar)
+  (cl:decf (y vec2) scalar)
+  vec2)
+
 ;;---------------------------------------------------------------
 
 (declaim (inline %+)

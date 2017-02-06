@@ -1,5 +1,22 @@
 (in-package #:rtg-math.vector4.destructive)
 
+;;----------------------------------------------------------------
+
+(defun +s (vec4 scalar)
+  (cl:incf (x vec4) scalar)
+  (cl:incf (y vec4) scalar)
+  (cl:incf (z vec4) scalar)
+  (cl:incf (w vec4) scalar)
+  vec4)
+
+;;----------------------------------------------------------------
+
+(defun -s (vec4 scalar)
+  (cl:decf (x vec4) scalar)
+  (cl:decf (y vec4) scalar)
+  (cl:decf (z vec4) scalar)
+  (cl:decf (w vec4) scalar))
+
 ;;---------------------------------------------------------------
 
 (declaim (inline %+)
