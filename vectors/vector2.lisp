@@ -2,81 +2,76 @@
 
 ;;----------------------------------------------------------------
 
-(declaim (inline make)
-         (ftype (function (single-float
-                           single-float)
-                          vec2)
-                make))
-(defun make (x y)
+(defn make ((x single-float) (y single-float)) vec2
   "This takes 2 floats and give back a vector2, this is just an
    array but it specifies the array type and populates it.
    For speed reasons it will not accept integers so make sure
    you hand it floats."
-  (declare (single-float x y))
-  (let (( vec (make-array 2 :element-type `single-float)))
-    (setf (aref vec 0) x
-          (aref vec 1) y)
-    vec))
+  (declare (optimize (speed 3) (safety 1) (debug 1)))
+  (v2-n:set-components x y (make-array 2 :element-type `single-float)))
 
 ;;----------------------------------------------------------------
 
-;;[TODO] What is faster (cl:* x x) or (expt x 2) ?
-(declaim (inline 0p)
-         (ftype (function (vec2)
-                          (boolean)) 0p))
-(defun 0p (vector-a)
+(defn 0p ((vector-a vec2)) boolean
   "Checks if the length of the vector is zero. As this is a
    floating point number it checks to see if the length is
    below a threshold set in the base-maths package"
-  (declare (vec2 vector-a))
-  (cl:= 0f0 (cl:+ (EXPT (AREF VECTOR-A 0) 2) (EXPT (AREF VECTOR-A 1) 2))))
+  (declare (optimize (speed 3) (safety 1) (debug 1)))
+  (cl:= 0f0 (cl:+ (expt (aref vector-a 0) 2)
+                  (expt (aref vector-a 1) 2))))
 
 ;;----------------------------------------------------------------
 
-(declaim (inline unitp)
-         (ftype (function (vec2)
-                          (boolean)) unitp))
-(defun unitp (vector-a)
+(defn unitp ((vector-a vec2)) boolean
   "Checks if the vector is of unit length. As this is a
    floating point number it checks to see if the length is
    within the range of 1 + or - and threshold set in base-maths"
-  (declare (vec2 vector-a))
-  (cl:= 0f0 (cl:- 1.0 (cl:+ (EXPT (AREF VECTOR-A 0) 2) (EXPT (AREF VECTOR-A 1) 2)))))
+  (declare (optimize (speed 3) (safety 1) (debug 1)))
+  (cl:= 0f0 (cl:- 1.0 (cl:+ (expt (aref vector-a 0) 2)
+                            (expt (aref vector-a 1) 2)))))
 ;;----------------------------------------------------------------
 
-(declaim (inline =)
-         (ftype (function (vec2
-                           vec2)
-                          (boolean)) =))
-(defun = (vector-a vector-b)
+(defn = ((vector-a vec2) (vector-b vec2)) boolean
   "Returns either t if the two vectors are equal.
    Otherwise it returns nil."
-  (declare (vec2 vector-a vector-b))
-  (AND (cl:= (AREF VECTOR-A 0) (AREF VECTOR-B 0))
-       (cl:= (AREF VECTOR-A 1) (AREF VECTOR-B 1))))
+  (declare (optimize (speed 3) (safety 1) (debug 1)))
+  (and (cl:= (aref vector-a 0) (aref vector-b 0))
+       (cl:= (aref vector-a 1) (aref vector-b 1))))
 
 ;;----------------------------------------------------------------
 
-(defun +s (vec2 scalar)
-  (v! (cl:+ (x vec2) scalar)
-      (cl:+ (y vec2) scalar)))
+(defn +s ((vec2 vec2) (scalar single-float)) vec2
+  (declare (optimize (speed 3) (safety 1) (debug 1)))
+  (make (cl:+ (x vec2) scalar)
+        (cl:+ (y vec2) scalar)))
 
 ;;----------------------------------------------------------------
 
-(defun -s (vec2 scalar)
-  (v! (cl:- (x vec2) scalar)
-      (cl:- (y vec2) scalar)))
+(defn -s ((vec2 vec2) (scalar single-float)) vec2
+  (declare (optimize (speed 3) (safety 1) (debug 1)))
+  (make (cl:- (x vec2) scalar)
+        (cl:- (y vec2) scalar)))
 
 ;;----------------------------------------------------------------
 
-(defun + (&rest vec2s)
+(defn %+ ((vector-a vec2) (vector-b vec2)) vec2
+  "Add two vectors and return a new vector containing the result"
+  (declare (optimize (speed 3) (safety 1) (debug 1)))
+  (make (cl:+ (aref vector-a 0) (aref vector-b 0))
+        (cl:+ (aref vector-a 1) (aref vector-b 1))))
+
+(defn + (&rest (vec2s vec2)) vec2
   "takes any number of vectors and add them all together
    returning a new vector"
+  (declare (optimize (speed 3) (safety 1) (debug 1)))
   (if vec2s
-      (loop :for vec :in vec2s
-         :summing (x vec) :into x
-         :summing (y vec) :into y
-         :finally (return (make x y)))
+      (let ((x 0f0)
+            (y 0f0))
+        (declare (single-float x y))
+        (loop :for vec :in vec2s :do
+           (incf x (x vec))
+           (incf y (y vec)))
+        (make x y))
       (make 0s0 0s0)))
 
 (define-compiler-macro + (&whole whole &rest vec2s)
@@ -86,27 +81,29 @@
     (2 `(%+ ,@vec2s))
     (otherwise whole)))
 
-(declaim (inline %+)
-         (ftype (function (vec2
-                           vec2)
-                          vec2) %+))
-(defun %+ (vector-a vector-b)
-  "Add two vectors and return a new vector containing the result"
-  (declare (vec2 vector-a vector-b))
-  (make (cl:+ (aref vector-a 0) (aref vector-b 0))
-        (cl:+ (aref vector-a 1) (aref vector-b 1))))
-
 ;;----------------------------------------------------------------
 
-(defun - (vec2 &rest vec2s)
+(defn %- ((vector-a vec2) (vector-b vec2)) vec2
+  "Subtract two vectors and return a new vector containing
+   the result"
+  (declare (optimize (speed 3) (safety 1) (debug 1)))
+  (make (cl:- (aref vector-a 0) (aref vector-b 0))
+        (cl:- (aref vector-a 1) (aref vector-b 1))))
+
+(defn - ((vec2 vec2) &rest (vec2s vec2)) vec2
   "takes any number of vectors and add them all together
    returning a new vector"
+  (declare (optimize (speed 3) (safety 1) (debug 1)))
   (assert vec2)
   (let ((x (x vec2))
         (y (y vec2)))
-    (loop :for vec :in vec2s :do
-       (cl:decf x (x vec))
-       (cl:decf y (y vec)))
+    (let ((x 0f0)
+          (y 0f0))
+      (declare (single-float x y))
+      (loop :for vec :in vec2s :do
+         (decf x (x vec))
+         (decf y (y vec)))
+      (make x y))
     (make x y)))
 
 (define-compiler-macro - (&whole whole &rest vec2s)
@@ -114,38 +111,18 @@
     (2 `(%- ,@vec2s))
     (otherwise whole)))
 
-(declaim (inline %-)
-         (ftype (function (vec2 vec2) vec2)
-                %-))
-(defun %- (vector-a vector-b)
-  "Subtract two vectors and return a new vector containing
-   the result"
-  (declare (vec2 vector-a vector-b))
-  (make (cl:- (aref vector-a 0) (aref vector-b 0))
-        (cl:- (aref vector-a 1) (aref vector-b 1))))
-
 ;;----------------------------------------------------------------
 
-(declaim (inline *s)
-         (ftype (function (vec2
-                           single-float)
-                          vec2) *s))
-(defun *s (vector-a a)
-  "Multiply vector by scalar"
-  (declare (vec2 vector-a)
-           (single-float a))
-  (make (cl:* (aref vector-a 0) a)
-        (cl:* (aref vector-a 1) a)))
-
-;;----------------------------------------------------------------
-
-(defun * (&rest vec2s)
+(defn * (&rest (vec2s vec2)) vec2
   "takes any number of vectors and multiply them all together
    returning a new vector"
+  (declare (optimize (speed 3) (safety 1) (debug 1)))
   (if vec2s
       (destructuring-bind (vec2 . vec2s) vec2s
+        (declare (vec2 vec2))
         (let ((x (x vec2))
               (y (y vec2)))
+          (declare (single-float x y))
           (loop :for vec :in vec2s :do
              (setf x (cl:* x (x vec)))
              (setf y (cl:* y (y vec))))
@@ -159,10 +136,7 @@
     (2 `(*v ,@vec2s))
     (otherwise whole)))
 
-(declaim (inline *v)
-         (ftype (function (vec2 vec2) vec2)
-                *v))
-(defun *v (vector-a vector-b)
+(defn *v ((vector-a vec2) (vector-b vec2)) vec2
   "Multiplies components, is not dot product, not sure what
    i'll need this for yet but hey!"
   (declare (vec2 vector-a vector-b))
@@ -171,11 +145,15 @@
 
 ;;----------------------------------------------------------------
 
-(declaim (inline /s)
-         (ftype (function (vec2
-                           single-float)
-                          vec2) /s))
-(defun /s (vector-a a)
+(defn *s ((vector-a vec2) (a single-float)) vec2
+  "Multiply vector by scalar"
+  (declare (optimize (speed 3) (safety 1) (debug 1)))
+  (make (cl:* (aref vector-a 0) a)
+        (cl:* (aref vector-a 1) a)))
+
+;;----------------------------------------------------------------
+
+(defn /s ((vector-a vec2) (a single-float)) vec2
   "divide vector by scalar and return result as new vector"
   (declare (vec2 vector-a)
            (single-float a))
@@ -184,12 +162,7 @@
 
 ;;----------------------------------------------------------------
 
-(declaim (inline /)
-         (ftype (function (vec2
-                           vec2)
-                          vec2)
-                /))
-(defun / (vector-a vector-b)
+(defn / ((vector-a vec2) (vector-b vec2)) vec2
   "Divides components, not sure what, i'll need this for
    yet but hey!"
   (declare (vec2 vector-a vector-b))
@@ -200,26 +173,18 @@
 
 ;;----------------------------------------------------------------
 
-(declaim (inline negate)
-         (ftype (function (vec2) vec2)
-                negate))
-(defun negate (vector-a)
+(defn negate ((vector-a vec2)) vec2
   "Return a vector that is the negative of the vector passed in"
-  (declare (vec2 vector-a))
+  (declare (optimize (speed 3) (safety 1) (debug 1)))
   (make (cl:- (aref vector-a 0)) (cl:- (aref vector-a 1))))
 
 ;;----------------------------------------------------------------
 
-(declaim (inline dot)
-         (ftype (function (vec2
-                           vec2)
-                          single-float)
-                dot))
-(defun dot (vector-a vector-b)
+(defn dot ((vector-a vec2) (vector-b vec2)) single-float
   "Return the dot product of the vector-a and vector-b."
-  (declare (vec2 vector-a vector-b))
-  (cl:+ (cl:* (AREF VECTOR-A 0) (AREF VECTOR-B 0))
-        (cl:* (AREF VECTOR-A 1) (AREF VECTOR-B 1))))
+  (declare (optimize (speed 3) (safety 1) (debug 1)))
+  (cl:+ (cl:* (x vector-a) (x vector-b))
+        (cl:* (y vector-a) (y vector-b))))
 
 ;;----------------------------------------------------------------
 
@@ -230,7 +195,7 @@
                 face-foreward))
 (defun face-foreward (vector-a vector-b)
   (declare (vec2 vector-a vector-b))
-  (if (> (print (dot vector-a vector-b)) 0)
+  (if (> (dot vector-a vector-b) 0)
       vector-a
       (negate vector-a)))
 

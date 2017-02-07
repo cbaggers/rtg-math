@@ -103,7 +103,7 @@
 ;;----------------------------------------------------------------
 
 (declaim (inline x y z w)
-         (ftype (function ((array single-float (*))) single-float)
+         (ftype (function ((simple-array single-float (*))) single-float)
                 x y z w))
 (defun x (vec)
   "Returns the x component of the vector"

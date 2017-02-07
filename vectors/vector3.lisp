@@ -2,9 +2,9 @@
 
 ;;---------------------------------------------------------------
 
-(defun-typed-inline make
-    ((x single-float) (y single-float) (z single-float)) -> vec3
-  (let (( vec (make-array 3 :element-type `single-float)))
+(defn-inline make ((x single-float) (y single-float) (z single-float)) vec3
+  ;;
+  (let ((vec (make-array 3 :element-type `single-float)))
     (setf (aref vec 0) x
           (aref vec 1) y
           (aref vec 2) z)
@@ -21,8 +21,9 @@
    floating point number it checks to see if the length is
    below a threshold set in the base-maths package"
   (declare (vec3 vector-a))
-  (cl:= 0f0 (cl:+ (EXPT (AREF VECTOR-A 0) 2) (EXPT (AREF VECTOR-A 1) 2)
-                  (EXPT (AREF VECTOR-A 2) 2))))
+  (cl:= 0f0 (cl:+ (expt (aref vector-a 0) 2)
+                  (expt (aref vector-a 1) 2)
+                  (expt (aref vector-a 2) 2))))
 
 ;;---------------------------------------------------------------
 
@@ -34,8 +35,9 @@
    floating point number it checks to see if the length is
    within the range of 1 + or - and threshold set in base-maths"
   (declare (vec3 vector-a))
-  (cl:= 0f0 (cl:- 1.0 (cl:+ (EXPT (AREF VECTOR-A 0) 2) (EXPT (AREF VECTOR-A 1) 2)
-                            (EXPT (AREF VECTOR-A 2) 2)))))
+  (cl:= 0f0 (cl:- 1.0 (cl:+ (expt (aref vector-a 0) 2)
+                            (expt (aref vector-a 1) 2)
+                            (expt (aref vector-a 2) 2)))))
 ;;---------------------------------------------------------------
 
 (declaim (inline =)
@@ -45,9 +47,9 @@
   "Returns either t if the two vectors are equal.
    Otherwise it returns nil."
   (declare (vec3 vector-a vector-b))
-  (AND (cl:= (AREF VECTOR-A 0) (AREF VECTOR-B 0))
-       (cl:= (AREF VECTOR-A 1) (AREF VECTOR-B 1))
-       (cl:= (AREF VECTOR-A 2) (AREF VECTOR-B 2))))
+  (and (cl:= (aref vector-a 0) (aref vector-b 0))
+       (cl:= (aref vector-a 1) (aref vector-b 1))
+       (cl:= (aref vector-a 2) (aref vector-b 2))))
 
 ;;----------------------------------------------------------------
 
@@ -181,8 +183,9 @@
   (declare (vec3 vector-a)
            (single-float a))
   (let ((b (cl:/ 1 a)))
-    (MAKE (cl:* (AREF VECTOR-A 0) B) (cl:* (AREF VECTOR-A 1) B)
-          (cl:* (AREF VECTOR-A 2) B))))
+    (make (cl:* (aref vector-a 0) b)
+          (cl:* (aref vector-a 1) b)
+          (cl:* (aref vector-a 2) b))))
 
 ;;---------------------------------------------------------------
 
@@ -193,9 +196,9 @@
   "Divides components, not sure what, i'll need this for
    yet but hey!"
   (declare (vec3 vector-a vector-b))
-  (MAKE (cl:/ (AREF VECTOR-A 0) (AREF VECTOR-B 0))
-        (cl:/ (AREF VECTOR-A 1) (AREF VECTOR-B 1))
-        (cl:/ (AREF VECTOR-A 2) (AREF VECTOR-B 2))))
+  (make (cl:/ (aref vector-a 0) (aref vector-b 0))
+        (cl:/ (aref vector-a 1) (aref vector-b 1))
+        (cl:/ (aref vector-a 2) (aref vector-b 2))))
 
 ;;---------------------------------------------------------------
 
@@ -205,7 +208,9 @@
 (defun negate (vector-a)
   "Return a vector that is the negative of the vector passed in"
   (declare (vec3 vector-a))
-  (MAKE (cl:- (AREF VECTOR-A 0)) (cl:- (AREF VECTOR-A 1)) (cl:- (AREF VECTOR-A 2))))
+  (make (cl:- (aref vector-a 0))
+        (cl:- (aref vector-a 1))
+        (cl:- (aref vector-a 2))))
 
 ;;----------------------------------------------------------------
 

@@ -1,8 +1,8 @@
 ;;;; package.lisp
 
 (uiop:define-package #:%rtg-math
-    (:use #:cl)
-  (:export :case= :defun-typed :defun-typed-inline))
+    (:use #:cl #:alexandria)
+  (:export :case= :defn :defn-inline))
 
 (uiop:define-package #:rtg-math.types
     (:use #:cl :%rtg-math)
@@ -56,7 +56,7 @@
   (:import-from :rtg-math.base-vectors :x :y :z :w :v!)
   (:import-from :rtg-math.base-maths :inv-sqrt)
   (:shadow := :+ :- :* :/ :length :abs)
-  (:export :+ :- :* :*s :+s :-s))
+  (:export :set-components :+ :- :* :*s :+s :-s))
 
 (uiop:define-package :rtg-math.vector3.destructive
     (:use :cl :%rtg-math :rtg-math.types)
@@ -64,7 +64,7 @@
   (:import-from :rtg-math.base-vectors :x :y :z :w :v!)
   (:import-from :rtg-math.base-maths :inv-sqrt)
   (:shadow := :+ :- :* :/ :length :abs)
-  (:export :+ :- :* :*s :+s :-s))
+  (:export :set-components :+ :- :* :*s :+s :-s))
 
 (uiop:define-package :rtg-math.vector4.destructive
     (:use :cl :%rtg-math :rtg-math.types)
@@ -72,7 +72,7 @@
   (:import-from :rtg-math.base-vectors :x :y :z :w :v!)
   (:import-from :rtg-math.base-maths :inv-sqrt)
   (:shadow := :+ :- :* :/ :length :abs)
-  (:export :+ :- :* :*s :+s :-s))
+  (:export :set-components :+ :- :* :*s :+s :-s))
 
 (uiop:define-package :rtg-math.vector2
     (:use :cl :%rtg-math :rtg-math.types)

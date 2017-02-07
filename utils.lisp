@@ -13,23 +13,56 @@
            (cond ,@cases))))))
 
 
-(defmacro defun-typed (name typed-args -> result-type &body body)
-  (assert (string= (symbol-name ->) "->"))
-  `(progn
-     (declaim (ftype (function ,(mapcar #'second typed-args)
-                               ,result-type)
-                     ,name))
-     (defun ,name ,(mapcar #'first typed-args)
-       (declare ,@(mapcar #'reverse typed-args))
-       ,@body)))
+(defun parse-defn-args (typed-args result-types)
+  (let ((seen-&rest nil))
+    (labels ((to-pair (x)
+               (destructuring-bind (name &optional (type t)) (ensure-list x)
+                 (cond
+                   ((or (string= name "&OPTIONAL")
+                        (string= name "&AUX"))
+                    (error "~a not valid in defn forms" name))
+                   ((string= name "&REST")
+                    (setf seen-&rest t)
+                    nil)
+                   ((and (not (char= #\& (char (symbol-name name) 0)))
+                         (not seen-&rest))
+                    (list type name)))))
+             ;;
+             (mayb-first (x)
+               (if (listp x)
+                   (first x)
+                   x))
+             ;;
+             (mayb-second (x)
+               (if (listp x)
+                   (second x)
+                   x)))
+      ;;
+      (values (mapcar #'mayb-first typed-args)
+              `(function ,(mapcar #'mayb-second typed-args)
+                         ,result-types)
+              (remove nil (mapcar #'to-pair typed-args))))))
 
-(defmacro defun-typed-inline (name typed-args -> result-type &body body)
-  (assert (string= (symbol-name ->) "->"))
-  `(progn
-     (declaim (inline make)
-              (ftype (function ,(mapcar #'second typed-args)
-                               ,result-type)
-                     ,name))
-     (defun ,name ,(mapcar #'first typed-args)
-       (declare ,@(mapcar #'reverse typed-args))
-       ,@body)))
+(defmacro defn (name typed-args result-types &body body)
+  (multiple-value-bind (args ftype type-decls)
+      (parse-defn-args typed-args result-types)
+    (multiple-value-bind (body decls doc) (parse-body body :documentation t)
+      `(progn
+         (declaim (ftype ,ftype ,name))
+         (defun ,name ,args
+           ,@(when doc (list doc))
+           (declare ,@type-decls)
+           ,@decls
+           ,@body)))))
+
+(defmacro defn-inline (name typed-args result-types &body body)
+  (multiple-value-bind (args ftype type-decls)
+      (parse-defn-args typed-args result-types)
+    (multiple-value-bind (body decls doc) (parse-body body :documentation t)
+      `(progn
+         (declaim (inline ,name) (ftype ,ftype ,name))
+         (defun ,name ,args
+           ,@(when doc (list doc))
+           (declare ,@type-decls)
+           ,@decls
+           ,@body)))))
