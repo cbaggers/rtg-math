@@ -113,3 +113,15 @@
   vec4)
 
 ;;---------------------------------------------------------------
+
+(declaim (inline normalize)
+         (ftype (function (vec4) vec4)
+                normalize))
+(defun normalize (vector-a)
+  "This normalizes the vector, it makes sure a zero length
+   vector won't throw an error."
+  (declare (vec4 vector-a))
+  (let ((len (length-squared vector-a)))
+    (if (cl:= 0f0 len)
+        vector-a
+        (*s vector-a (inv-sqrt len)))))

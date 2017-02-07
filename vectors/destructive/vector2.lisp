@@ -102,3 +102,15 @@
   vec2)
 
 ;;---------------------------------------------------------------
+
+(declaim (inline normalize)
+         (ftype (function (vec2) vec2)
+                normalize))
+(defun normalize (vector-a)
+  "This normalizes the vector, it makes sure a zero length
+   vector won't throw an error."
+  (declare (vec2 vector-a))
+  (let ((len (length-squared vector-a)))
+    (if (cl:= 0f0 len)
+        vector-a
+        (*s vector-a (inv-sqrt len)))))
