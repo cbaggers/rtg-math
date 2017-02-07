@@ -40,7 +40,6 @@
 
 (defn + ((accum-vec vec3) &rest (vec3s vec3)) vec3
   "Add two vectors and return a new vector containing the result"
-  (declare (inline %+))
   (declare (optimize (speed 3) (safety 1) (debug 1)))
   (loop :for vec :in vec3s :do (%+ accum-vec vec))
   accum-vec)
@@ -64,7 +63,6 @@
 
 (defn - ((accum-vec vec3) &rest (vec3s vec3)) vec3
   "Add two vectors and return a new vector containing the result"
-  (declare (inline %-))
   (loop :for vec :in vec3s :do (%- accum-vec vec))
   accum-vec)
 
@@ -88,7 +86,6 @@
 (defn * ((accum-vec vec3) &rest (vec3s vec3)) vec3
   "Add two vectors and return a new vector containing the result"
   (declare (optimize (speed 3) (safety 1) (debug 1)))
-  (declare (inline %*))
   (loop :for vec :in vec3s :do (%* accum-vec vec))
   accum-vec)
 
@@ -128,13 +125,6 @@
   (setf (y vec3-a) (cl:/ (y vec3-a) (y vec3-b)))
   (setf (z vec3-a) (cl:/ (z vec3-a) (z vec3-b)))
   vec3-a)
-
-;;---------------------------------------------------------------
-
-(defun negate ((vector-a))
-  "Return a vector that is the negative of the vector passed in"
-  (declare (vec2 vector-a))
-  (make (cl:- (aref vector-a 0)) (cl:- (aref vector-a 1))))
 
 ;;---------------------------------------------------------------
 

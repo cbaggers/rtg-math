@@ -46,7 +46,6 @@
 (defn + ((accum-vec vec4) &rest (vec4s vec4)) vec4
   "Add two vectors and return a new vector containing the result"
   (declare (optimize (speed 3) (safety 1) (debug 1)))
-  (declare (inline %+))
   (loop :for vec :in vec4s :do (%+ accum-vec vec))
   accum-vec)
 
@@ -71,7 +70,6 @@
 (defn - ((accum-vec vec4) &rest (vec4s vec4)) vec4
   "Add two vectors and return a new vector containing the result"
   (declare (optimize (speed 3) (safety 1) (debug 1)))
-  (declare (inline %-))
   (loop :for vec :in vec4s :do (%- accum-vec vec))
   accum-vec)
 
@@ -96,7 +94,6 @@
 (defn * ((accum-vec vec4) &rest (vec4s vec4)) vec4
   "Add two vectors and return a new vector containing the result"
   (declare (optimize (speed 3) (safety 1) (debug 1)))
-  (declare (inline %*))
   (loop :for vec :in vec4s :do (%* accum-vec vec))
   accum-vec)
 
