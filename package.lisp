@@ -119,7 +119,7 @@
   (:shadow := :+ :- :* :/ :length :abs)
   (:export :make
            :0p :unitp
-           := :+ :- :* :/ :*s :/s :*v3 :+s :-s
+           := :+ :- :* :/ :*s :/s :+s :-s
            :negate
            :abs
            :length-squared :length :distance-squared :distance
