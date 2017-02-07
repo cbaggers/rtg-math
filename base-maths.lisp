@@ -11,9 +11,9 @@
   (min (max val min) max))
 
 (declaim (inline clampf)
-	 (ftype (function (single-float single-float single-float)
-			  single-float)
-		clampf))
+         (ftype (function (single-float single-float single-float)
+                          single-float)
+                clampf))
 (defun clampf (min max float)
   (declare (single-float min max float))
   (the single-float (min (max float min) max)))
@@ -21,9 +21,9 @@
 ;;----------------------------------------------------------------
 
 (declaim (inline inv-sqrt)
-	 (ftype (function (single-float)
-			  single-float)
-		inv-sqrt))
+         (ftype (function (single-float)
+                          single-float)
+                inv-sqrt))
 (defun inv-sqrt (x)
   "Calculates the inverse square root of a number"
   (declare (single-float x))
@@ -31,26 +31,26 @@
 
 ;;----------------------------------------------------------------
 
-(declaim (inline radians)
-	 (ftype (function ((or integer single-float)) single-float)
-                radians))
-(defun radians (degrees)
-  (radians-f (the single-float (float degrees))))
-
-(declaim (inline degrees)
-	 (ftype (function ((or integer single-float)) single-float)
-                degrees))
-(defun degrees (radians)
-  (degrees-f (the single-float (float radians))))
-
 (declaim (inline radians-f)
-	 (ftype (function (single-float) single-float) radians-f))
+         (ftype (function (single-float) single-float) radians-f))
 (defun radians-f (degrees)
   (declare (single-float degrees))
   (the single-float (* degrees +one-degree-in-radians+)))
 
 (declaim (inline degrees-f)
-	 (ftype (function (single-float) single-float) degrees-f))
+         (ftype (function (single-float) single-float) degrees-f))
 (defun degrees-f (radians)
   (declare (single-float radians))
   (the single-float (* radians +one-radian-in-degrees+)))
+
+(declaim (inline radians)
+         (ftype (function ((or integer single-float)) single-float)
+                radians))
+(defun radians (degrees)
+  (radians-f (the single-float (float degrees))))
+
+(declaim (inline degrees)
+         (ftype (function ((or integer single-float)) single-float)
+                degrees))
+(defun degrees (radians)
+  (degrees-f (the single-float (float radians))))
