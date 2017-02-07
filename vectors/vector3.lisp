@@ -12,70 +12,67 @@
 
 ;;---------------------------------------------------------------
 
-;;[TODO] What is faster (cl:* x x) or (expt x 2) ?
-(declaim (inline 0p)
-         (ftype (function (vec3) (boolean))
-                0p))
-(defun 0p (vector-a)
+(defn 0p ((vector-a vec3)) boolean
   "Checks if the length of the vector is zero. As this is a
    floating point number it checks to see if the length is
    below a threshold set in the base-maths package"
-  (declare (vec3 vector-a))
+  (declare (optimize (speed 3) (safety 1) (debug 1)))
   (cl:= 0f0 (cl:+ (expt (aref vector-a 0) 2)
                   (expt (aref vector-a 1) 2)
                   (expt (aref vector-a 2) 2))))
 
 ;;---------------------------------------------------------------
 
-(declaim (inline unitp)
-         (ftype (function (vec3) (boolean))
-                unitp))
-(defun unitp (vector-a)
+(defn unitp ((vector-a vec3)) boolean
   "Checks if the vector is of unit length. As this is a
    floating point number it checks to see if the length is
    within the range of 1 + or - and threshold set in base-maths"
-  (declare (vec3 vector-a))
+  (declare (optimize (speed 3) (safety 1) (debug 1)))
   (cl:= 0f0 (cl:- 1.0 (cl:+ (expt (aref vector-a 0) 2)
                             (expt (aref vector-a 1) 2)
                             (expt (aref vector-a 2) 2)))))
 ;;---------------------------------------------------------------
 
-(declaim (inline =)
-         (ftype (function (vec3 vec3) (boolean))
-                =))
-(defun = (vector-a vector-b)
+(defn = ((vector-a vec3) (vector-b vec3)) boolean
   "Returns either t if the two vectors are equal.
    Otherwise it returns nil."
-  (declare (vec3 vector-a vector-b))
+  (declare (optimize (speed 3) (safety 1) (debug 1)))
   (and (cl:= (aref vector-a 0) (aref vector-b 0))
        (cl:= (aref vector-a 1) (aref vector-b 1))
        (cl:= (aref vector-a 2) (aref vector-b 2))))
 
 ;;----------------------------------------------------------------
 
-(defun +s (vec2 scalar)
-  (make (cl:+ (x vec2) scalar)
-        (cl:+ (y vec2) scalar)
-        (cl:+ (z vec2) scalar)))
+(defn +s ((vec3 vec3) (scalar single-float)) vec3
+  (declare (optimize (speed 3) (safety 1) (debug 1)))
+  (make (cl:+ (x vec3) scalar)
+        (cl:+ (y vec3) scalar)
+        (cl:+ (z vec3) scalar)))
 
 ;;----------------------------------------------------------------
 
-(defun -s (vec2 scalar)
-  (make (cl:- (x vec2) scalar)
-        (cl:- (y vec2) scalar)
-        (cl:- (z vec2) scalar)))
+(defn -s ((vec3 vec3) (scalar single-float)) vec3
+  (declare (optimize (speed 3) (safety 1) (debug 1)))
+  (make (cl:- (x vec3) scalar)
+        (cl:- (y vec3) scalar)
+        (cl:- (z vec3) scalar)))
 
 ;;---------------------------------------------------------------
 
-(defun + (&rest vec3s)
+(defn + (&rest (vec3s vec3)) vec3
   "takes any number of vectors and add them all together
    returning a new vector"
+  (declare (optimize (speed 3) (safety 1) (debug 1)))
   (if vec3s
-      (loop :for vec :in vec3s
-         :summing (x vec) :into x
-         :summing (y vec) :into y
-         :summing (z vec) :into z
-         :finally (return (make x y z)))
+      (let ((x 0f0)
+            (y 0f0)
+            (z 0f0))
+        (declare (single-float x y z))
+        (loop :for vec :in vec3s :do
+           (incf x (x vec))
+           (incf y (y vec))
+           (incf z (z vec)))
+        (make x y z))
       (make 0s0 0s0 0s0)))
 
 (define-compiler-macro + (&whole whole &rest vec3s)
@@ -85,69 +82,67 @@
     (2 `(%+ ,@vec3s))
     (otherwise whole)))
 
-(declaim (inline %+)
-         (ftype (function (vec3 vec3) vec3)
-                %+))
-(defun %+ (vector-a vector-b)
+(defn %+ ((vector-a vec3) (vector-b vec3)) vec3
   "Add two vectors and return a new vector containing the result"
-  (declare (vec3 vector-a vector-b))
+  (declare (optimize (speed 3) (safety 1) (debug 1)))
   (make (cl:+ (aref vector-a 0) (aref vector-b 0))
         (cl:+ (aref vector-a 1) (aref vector-b 1))
         (cl:+ (aref vector-a 2) (aref vector-b 2))))
 
 ;;---------------------------------------------------------------
 
-(defun - (vec3 &rest vec3s)
+(defn - ((vec3 vec3) &rest (vec3s vec3)) vec3
   "takes any number of vectors and add them all together
    returning a new vector"
+  (declare (optimize (speed 3) (safety 1) (debug 1)))
   (assert vec3)
-  (let ((x (x vec3))
-        (y (y vec3))
-        (z (z vec3)))
-    (loop :for vec :in vec3s :do
-       (cl:decf x (x vec))
-       (cl:decf y (y vec))
-       (cl:decf z (z vec)))
-    (make x y z)))
+  (if vec3s
+      (let ((x (x vec3))
+            (y (y vec3))
+            (z (z vec3)))
+        (declare (single-float x y z))
+        (loop :for vec :in vec3s :do
+           (cl:decf x (x vec))
+           (cl:decf y (y vec))
+           (cl:decf z (z vec)))
+        (make x y z))
+      vec3))
 
 (define-compiler-macro - (&whole whole &rest vec3s)
   (case= (cl:length vec3s)
     (2 `(%- ,@vec3s))
     (otherwise whole)))
 
-(declaim (inline %-)
-         (ftype (function (vec3 vec3) vec3)
-                %-))
-(defun %- (vector-a vector-b)
+(defn %- ((vector-a vec3) (vector-b vec3)) vec3
   "Subtract two vectors and return a new vector containing
    the result"
-  (declare (vec3 vector-a vector-b))
+  (declare (optimize (speed 3) (safety 1) (debug 1)))
   (make (cl:- (aref vector-a 0) (aref vector-b 0))
         (cl:- (aref vector-a 1) (aref vector-b 1))
         (cl:- (aref vector-a 2) (aref vector-b 2))))
 
 ;;---------------------------------------------------------------
 
-(declaim (inline *s)
-         (ftype (function (vec3 single-float) vec3)
-                *s))
-(defun *s (vector-a a)
+(defn *s ((vector-a vec3) (a single-float)) vec3
   "Multiply vector by scalar"
-  (declare (vec3 vector-a)
-           (single-float a))
-  (make (cl:* (aref vector-a 0) a) (cl:* (aref vector-a 1) a)
+  (declare (optimize (speed 3) (safety 1) (debug 1)))
+  (make (cl:* (aref vector-a 0) a)
+        (cl:* (aref vector-a 1) a)
         (cl:* (aref vector-a 2) a)))
 
 ;;---------------------------------------------------------------
 
-(defun * (&rest vec3s)
+(defn * (&rest (vec3s vec3)) vec3
   "takes any number of vectors and multiply them all together
    returning a new vector"
+  (declare (optimize (speed 3) (safety 1) (debug 1)))
   (if vec3s
       (destructuring-bind (vec3 . vec3s) vec3s
+        (declare (vec3 vec3))
         (let ((x (x vec3))
               (y (y vec3))
               (z (z vec3)))
+          (declare (single-float x y z))
           (loop :for vec :in vec3s :do
              (setf x (cl:* x (x vec)))
              (setf y (cl:* y (y vec)))
@@ -162,26 +157,18 @@
     (2 `(*v ,@vec3s))
     (otherwise whole)))
 
-(declaim (inline *v)
-         (ftype (function (vec3 vec3) vec3)
-                *v))
-(defun *v (vector-a vector-b)
-  "Multiplies components, is not dot product, not sure what
-   i'll need this for yet but hey!"
-  (declare (vec3 vector-a vector-b))
+(defn *v ((vector-a vec3) (vector-b vec3)) vec3
+  "Multiplies components"
+  (declare (optimize (speed 3) (safety 1) (debug 1)))
   (make (cl:* (aref vector-a 0) (aref vector-b 0))
         (cl:* (aref vector-a 1) (aref vector-b 1))
         (cl:* (aref vector-a 2) (aref vector-b 2))))
 
 ;;---------------------------------------------------------------
 
-(declaim (inline /s)
-         (ftype (function (vec3 single-float) vec3)
-                /s))
-(defun /s (vector-a a)
+(defn /s ((vector-a vec3) (a single-float)) vec3
   "divide vector by scalar and return result as new vector"
-  (declare (vec3 vector-a)
-           (single-float a))
+  (declare (optimize (speed 3) (safety 1) (debug 1)))
   (let ((b (cl:/ 1 a)))
     (make (cl:* (aref vector-a 0) b)
           (cl:* (aref vector-a 1) b)
@@ -189,63 +176,47 @@
 
 ;;---------------------------------------------------------------
 
-(declaim (inline /)
-         (ftype (function (vec3 vec3) vec3)
-                /))
-(defun / (vector-a vector-b)
-  "Divides components, not sure what, i'll need this for
-   yet but hey!"
-  (declare (vec3 vector-a vector-b))
+(defn / ((vector-a vec3) (vector-b vec3)) vec3
+  "Divides components"
+  (declare (optimize (speed 3) (safety 1) (debug 1)))
   (make (cl:/ (aref vector-a 0) (aref vector-b 0))
         (cl:/ (aref vector-a 1) (aref vector-b 1))
         (cl:/ (aref vector-a 2) (aref vector-b 2))))
 
 ;;---------------------------------------------------------------
 
-(declaim (inline negate)
-         (ftype (function (vec3) vec3)
-                negate))
-(defun negate (vector-a)
+(defn negate ((vector-a vec3)) vec3
   "Return a vector that is the negative of the vector passed in"
-  (declare (vec3 vector-a))
+  (declare (optimize (speed 3) (safety 1) (debug 1)))
   (make (cl:- (aref vector-a 0))
         (cl:- (aref vector-a 1))
         (cl:- (aref vector-a 2))))
 
 ;;----------------------------------------------------------------
 
-(declaim (inline dot)
-         (ftype (function (vec3 vec3) single-float)
-                dot))
-(defun dot (vector-a vector-b)
+(defn dot ((vector-a vec3) (vector-b vec3)) single-float
   "Return the dot product of the vector-a and vector-b."
-  (declare (vec3 vector-a vector-b))
-  (cl:+ (cl:* (AREF VECTOR-A 0) (AREF VECTOR-B 0))
-        (cl:* (AREF VECTOR-A 1) (AREF VECTOR-B 1))
-        (cl:* (AREF VECTOR-A 2) (AREF VECTOR-B 2))))
+  (declare (optimize (speed 3) (safety 1) (debug 1)))
+  (cl:+ (cl:* (aref vector-a 0) (aref vector-b 0))
+        (cl:* (aref vector-a 1) (aref vector-b 1))
+        (cl:* (aref vector-a 2) (aref vector-b 2))))
 
 ;;---------------------------------------------------------------
 
-(declaim (inline face-foreward)
-         (ftype (function (vec3 vec3) vec3)
-                face-foreward))
-(defun face-foreward (vector-a vector-b)
-  (declare (vec3 vector-a vector-b))
-  (if (> (print (dot vector-a vector-b)) 0)
+(defn face-foreward ((vector-a vec3) (vector-b vec3)) vec3
+  (declare (optimize (speed 3) (safety 1) (debug 1)))
+  (if (> (dot vector-a vector-b) 0)
       vector-a
       (negate vector-a)))
 
 ;;---------------------------------------------------------------
 
-(declaim (inline length-squared)
-         (ftype (function (vec3) single-float)
-                length-squared))
-(defun length-squared (vector-a)
+(defn length-squared ((vector-a vec3)) single-float
   "Return the squared length of the vector. A regular length
    is the square root of this value. The sqrt function is slow
    so if all thats needs doing is to compare lengths then always
    use the length squared function"
-  (declare (vec3 vector-a))
+  (declare (optimize (speed 3) (safety 1) (debug 1)))
   (let ((x (x vector-a))
         (y (y vector-a))
         (z (z vector-a)))
@@ -253,72 +224,55 @@
 
 ;;---------------------------------------------------------------
 
-(declaim (inline length)
-         (ftype (function (vec3) single-float)
-                length))
-(defun length (vector-a)
+(defn length ((vector-a vec3)) single-float
   "Returns the length of a vector
    If you only need to compare relative lengths then definately
    stick to length-squared as the sqrt is a slow operation."
-  (declare (vec3 vector-a))
+  (declare (optimize (speed 3) (safety 1) (debug 1)))
   (sqrt (length-squared vector-a)))
 
 ;;---------------------------------------------------------------
 
-(declaim (inline distance-squared)
-         (ftype (function (vec3 vec3) single-float)
-                distance-squared))
-(defun distance-squared (vector-a vector-b)
+(defn distance-squared ((vector-a vec3) (vector-b vec3)) single-float
   "finds the squared distance between 2 points defined by vectors
    vector-a & vector-b"
-  (declare (vec3 vector-a vector-b))
+  (declare (optimize (speed 3) (safety 1) (debug 1)))
   (length-squared (- vector-b vector-a)))
 
 ;;---------------------------------------------------------------
 
-(declaim (inline distance)
-         (ftype (function (vec3 vec3) single-float)
-                distance))
-(defun distance (vector-a vector-b)
+(defn distance ((vector-a vec3) (vector-b vec3)) single-float
   "Return the distance between 2 points defined by vectors
    vector-a & vector-b. If comparing distances, use
    c-distance-squared as it desnt require a sqrt and thus is
    faster."
-  (declare (vec3 vector-a vector-b))
+  (declare (optimize (speed 3) (safety 1) (debug 1)))
   (sqrt (distance-squared vector-a vector-b)))
 
 ;;---------------------------------------------------------------
 
-(declaim (inline abs)
-         (ftype (function (vec3) vec3) abs))
-(defun abs (vector-a)
+(defn abs ((vector-a vec3)) vec3
   "Return the vec3 containing the abs of the original vec3's components."
-  (declare (vec3 vector-a))
-  (make (cl:abs (x vector-a)) (cl:abs (y vector-a)) (cl:abs (y vector-a))))
+  (declare (optimize (speed 3) (safety 1) (debug 1)))
+  (make (cl:abs (x vector-a))
+        (cl:abs (y vector-a))
+        (cl:abs (y vector-a))))
 
 ;;---------------------------------------------------------------
 
-(declaim (inline absolute-dot)
-         (ftype (function (vec3 vec3) single-float)
-                absolute-dot))
-(defun absolute-dot (vector-a vector-b)
+(defn absolute-dot ((vector-a vec3) (vector-b vec3)) single-float
   "Return the absolute dot product of the vector-a and vector-b."
-  (declare (vec3 vector-a vector-b))
-  (cl:+ (CL:ABS (cl:* (AREF VECTOR-A 0) (AREF VECTOR-B 0)))
-        (CL:ABS (cl:* (AREF VECTOR-A 1) (AREF VECTOR-B 1)))
-        (CL:ABS (cl:* (AREF VECTOR-A 2) (AREF VECTOR-B 2)))))
+  (declare (optimize (speed 3) (safety 1) (debug 1)))
+  (cl:+ (cl:abs (cl:* (aref vector-a 0) (aref vector-b 0)))
+        (cl:abs (cl:* (aref vector-a 1) (aref vector-b 1)))
+        (cl:abs (cl:* (aref vector-a 2) (aref vector-b 2)))))
 
 ;;---------------------------------------------------------------
 
-;; [TODO] shouldnt this return a zero vector in event of zero
-;; length? does it matter?
-(declaim (inline normalize)
-         (ftype (function (vec3) vec3)
-                normalize))
-(defun normalize (vector-a)
+(defn normalize ((vector-a vec3)) vec3
   "This normalizes the vector, it makes sure a zero length
    vector won't throw an error."
-  (declare (vec3 vector-a))
+  (declare (optimize (speed 3) (safety 1) (debug 1)))
   (let ((len (length-squared vector-a)))
     (if (cl:= 0f0 len)
         vector-a
@@ -326,10 +280,7 @@
 
 ;;---------------------------------------------------------------
 
-(declaim (inline cross)
-         (ftype (function (vec3 vec3) vec3)
-                cross))
-(defun cross (vec-a vec-b)
+(defn cross ((vec-a vec3) (vec-b vec3)) vec3
   "Calculates the cross-product of 2 vectors, i.e. the vector
    that lies perpendicular to them both. The resultign vector
    will <b>NOT</b> be normalized, to maximise efficiency
@@ -341,7 +292,7 @@
    will be sin(a) where a is the angle between the two vectors.
    The fact that we don't normalize may be useful in our
    quaternion functions later on."
-  (declare (vec3 vec-a vec-b))
+  (declare (optimize (speed 3) (safety 1) (debug 1)))
   (make
    (cl:- (cl:* (y vec-a) (z vec-b)) (cl:* (z vec-a) (y vec-b)))
    (cl:- (cl:* (z vec-a) (x vec-b)) (cl:* (x vec-a) (z vec-b)))
@@ -380,22 +331,16 @@
 
 ;;----------------------------------------------------------------
 
-(declaim (inline lerp)
-         (ftype (function (vec3 vec3 single-float) vec3)
-                lerp))
-(defun lerp (vector-a vector-b ammount)
-  (declare (vec3 vector-a vector-b))
+(defn lerp ((vector-a vec3) (vector-b vec3) (ammount single-float)) vec3
+  (declare (optimize (speed 3) (safety 1) (debug 1)))
   (%+ vector-a (*s (%- vector-b vector-a) ammount)))
 
 
 ;; read this for details: (+ (* (- 1.0 v) a) (* v b))
 ;; https://gitlab.common-lisp.net/alexandria/alexandria/commit/926a066611b7b11cb71e26c827a271e500888c30
 ;; thanks to axion for the heads-up
-(declaim (inline stable-lerp)
-         (ftype (function (vec3 vec3 single-float) vec3)
-                stable-lerp))
-(defun stable-lerp (vector-a vector-b ammount)
-  (declare (vec3 vector-a vector-b))
+(defn stable-lerp ((vector-a vec3) (vector-b vec3) (ammount single-float)) vec3
+  (declare (optimize (speed 3) (safety 1) (debug 1)))
   (%+ (*s vector-a (cl:- 1s0 ammount))
       (*s vector-b ammount)))
 
@@ -414,12 +359,10 @@
 
 ;;----------------------------------------------------------------
 
-(declaim (inline bezier)
-         (ftype (function (vec3 vec3 vec3 vec3 single-float) vec3)
-                bezier))
-(defun bezier (a1 a2 b1 b2 ammount)
-  (declare (vec3 a1 a2 b1 b2)
-           (single-float ammount))
+(defn bezier ((a1 vec3) (a2 vec3)
+               (b1 vec3) (b2 vec3)
+               (ammount single-float)) vec3
+  (declare (optimize (speed 3) (safety 1) (debug 1)))
   (lerp (lerp a1 a2 ammount)
         (lerp b1 b2 ammount)
         ammount))
