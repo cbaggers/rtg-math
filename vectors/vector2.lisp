@@ -95,16 +95,15 @@
    returning a new vector"
   (declare (optimize (speed 3) (safety 1) (debug 1)))
   (assert vec2)
-  (let ((x (x vec2))
-        (y (y vec2)))
-    (let ((x 0f0)
-          (y 0f0))
-      (declare (single-float x y))
-      (loop :for vec :in vec2s :do
-         (decf x (x vec))
-         (decf y (y vec)))
-      (make x y))
-    (make x y)))
+  (if vec2s
+      (let ((x (x vec2))
+            (y (y vec2)))
+        (declare (single-float x y))
+        (loop :for vec :in vec2s :do
+           (decf x (x vec))
+           (decf y (y vec)))
+        (make x y))
+      vec2))
 
 (define-compiler-macro - (&whole whole &rest vec2s)
   (case= (cl:length vec2s)
@@ -188,106 +187,72 @@
 
 ;;----------------------------------------------------------------
 
-(declaim (inline face-foreward)
-         (ftype (function (vec2
-                           vec2)
-                          vec2)
-                face-foreward))
-(defun face-foreward (vector-a vector-b)
-  (declare (vec2 vector-a vector-b))
+(defn face-foreward ((vector-a vec2) (vector-b vec2)) vec2
   (if (> (dot vector-a vector-b) 0)
       vector-a
       (negate vector-a)))
 
 ;;----------------------------------------------------------------
 
-(declaim (inline length-squared)
-         (ftype (function (vec2)
-                          single-float) length-squared))
-(defun length-squared (vector-a)
+(defn length-squared ((vector-a vec2)) single-float
   "Return the squared length of the vector. A regular length
    is the square root of this value. The sqrt function is slow
    so if all thats needs doing is to compare lengths then always
    use the length squared function"
-  (declare (vec2 vector-a))
+  (declare (optimize (speed 3) (safety 1) (debug 1)))
   (let ((x (x vector-a))
         (y (y vector-a)))
     (cl:+ (cl:* x x) (cl:* y y))))
 
 ;;----------------------------------------------------------------
 
-(declaim (inline length)
-         (ftype (function (vec2)
-                          single-float) length))
-(defun length (vector-a)
+(defn length ((vector-a vec2)) single-float
   "Returns the length of a vector
    If you only need to compare relative lengths then definately
    stick to length-squared as the sqrt is a slow operation."
-  (declare (vec2 vector-a))
+  (declare (optimize (speed 3) (safety 1) (debug 1)))
   (sqrt (length-squared vector-a)))
 
 ;;----------------------------------------------------------------
 
-(declaim (inline distance-squared)
-         (ftype (function (vec2
-                           vec2)
-                          single-float)
-                distance-squared))
-(defun distance-squared (vector-a vector-b)
+(defn distance-squared ((vector-a vec2) (vector-b vec2)) single-float
   "finds the squared distance between 2 points defined by vectors
    vector-a & vector-b"
-  (declare (vec2 vector-a vector-b))
+  (declare (optimize (speed 3) (safety 1) (debug 1)))
   (length-squared (- vector-b vector-a)))
 
 ;;----------------------------------------------------------------
 
-(declaim (inline distance)
-         (ftype (function (vec2
-                           vec2)
-                          single-float)
-                distance))
-(defun distance (vector-a vector-b)
+(defn distance ((vector-a vec2) (vector-b vec2)) single-float
   "Return the distance between 2 points defined by vectors
    vector-a & vector-b. If comparing distances, use
    c-distance-squared as it desnt require a sqrt and thus is
    faster."
-  (declare (vec2 vector-a vector-b))
+  (declare (optimize (speed 3) (safety 1) (debug 1)))
   (sqrt (distance-squared vector-a vector-b)))
 
 ;;----------------------------------------------------------------
 
-(declaim (inline abs)
-         (ftype (function (vec2) vec2) abs))
-(defun abs (vector-a)
+(defn abs ((vector-a vec2)) vec2
   "Return the vec2 containing the abs of the original vec2's components."
-  (declare (vec2 vector-a))
+  (declare (optimize (speed 3) (safety 1) (debug 1)))
   (make (cl:abs (x vector-a)) (cl:abs (y vector-a))))
 
 ;;----------------------------------------------------------------
 
-(declaim (inline absolute-dot)
-         (ftype (function (vec2
-                           vec2)
-                          single-float)
-                absolute-dot))
-(defun absolute-dot (vector-a vector-b)
+(defn absolute-dot ((vector-a vec2) (vector-b vec2)) single-float
   "Return the absolute dot product of the vector-a and vector-b."
-  (declare (vec2 vector-a vector-b))
-  (cl:+ (CL:ABS (cl:* (AREF VECTOR-A 0) (AREF VECTOR-B 0)))
-        (CL:ABS (cl:* (AREF VECTOR-A 1) (AREF VECTOR-B 1)))))
+  (declare (optimize (speed 3) (safety 1) (debug 1)))
+  (cl:+ (cl:abs (cl:* (aref vector-a 0) (aref vector-b 0)))
+        (cl:abs (cl:* (aref vector-a 1) (aref vector-b 1)))))
 
 ;;----------------------------------------------------------------
 
-;; [TODO] shouldnt this return a zero vector in event of zero
-;; length? does it matter?
-(declaim (inline normalize)
-         (ftype (function (vec2)
-                          vec2)
-                normalize))
-(defun normalize (vector-a)
+
+(defn normalize ((vector-a vec2)) vec2
   "This normalizes the vector, it makes sure a zero length
    vector won't throw an error."
-  (declare (vec2 vector-a))
+  (declare (optimize (speed 3) (safety 1) (debug 1)))
   (let ((len (length-squared vector-a)))
     (if (cl:= 0f0 len)
         vector-a
@@ -295,51 +260,31 @@
 
 ;;----------------------------------------------------------------
 
-(declaim (inline perp-dot)
-         (ftype (function (vec2
-                           vec2)
-                          float)
-                perp-dot))
-(defun perp-dot (vec-a vec-b)
-  (declare (vec2 vec-a vec-b))
+(defn perp-dot ((vec-a vec2) (vec-b vec2)) single-float
+  (declare (optimize (speed 3) (safety 1) (debug 1)))
   (cl:- (cl:* (x vec-a) (y vec-b)) (cl:* (y vec-a) (x vec-b))))
 
 ;;----------------------------------------------------------------
 
-(declaim (inline cross)
-         (ftype (function (vec2
-                           vec2)
-                          float)
-                cross))
-(defun cross (vec-a vec-b)
+(defn cross ((vec-a vec2) (vec-b vec2)) single-float
   "Calculates the 2 dimensional cross-product of 2 vectors,
    which results in a single floating point value which is
    2 times the area of the triangle."
-  (declare (vec2 vec-a vec-b))
-  (cl:- (cl:* (x vec-a) (y vec-b)) (cl:* (y vec-a) (x vec-b))))
+  (declare (optimize (speed 3) (safety 1) (debug 1)))
+  (cl:- (cl:* (x vec-a) (y vec-b))
+        (cl:* (y vec-a) (x vec-b))))
 
 ;;----------------------------------------------------------------
 
-(declaim (inline lerp)
-         (ftype (function (vec2 vec2 single-float) vec2)
-                lerp))
-(defun lerp (vector-a vector-b ammount)
-  (declare (vec2 vector-a vector-b))
+(defn lerp ((vector-a vec2) (vector-b vec2) (ammount single-float)) vec2
+  (declare (optimize (speed 3) (safety 1) (debug 1)))
   (%+ vector-a (*s (%- vector-b vector-a) ammount)))
 
 ;;----------------------------------------------------------------
 
-(declaim (inline bezier)
-         (ftype (function (vec2
-                           vec2
-                           vec2
-                           vec2
-                           single-float)
-                          vec2)
-                bezier))
-(defun bezier (a1 a2 b1 b2 ammount)
-  (declare (vec2 a1 a2 b1 b2)
-           (single-float ammount))
+(defn bezier ((a1 vec2) (a2 vec2)
+               (b1 vec2) (b2 vec2) (ammount single-float)) vec2
+  (declare (optimize (speed 3) (safety 1) (debug 1)))
   (lerp (lerp a1 a2 ammount)
         (lerp b1 b2 ammount)
         ammount))
@@ -352,6 +297,6 @@
 
 ;;----------------------------------------------------------------
 
-(defun from-complex (c)
+(defn from-complex ((c complex)) vec2
   (make (coerce (realpart c) 'single-float)
         (coerce (imagpart c) 'single-float)))
