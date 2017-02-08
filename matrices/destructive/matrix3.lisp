@@ -3,9 +3,9 @@
 ;;----------------------------------------------------------------
 
 (declaim (inline melm)
-	 (ftype (function (mat3 (integer 0 3) (integer 0 3))
-			  single-float)
-		melm))
+         (ftype (function (mat3 (integer 0 3) (integer 0 3))
+                          single-float)
+                melm))
 (defun melm (mat-a row col)
   "Provides access to data in the matrix by row
    and column number. The actual data is stored in a 1d list in
@@ -85,7 +85,6 @@
     mat-accum))
 
 (defun * (accum-mat &rest mat4s)
-  "Add two matrices and returns the mutated matrix (accum-mat)"
   (reduce #'%* mat4s :initial-value accum-mat))
 
 (define-compiler-macro * (&whole whole accum-mat &rest mat4s)
