@@ -2,37 +2,35 @@
 
 ;;----------------------------------------------------------------
 
-(defun w (quat)
+(defn w ((quat quaternion)) single-float
   "Returns the w component of the quaternion"
+  (declare (optimize (speed 3) (safety 1) (debug 1)))
   (aref quat 0))
 
-(defun x (quat)
+(defn x ((quat quaternion)) single-float
   "Returns the x component of the quaternion"
+  (declare (optimize (speed 3) (safety 1) (debug 1)))
   (aref quat 1))
 
-(defun y (quat)
+(defn y ((quat quaternion)) single-float
   "Returns the y component of the quaternion"
+  (declare (optimize (speed 3) (safety 1) (debug 1)))
   (aref quat 2))
 
-(defun z (quat)
+(defn z ((quat quaternion)) single-float
   "Returns the z component of the quaternion"
+  (declare (optimize (speed 3) (safety 1) (debug 1)))
   (aref quat 3))
 
 ;;----------------------------------------------------------------;;
 
-(declaim (inline q!)
-         (ftype (function (single-float
-                           single-float
-                           single-float
-                           single-float)
-                          quaternion)
-                q!))
-(defun q! (w x y z)
+(defn q! ((w single-float) (x single-float) (y single-float) (z single-float))
+	quaternion
   "This takes 4 floats and give back a vector4, this is just an
    array but it specifies the array type and populates it.
    For speed reasons it will not accept integers so make sure
    you hand it floats."
-  (declare (single-float x y z w))
+  (declare (optimize (speed 3) (safety 1) (debug 1)))
   (let ((q (make-array 4 :element-type `single-float)))
     (setf (aref q 0) w
           (aref q 1) x
@@ -40,27 +38,33 @@
           (aref q 3) z)
     q))
 
-(defun 0! ()
+(defn 0! () quaternion
+  (declare (optimize (speed 3) (safety 1) (debug 1)))
   (q! 0.0 0.0 0.0 0.0))
 
-(defun 0p (quat)
+(defn 0p ((quat quaternion)) boolean
+  (declare (optimize (speed 3) (safety 1) (debug 1)))
   (let ((w (w quat)) (x (x quat)) (y (y quat)) (z (z quat)))
     (cl:= 0f0 (cl:+ (cl:* w w) (cl:* x x) (cl:* y y) (cl:* z z)))))
 
-(defun unitp (quat)
+(defn unitp ((quat quaternion)) boolean
+  (declare (optimize (speed 3) (safety 1) (debug 1)))
   (let ((w (w quat)) (x (x quat)) (y (y quat)) (z (z quat)))
     (cl:= 0f0 (cl:- 1.0 (cl:* w w) (cl:* x x) (cl:* y y) (cl:* z z)))))
 
-(defun identity ()
+(defn identity () quaternion
+  (declare (optimize (speed 3) (safety 1) (debug 1)))
   (q! 1.0 0.0 0.0 0.0))
 
-(defun identity-p (quat)
+(defn identity-p ((quat quaternion)) boolean
+  (declare (optimize (speed 3) (safety 1) (debug 1)))
   (and (cl:= 0f0 (cl:- 1.0 (w quat)))
        (cl:= 0f0 (x quat))
        (cl:= 0f0 (y quat))
        (cl:= 0f0 (z quat))))
 
-(defun from-mat3 (mat3)
+(defn from-mat3 ((mat3 mat3)) quaternion
+  ;;(declare (optimize (speed 3) (safety 1) (debug 1)))
   (let ((trace (m3:trace mat3)))
     (if (> trace 0s0)
         (let* ((s (sqrt (cl:+ trace 1s0)))
@@ -93,7 +97,8 @@
                       recip))
           (normalize quat)))))
 
-(defun from-mat3-no-normalize (mat3)
+(defn from-mat3-no-normalize ((mat3 mat3)) quaternion
+  ;;(declare (optimize (speed 3) (safety 1) (debug 1)))
   (let ((trace (m3:trace mat3)))
     (if (> trace 0s0)
         (let* ((s (sqrt (cl:+ trace 1s0)))
@@ -126,7 +131,8 @@
                       recip))
           quat))))
 
-(defun from-axis-angle (axis-vec3 angle)
+(defn from-axis-angle ((axis-vec3 vec3) (angle single-float)) quaternion
+  ;;(declare (optimize (speed 3) (safety 1) (debug 1)))
   (let ((length (v3:length-squared axis-vec3)))
     (if (cl:= 0f0 length)
         (identity)
@@ -134,19 +140,21 @@
                (sin-half-angle (sin half-angle))
                (cos-half-angle (cos half-angle))
                (scale-factor (/ sin-half-angle (sqrt length))))
-          (v4:make cos-half-angle
-                   (cl:* scale-factor (aref axis-vec3 0))
-                   (cl:* scale-factor (aref axis-vec3 1))
-                   (cl:* scale-factor (aref axis-vec3 2)))))))
+          (q! cos-half-angle
+			  (cl:* scale-factor (aref axis-vec3 0))
+			  (cl:* scale-factor (aref axis-vec3 1))
+			  (cl:* scale-factor (aref axis-vec3 2)))))))
 
-(defun from-axies (x-axies y-axies z-axies)
+(defn from-axies ((x-axies vec3) (y-axies vec3) (z-axies vec3)) quaternion
+  (declare (optimize (speed 3) (safety 1) (debug 1)))
   (from-mat3
    (m3:make
     (aref x-axies 0) (aref y-axies 1) (aref z-axies 2)
     (aref x-axies 0) (aref y-axies 1) (aref z-axies 2)
     (aref x-axies 0) (aref y-axies 1) (aref z-axies 2))))
 
-(defun from-look-at (from3 to3)
+(defn from-look-at ((from3 vec3) (to3 vec3)) quaternion
+  (declare (optimize (speed 3) (safety 1) (debug 1)))
   (let* ((dir (v3:- from3 to3))
          (n-dir (v3:normalize dir))
          (right (v3:make (v:z n-dir) 0.0 (cl:- (v:x n-dir))))
@@ -154,15 +162,19 @@
          (up (v3:cross n-dir n-right)))
     (q:from-axies n-right up n-dir)))
 
-(defun to-look-at (quat)
+(defn to-look-at ((quat quaternion)) vec3
+  (declare (optimize (speed 3) (safety 1) (debug 1)))
   (let ((v (v3:make 0s0 0s0 -1s0)))
     (m3:*v (to-mat3 quat) v)))
 
-(defun to-look-at-vec4 (quat)
+(defn to-look-at-vec4 ((quat quaternion)) vec4
+  (declare (optimize (speed 3) (safety 1) (debug 1)))
   (let ((v (v4:make 0s0 0s0 -1s0 0s0)))
     (m4:*v (to-mat4 quat) v)))
 
-(defun from-fixed-angles (x-rot y-rot z-rot)
+(defn from-fixed-angles ((x-rot single-float) (y-rot single-float)
+						 (z-rot single-float)) quaternion
+  (declare (optimize (speed 3) (safety 1) (debug 1)))
   (let ((x-rot (/ x-rot 2.0))
         (y-rot (/ y-rot 2.0))
         (z-rot (/ z-rot 2.0)))
@@ -174,27 +186,36 @@
           (cl:- (cl:* cos-x sin-y cos-z) (cl:* sin-x cos-y sin-z))
           (cl:- (cl:* cos-x cos-y sin-z) (cl:* sin-x sin-y cos-x))))))
 
-(defun magnitude (quat)
+(defn magnitude ((quat quaternion)) single-float
+  (declare (optimize (speed 3) (safety 1) (debug 1)))
   (let ((w (w quat)) (x (x quat)) (y (y quat)) (z (z quat)))
     (sqrt (cl:+ (cl:* w w) (cl:* x x) (cl:* y y) (cl:* z z)))))
 
-(defun norm (quat)
+(defn norm ((quat quaternion)) single-float
+  (declare (optimize (speed 3) (safety 1) (debug 1)))
   (let ((w (w quat)) (x (x quat)) (y (y quat)) (z (z quat)))
     (cl:+ (cl:* w w) (cl:* x x) (cl:* y y) (cl:* z z))))
 
-(defun = (q1 q2)
-  (and (cl:= 0f0 (cl:- (w q2) (w q1))) (cl:= 0f0 (cl:- (x q2) (x q1)))
-       (cl:= 0f0 (cl:- (y q2) (y q1))) (cl:= 0f0 (cl:- (z q2) (z q1)))))
+(defn = ((q1 quaternion) (q2 quaternion)) boolean
+  (declare (optimize (speed 3) (safety 1) (debug 1)))
+  (and (cl:= 0f0 (cl:- (w q2) (w q1)))
+	   (cl:= 0f0 (cl:- (x q2) (x q1)))
+       (cl:= 0f0 (cl:- (y q2) (y q1)))
+	   (cl:= 0f0 (cl:- (z q2) (z q1)))))
 
-;;[TODO] This seems wrong!...but book says it's right
-(defun /= (q1 q2)
-  (not (or (cl:= 0f0 (cl:- (w q2) (w q1))) (cl:= 0f0 (cl:- (x q2) (x q1)))
-           (cl:= 0f0 (cl:- (y q2) (y q1))) (cl:= 0f0 (cl:- (z q2) (z q1))))))
+(defn /= ((q1 quaternion) (q2 quaternion)) boolean
+  (declare (optimize (speed 3) (safety 1) (debug 1)))
+  (not (or (cl:= 0f0 (cl:- (w q2) (w q1)))
+		   (cl:= 0f0 (cl:- (x q2) (x q1)))
+		   (cl:= 0f0 (cl:- (y q2) (y q1)))
+		   (cl:= 0f0 (cl:- (z q2) (z q1))))))
 
-(defun copy (quat)
+(defn copy ((quat quaternion)) quaternion
+  (declare (optimize (speed 3) (safety 1) (debug 1)))
   (q! (w quat) (x quat) (y quat) (z quat)))
 
-(defun get-axis-angle (quat)
+(defn get-axis-angle ((quat quaternion)) list
+  ;;(declare (optimize (speed 3) (safety 1) (debug 1)))
   (list
    (let ((length (sqrt (cl:- 1.0 (cl:* (w quat) (w quat))))))
      (if (cl:= 0f0 length)
@@ -205,8 +226,9 @@
                     (cl:* length (z quat))))))
    (cl:* 2.0 (acos (w quat)))))
 
-(defun normalize (quat)
-  (let ((length-squared (v4:dot quat quat)))
+(defn normalize ((quat quaternion)) quaternion
+  ;;(declare (optimize (speed 3) (safety 1) (debug 1)))
+  (let ((length-squared (dot quat quat)))
     (if (cl:= 0f0 length-squared)
         (0!)
         (let ((factor (inv-sqrt length-squared)))
@@ -215,14 +237,17 @@
               (cl:* (y quat) factor)
               (cl:* (z quat) factor))))))
 
-(defun qconjugate (quat)
+(defn qconjugate ((quat quaternion)) quaternion
+  (declare (optimize (speed 3) (safety 1) (debug 1)))
   (warn "q:qconjugate is deprecated, please switch to q:conjugate")
   (q! (w quat) (cl:- (x quat)) (cl:- (y quat)) (cl:- (z quat))))
 
-(defun conjugate (quat)
+(defn conjugate ((quat quaternion)) quaternion
+  (declare (optimize (speed 3) (safety 1) (debug 1)))
   (q! (w quat) (cl:- (x quat)) (cl:- (y quat)) (cl:- (z quat))))
 
-(defun inverse (quat)
+(defn inverse ((quat quaternion)) quaternion
+  (declare (optimize (speed 3) (safety 1) (debug 1)))
   (let ((norm (norm quat)))
     (if (cl:= 0f0 norm)
         (identity)
@@ -232,22 +257,73 @@
               (cl:- (cl:* norm-recip (y quat)))
               (cl:- (cl:* norm-recip (z quat))))))))
 
-(defun + (&rest quats)
-  (apply #'v4:+ quats))
+(defn %+ ((quat-a quaternion) (quat-b quaternion)) quaternion
+  "Add two quats and return a new quat containing the result"
+  (declare (optimize (speed 3) (safety 1) (debug 1)))
+  (q! (cl:+ (w quat-a) (w quat-b))
+	  (cl:+ (x quat-a) (x quat-b))
+	  (cl:+ (y quat-a) (y quat-b))
+	  (cl:+ (z quat-a) (z quat-b))))
+
+(defn + (&rest (quats quaternion)) quaternion
+  (declare (optimize (speed 3) (safety 1) (debug 1)))
+  (if quats
+      (let ((w 0f0)
+			(x 0f0)
+            (y 0f0)
+            (z 0f0))
+        (declare (single-float x y z w))
+        (loop :for vec :in quats :do
+		   (incf w (w vec))
+           (incf x (x vec))
+           (incf y (y vec))
+           (incf z (z vec)))
+        (q! w x y z))
+      (identity)))
 
 (define-compiler-macro + (&rest components)
-  (reduce (lambda (a x) `(v4:+ ,a ,x)) components))
+  (reduce (lambda (a x) `(%+ ,a ,x)) components))
 
-(defun - (&rest quats)
-  (apply #'v4:- quats))
+(defn %- ((quat-a quaternion) (quat-b quaternion)) quaternion
+  "Add two quats and return a new quat containing the result"
+  (declare (optimize (speed 3) (safety 1) (debug 1)))
+  (q! (cl:- (w quat-a) (w quat-b))
+	  (cl:- (x quat-a) (x quat-b))
+	  (cl:- (y quat-a) (y quat-b))
+	  (cl:- (z quat-a) (z quat-b))))
+
+(defn - ((quat quaternion) &rest (quats quaternion)) quaternion
+  "takes any number of vectors and add them all together
+   returning a new vector"
+  (declare (optimize (speed 3) (safety 1) (debug 1)))
+  (assert quat)
+  (if quats
+      (let ((x (x quat))
+            (y (y quat))
+            (z (z quat))
+            (w (w quat)))
+        (declare (single-float x y z w))
+        (loop :for vec :in quats :do
+           (cl:decf x (x vec))
+           (cl:decf y (y vec))
+           (cl:decf z (z vec))
+           (cl:decf w (w vec)))
+        (q! x y z w))
+      quat))
 
 (define-compiler-macro - (&rest components)
-  (reduce (lambda (a x) `(v4:- ,a ,x)) components))
+  (reduce (lambda (a x) `(%- ,a ,x)) components))
 
-(defun *s (quat-a scalar)
-  (v:* quat-a scalar))
+(defn *s ((quat-a quaternion) (scalar single-float)) quaternion
+  "Multiply quat by scalar"
+  (declare (optimize (speed 3) (safety 1) (debug 1)))
+  (q! (cl:* (w quat-a) scalar)
+	  (cl:* (x quat-a) scalar)
+	  (cl:* (y quat-a) scalar)
+	  (cl:* (z quat-a) scalar)))
 
-(defun * (quat-a quat-b)
+(defn * ((quat-a quaternion) (quat-b quaternion)) quaternion
+  (declare (optimize (speed 3) (safety 1) (debug 1)))
   (q! (cl:- (cl:* (w quat-a) (w quat-b))
             (cl:* (x quat-a) (x quat-b))
             (cl:* (y quat-a) (y quat-b))
@@ -265,7 +341,8 @@
                   (cl:* (x quat-a) (y quat-b)))
             (cl:* (y quat-a) (x quat-b)))))
 
-(defun to-mat3 (quat)
+(defn to-mat3 ((quat quaternion)) mat3
+  (declare (optimize (speed 3) (safety 1) (debug 1)))
   (let ((w (w quat)) (x (x quat)) (y (y quat)) (z (z quat)))
     (let ((x2 (cl:+ x x)) (y2 (cl:+ y y)) (z2 (cl:+ z z)))
       (let ((wx (cl:* w x2))  (wy (cl:* w y2))  (wz (cl:* w z2))
@@ -277,7 +354,8 @@
          (cl:+ xy wz)            (cl:- 1.0 (cl:+ xx zz)) (cl:- yz wx)
          (cl:- xz wy)            (cl:+ yz wx)            (cl:- 1.0 (cl:+ xx yy)))))))
 
-(defun to-mat4 (quat)
+(defn to-mat4 ((quat quaternion)) mat4
+  (declare (optimize (speed 3) (safety 1) (debug 1)))
   (let ((w (w quat))  (x (x quat))  (y (y quat))  (z (z quat)))
     (let ((x2 (cl:+ x x)) (y2 (cl:+ y y)) (z2 (cl:+ z z)))
       (let ((wx (cl:* w x2))  (wy (cl:* w y2))  (wz (cl:* w z2))
@@ -290,12 +368,19 @@
          (cl:- xz wy)             (cl:+ yz wx)            (cl:- 1.0 (cl:+ xx yy))  0.0
          0.0                      0.0                     0.0                      1.0)))))
 
-(defun dot (quat-a quat-b)
-  (v4:dot quat-a quat-b))
+(defn dot ((quat-a quaternion) (quat-b quaternion)) single-float
+  (declare (optimize (speed 3) (safety 1) (debug 1)))
+  "return the dot product of the quat-a and quat-b."
+  (declare (optimize (speed 3) (safety 1) (debug 1)))
+  (cl:+ (cl:* (w quat-a) (w quat-b))
+        (cl:* (x quat-a) (x quat-b))
+        (cl:* (y quat-a) (y quat-b))
+        (cl:* (z quat-a) (z quat-b))))
 
 ;; [TODO] Look into assets (this should be a unit quaternion
-(defun rotate (vec3 quat)
+(defn rotate ((vec3 vec3) (quat quaternion)) vec3
   "Rotate vec3 by quaternion. Assumes quaternion is normalized."
+  (declare (optimize (speed 3) (safety 1) (debug 1)))
   (let* ((v-mult (cl:* 2.0 (cl:+ (cl:* (x quat) (aref vec3 0))
                                  (cl:* (y quat) (aref vec3 1))
                                  (cl:* (z quat) (aref vec3 2)))))
@@ -317,24 +402,27 @@
                          (cl:- (cl:* (x quat) (aref vec3 1))
                                (cl:* (y quat) (aref vec3 0))))))))
 
-;; [TODO] Could be faster (see q+1 area)
-(defun lerp (start-quat end-quat pos)
+(defn lerp ((start-quat quaternion) (end-quat quaternion) (pos single-float))
+	quaternion
   "Linearaly interpolate between two quaternions. Note that this
    will always take the shortest path."
+  (declare (optimize (speed 3) (safety 1) (debug 1)))
   ;; get cos of 'angle' between quaternions
-  (let ((cos-angle (v4:dot start-quat end-quat)))
+  (let ((cos-angle (dot start-quat end-quat)))
     (if (>= cos-angle 0f0)
         (+ (*s end-quat pos)
            (*s start-quat (cl:- 1.0 pos)))
         (+ (*s end-quat pos)
            (*s start-quat (cl:- pos 1.0))))))
 
-(defun slerp (start-quat end-quat pos)
+(defn slerp ((start-quat quaternion) (end-quat quaternion) (pos single-float))
+	quaternion
   "Spherically interpolate between two quaternions. Note that this
    will always take the shortest path."
+  ;;(declare (optimize (speed 3) (safety 1) (debug 1)))
   ;; get cos of 'angle' between quaternions
   (destructuring-bind (start-mult end-mult)
-      (let ((cos-angle (v4:dot start-quat end-quat)))
+      (let ((cos-angle (dot start-quat end-quat)))
         ;; if angle between quaternions is less than 90 degrees
         (if (> cos-angle 0f0)
             ;; if angle is greater than zero
@@ -361,8 +449,10 @@
     (+ (*s start-quat start-mult)
        (*s end-quat end-mult))))
 
-(defun approx-slerp (start-quat end-quat pos)
-  (let* ((cos-angle (v4:dot start-quat end-quat))
+(defn approx-slerp ((start-quat quaternion) (end-quat quaternion)
+					(pos single-float)) quaternion
+  (declare (optimize (speed 3) (safety 1) (debug 1)))
+  (let* ((cos-angle (dot start-quat end-quat))
          (factor (expt (cl:- 1.0 (cl:* 0.7878088 cos-angle)) 2.0))
          (k (cl:* 0.5069269 factor))
          (b (cl:* 2.0 k))
