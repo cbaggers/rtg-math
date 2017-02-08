@@ -102,9 +102,7 @@
 
 ;;----------------------------------------------------------------
 
-(declaim (inline x y z w)
-         (ftype (function ((simple-array single-float (*))) single-float)
-                x y z w))
+(declaim (inline x y z w))
 (defun x (vec)
   "Returns the x component of the vector"
   (aref vec 0))
@@ -118,6 +116,18 @@
   "Returns the w component of the vector"
   (aref vec 3))
 
+(define-compiler-macro x (vec)
+  `(aref ,vec 0))
+
+(define-compiler-macro y (vec)
+  `(aref ,vec 1))
+
+(define-compiler-macro z (vec)
+  `(aref ,vec 2))
+
+(define-compiler-macro w (vec)
+  `(aref ,vec 3))
+
 (defun (setf x) (value vec)
   "Sets the x component of the vector"
   (setf (aref vec 0) (float value)))
@@ -130,5 +140,17 @@
 (defun (setf w) (value vec)
   "Sets the w component of the vector"
   (setf (aref vec 3) (float value)))
+
+(define-compiler-macro (setf x) (value vec)
+  `(setf (aref ,vec 0) ,value))
+
+(define-compiler-macro (setf y) (value vec)
+  `(setf (aref ,vec 1) ,value))
+
+(define-compiler-macro (setf z) (value vec)
+  `(setf (aref ,vec 2) ,value))
+
+(define-compiler-macro (setf w) (value vec)
+  `(setf (aref ,vec 3) ,value))
 
 ;;----------------------------------------------------------------
