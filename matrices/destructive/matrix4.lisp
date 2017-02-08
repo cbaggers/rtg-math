@@ -2,29 +2,26 @@
 
 ;;----------------------------------------------------------------
 
-(declaim (inline melm)
-         (ftype (function (mat4 (integer 0 4) (integer 0 4))
-                          single-float)
-                melm))
-(defun melm (mat-a row col)
+(defn melm ((mat-a mat4) (row (integer 0 3)) (col (integer 0 3))) single-float
   "Provides access to data in the matrix by row
    and column number. The actual data is stored in a 1d list in
    column major order, but this abstraction means we only have
    to think in row major order which is how most mathematical
    texts and online tutorials choose to show matrices"
+  (declare (optimize (speed 3) (safety 1) (debug 1)))
   (declare (mat4 mat-a)
            (type (integer 0 4) row col))
   (aref mat-a (cl:+ row (cl:* col 4))))
 
-(defun (setf melm) (value mat-a row col)
+(defn (setf melm) ((value single-float)
+                   (mat-a mat4) (row (integer 0 3)) (col (integer 0 3)))
+    single-float
   "Provides access to data in the matrix by row
    and column number. The actual data is stored in a 1d list in
    column major order, but this abstraction means we only have
    to think in row major order which is how most mathematical
    texts and online tutorials choose to show matrices"
-  (declare (mat4 mat-a)
-           (type (integer 0 4) row col)
-           (single-float value))
+  (declare (optimize (speed 3) (safety 1) (debug 1)))
   (setf (aref mat-a (cl:+ row (cl:* col 4))) value))
 
 (define-compiler-macro melm (mat-a row col)
@@ -33,19 +30,19 @@
    column major order, but this abstraction means we only have
    to think in row major order which is how most mathematical
    texts and online tutorials choose to show matrices"
-  (cond ((and (numberp row) (numberp col))
+  (cond ((and (typep row '(integer 0 3))
+              (typep col '(integer 0 3)))
          `(aref ,mat-a ,(cl:+ row (cl:* col 4))))
-        ((numberp col)
+        ((typep col '(integer 0 3))
          `(aref ,mat-a (cl:+ ,row ,(cl:* col 4))))
         (t `(aref ,mat-a (cl:+ ,row (cl:* ,col 4))))))
 
 ;;----------------------------------------------------------------
 
-(defun %* (mat-accum to-multiply-mat)
+(defn %* ((mat-accum mat4) (to-multiply-mat mat4)) mat4
   "Multiplies 2 matrices and returns the result as a new
    matrix"
-  (declare (type mat4 mat-accum to-multiply-mat)
-           (optimize (speed 3) (safety 1) (debug 1)))
+  (declare (optimize (speed 3) (safety 1) (debug 1)))
   (let ((a (cl:+ (cl:* (melm mat-accum 0 0) (melm to-multiply-mat 0 0))
                  (cl:* (melm mat-accum 0 1) (melm to-multiply-mat 1 0))
                  (cl:* (melm mat-accum 0 2) (melm to-multiply-mat 2 0))
@@ -128,8 +125,9 @@
     (setf (melm mat-accum 3 3) p)
     mat-accum))
 
-(defun * (accum-mat &rest mat4s)
+(defn * ((accum-mat mat4) &rest (mat4s mat4)) mat4
   "Add two matrices and returns the mutated matrix (accum-mat)"
+  (declare (optimize (speed 3) (safety 1) (debug 1)))
   (reduce #'%* mat4s :initial-value accum-mat))
 
 (define-compiler-macro * (&whole whole accum-mat &rest mat4s)

@@ -2,21 +2,16 @@
 
 ;;----------------------------------------------------------------
 
-(declaim (inline melm)
-         (ftype (function (mat3 (integer 0 3) (integer 0 3))
-                          single-float)
-                melm))
-(defun melm (mat-a row col)
+(defn melm ((mat-a mat3) (row (integer 0 2)) (col (integer 0 2))) single-float
   "Provides access to data in the matrix by row
    and column number. The actual data is stored in a 1d list in
    column major order, but this abstraction means we only have
    to think in row major order which is how most mathematical
    texts and online tutorials choose to show matrices"
-  (declare (mat3 mat-a)
-           (type (integer 0 3) row col))
   (aref mat-a (cl:+ row (cl:* col 3))))
 
-(defun (setf melm) (value mat-a row col)
+(defn (setf melm) ((value single-float) (mat-a mat3)
+                   (row (integer 0 2)) (col (integer 0 2))) single-float
   "Provides access to data in the matrix by row
    and column number. The actual data is stored in a 1d list in
    column major order, but this abstraction means we only have
@@ -41,11 +36,10 @@
 
 ;;----------------------------------------------------------------
 
-(defun %* (mat-accum to-multiply-mat)
+(defn %* ((mat-accum mat3) (to-multiply-mat mat3)) mat3
   "Multiplies 2 matrices and returns the result as a new
    matrix"
-  (declare (type mat3 mat-accum to-multiply-mat)
-           (optimize (speed 3) (safety 1) (debug 1)))
+  (declare (optimize (speed 3) (safety 1) (debug 1)))
   (let ((a (cl:+ (cl:* (melm mat-accum 0 0) (melm to-multiply-mat 0 0))
                  (cl:* (melm mat-accum 0 1) (melm to-multiply-mat 1 0))
                  (cl:* (melm mat-accum 0 2) (melm to-multiply-mat 2 0))))
@@ -84,8 +78,8 @@
     (setf (melm mat-accum 2 2) i)
     mat-accum))
 
-(defun * (accum-mat &rest mat4s)
-  (reduce #'%* mat4s :initial-value accum-mat))
+(defn * ((accum-mat mat3) &rest (mat3s mat3)) mat3
+  (reduce #'%* mat3s :initial-value accum-mat))
 
 (define-compiler-macro * (&whole whole accum-mat &rest mat4s)
   (assert accum-mat)
