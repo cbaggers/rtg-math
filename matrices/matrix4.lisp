@@ -428,15 +428,15 @@
    (melm m-a 0 3) (melm m-a 1 3) (melm m-a 2 3) (melm m-a 3 3)))
 
 ;;----------------------------------------------------------------
-
-(defn translation ((vec3-a vec3)) mat4
+;;{TODO} resolve abigutity around vec length
+(defn translation ((vec-a (simple-array single-float))) mat4
   "Takes a vector3 and returns a matrix4 which will translate
    by the specified amount"
   (declare (optimize (speed 3) (safety 1) (debug 1)))
   (make
-   1f0  0f0  0f0  (x vec3-a)
-   0f0  1f0  0f0  (y vec3-a)
-   0f0  0f0  1f0  (z vec3-a)
+   1f0  0f0  0f0  (x vec-a)
+   0f0  1f0  0f0  (y vec-a)
+   0f0  0f0  1f0  (z vec-a)
    0f0  0f0  0f0  1f0))
 
 ;;----------------------------------------------------------------
