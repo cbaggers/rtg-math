@@ -2,6 +2,25 @@
 
 ;;----------------------------------------------------------------
 
+(defn set-components ((a single-float) (b single-float) (c single-float)
+                      (d single-float) (e single-float) (f single-float)
+                      (g single-float) (h single-float) (i single-float)
+                      (mat3-to-mutate mat3)) mat3
+  "Make a 3x3 matrix. Data must be provided in row major order"
+  (declare (optimize (speed 3) (safety 1) (debug 1)))
+  (setf (melm mat3-to-mutate 0 0) a)
+  (setf (melm mat3-to-mutate 0 1) b)
+  (setf (melm mat3-to-mutate 0 2) c)
+  (setf (melm mat3-to-mutate 1 0) d)
+  (setf (melm mat3-to-mutate 1 1) e)
+  (setf (melm mat3-to-mutate 1 2) f)
+  (setf (melm mat3-to-mutate 2 0) g)
+  (setf (melm mat3-to-mutate 2 1) h)
+  (setf (melm mat3-to-mutate 2 2) i)
+  mat3-to-mutate)
+
+;;----------------------------------------------------------------
+
 (defn melm ((mat-a mat3) (row (integer 0 2)) (col (integer 0 2))) single-float
   "Provides access to data in the matrix by row
    and column number. The actual data is stored in a 1d list in

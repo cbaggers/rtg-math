@@ -2,6 +2,35 @@
 
 ;;----------------------------------------------------------------
 
+(defn set-components
+    ((a single-float) (b single-float) (c single-float) (d single-float)
+     (e single-float) (f single-float) (g single-float) (h single-float)
+     (i single-float) (j single-float) (k single-float) (l single-float)
+     (m single-float) (n single-float) (o single-float) (p single-float)
+     (mat4-to-mutate mat4)) mat4
+  "Make a 4x4 matrix. Data must be provided in row major order"
+  (declare (optimize (speed 3) (safety 1) (debug 1)))
+  ;; as you can see it is stored in column major order
+  (setf (melm mat4-to-mutate 0 0) a)
+  (setf (melm mat4-to-mutate 0 1) b)
+  (setf (melm mat4-to-mutate 0 2) c)
+  (setf (melm mat4-to-mutate 0 3) d)
+  (setf (melm mat4-to-mutate 1 0) e)
+  (setf (melm mat4-to-mutate 1 1) f)
+  (setf (melm mat4-to-mutate 1 2) g)
+  (setf (melm mat4-to-mutate 1 3) h)
+  (setf (melm mat4-to-mutate 2 0) i)
+  (setf (melm mat4-to-mutate 2 1) j)
+  (setf (melm mat4-to-mutate 2 2) k)
+  (setf (melm mat4-to-mutate 2 3) l)
+  (setf (melm mat4-to-mutate 3 0) m)
+  (setf (melm mat4-to-mutate 3 1) n)
+  (setf (melm mat4-to-mutate 3 2) o)
+  (setf (melm mat4-to-mutate 3 3) p)
+  mat4-to-mutate)
+
+;;----------------------------------------------------------------
+
 (defn melm ((mat-a mat4) (row (integer 0 3)) (col (integer 0 3))) single-float
   "Provides access to data in the matrix by row
    and column number. The actual data is stored in a 1d list in
