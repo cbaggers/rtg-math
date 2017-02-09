@@ -24,12 +24,12 @@
   "Returns either t if the matrices are equal.
    Otherwise it returns nil."
   (let* ((matrix-a (first matrices))
-	 (len-a (cl:length matrix-a)))
+         (len-a (cl:length matrix-a)))
     (and (every (lambda (x) (cl:= (cl:length x) len-a)) (rest matrices))
-	 (loop :for i :below len-a :always
-	    (loop :for j :in (rest matrices)
-	       :for v cl:= (aref matrix-a i)
-	       :always (cl:= (aref j i) v))))))
+         (loop :for i :below len-a :always
+            (loop :for j :in (rest matrices)
+               :for v cl:= (aref matrix-a i)
+               :always (cl:= (aref j i) v))))))
 
 ;;----------------------------------------------------------------
 

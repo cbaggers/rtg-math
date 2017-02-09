@@ -14,7 +14,7 @@
                 ,len :element-type 'single-float :initial-contents
                 (list ,@(loop :for char :across name
                            :collect `(aref ,arr ,(or (position char "XYZW")
-						     (error "Vectors: swizzle: Pattern component was not X, Y, Z or W: ~a" char)))))))))
+                                                     (error "Vectors: swizzle: Pattern component was not X, Y, Z or W: ~a" char)))))))))
       form))
 
 (defun swizzle (vec pattern)
@@ -26,7 +26,7 @@
         (loop :for char :across name :for i :from 0 :do
            (setf (aref result i)
                  (aref vec (or (position char "XYZW")
-			       (error "Vectors: swizzle: Pattern component was not X, Y, Z or W: ~a" char))))))
+                               (error "Vectors: swizzle: Pattern component was not X, Y, Z or W: ~a" char))))))
     result))
 
 (defun (setf swizzle) (value vec pattern)
@@ -74,35 +74,35 @@
 
 (defmacro dvec (var-list expression &body body)
   (when (or (not (listp var-list))
-	    (not (every #'symbolp var-list))
-	    (< (cl:length var-list) 1)
-	    (> (cl:length var-list) 4))
+            (not (every #'symbolp var-list))
+            (< (cl:length var-list) 1)
+            (> (cl:length var-list) 4))
     (error "dvec: invalid vector destructuring pattern ~s"
-	   var-list))
+           var-list))
   (let ((e (gensym "expression")))
     `(let ((,e ,expression))
        (let ,(loop :for v :in var-list :for i :from 0 :collect
-		`(,v (aref ,e ,i)))
-	 ,@body))))
+                `(,v (aref ,e ,i)))
+         ,@body))))
 
 (defmacro dvec* (var-list-expression-pairs &body body)
   (labels ((group (source n)
-	     "This takes a  flat list and emit a list of lists, each n long
+             "This takes a  flat list and emit a list of lists, each n long
               containing the elements of the original list"
-	     (if (= 0 n) (error "zero length"))
-	     (labels ((rec (source acc)
-			(let ((rest (nthcdr n source)))
-			  (if (consp rest)
-			      (rec rest (cons (subseq source 0 n)
-					      acc))
-			      (nreverse (cons source acc))))))
-	       (if source
-		   (rec source nil)
-		   nil))))
+             (if (= 0 n) (error "zero length"))
+             (labels ((rec (source acc)
+                        (let ((rest (nthcdr n source)))
+                          (if (consp rest)
+                              (rec rest (cons (subseq source 0 n)
+                                              acc))
+                              (nreverse (cons source acc))))))
+               (if source
+                   (rec source nil)
+                   nil))))
     (let ((pairs (append body
-			 (group var-list-expression-pairs 2))))
+                         (group var-list-expression-pairs 2))))
       (labels ((m (x y) `(dvec ,@y ,x)))
-	(reduce #'m pairs)))))
+        (reduce #'m pairs)))))
 
 ;;----------------------------------------------------------------
 
@@ -157,11 +157,11 @@
   "Returns either t if the vectors are equal.
    Otherwise it returns nil."
   (let* ((vec-a (first vecs))
-	 (a-len (cl:length vec-a)))
+         (a-len (cl:length vec-a)))
     (loop :for vec :in (cdr vecs) :always
        (and (cl:= (cl:length vec) a-len)
-	    (loop :for i :below a-len :always
-	       (cl:= (aref vec i) (aref vec-a i)))))))
+            (loop :for i :below a-len :always
+               (cl:= (aref vec i) (aref vec-a i)))))))
 
 ;;----------------------------------------------------------------
 
@@ -169,11 +169,11 @@
   "Returns either t if the two vectors are equal.
    Otherwise it returns nil."
   (let* ((vec-a (first vecs))
-	 (a-len (cl:length vec-a)))
+         (a-len (cl:length vec-a)))
     (not (loop :for vec :in (cdr vecs) :always
-	    (and (cl:= (cl:length vec) a-len)
-		 (loop :for i :below a-len :always
-		    (cl:= (aref vec i) (aref vec-a i))))))))
+            (and (cl:= (cl:length vec) a-len)
+                 (loop :for i :below a-len :always
+                    (cl:= (aref vec i) (aref vec-a i))))))))
 
 ;;----------------------------------------------------------------
 

@@ -15,9 +15,9 @@
     (subseq
      (remove-duplicates
       (first (primitives:sphere-data
-	      :radius (float radius)
-	      :lines-of-latitude count :lines-of-latitude count
-	      :normals nil :tex-coords nil))
+              :radius (float radius)
+              :lines-of-latitude count :lines-of-latitude count
+              :normals nil :tex-coords nil))
       :test (lambda (x y) (< (v3:distance x y) 0.001)))
      0 num-of-points)))
 
@@ -57,9 +57,9 @@
 
 (defun sort-points (points)
   (mapcar #'first
-	  (sort (mapcar (lambda (x) (list x (loop for i across x sum (* i i))))
-			points)
-		#'> :key #'second)))
+          (sort (mapcar (lambda (x) (list x (loop for i across x sum (* i i))))
+                        points)
+                #'> :key #'second)))
 
 ;;--------------------------------------------------
 

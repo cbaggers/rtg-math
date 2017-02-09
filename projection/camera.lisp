@@ -18,11 +18,11 @@
 
 (defun orthographic (frame-width frame-height near far)
   (let ((left (- (/ frame-width 2.0)))
-	(right (/ frame-width 2.0))
-	(top (/ frame-height 2.0))
-	(bottom (- (/ frame-height 2.0)))
-	(near near )
-	(far far ))
+        (right (/ frame-width 2.0))
+        (top (/ frame-height 2.0))
+        (bottom (- (/ frame-height 2.0)))
+        (near near )
+        (far far ))
     (m4:make
      (/ 2 (- right left)) 0.0 0.0 (- (/ (+ right left) (- left right)))
      0.0 (/ 2 (- top bottom)) 0.0 (- (/ (+ top bottom) (- bottom top)))
