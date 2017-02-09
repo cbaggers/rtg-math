@@ -152,14 +152,14 @@
   (:nicknames :m3-n)
   (:shadow :identity :trace :+ := :/= :- :* :/)
   (:import-from :rtg-math.base-vectors :x :y :z :w :v!)
-  (:export :melm :*))
+  (:export :set-components :melm :*))
 
 (uiop:define-package :rtg-math.matrix4.destructive
     (:use :cl :%rtg-math :rtg-math.types)
   (:nicknames :m4-n)
   (:shadow :identity :trace :+ := :/= :- :* :/)
   (:import-from :rtg-math.base-vectors :x :y :z :w :v!)
-  (:export :melm :*))
+  (:export :set-components :melm :*))
 
 (uiop:define-package :rtg-math.matrix3
     (:use :cl :%rtg-math :rtg-math.types)
@@ -215,8 +215,17 @@
            :inverse :affine-inverse :transpose :trace :negate
            :to-string))
 
+(uiop:define-package :rtg-math.quaternions.destructive
+    (:use :cl :%rtg-math :rtg-math.types :rtg-math.base-maths)
+  (:nicknames :q-n)
+  (:shadow :lerp :/= := :+ :- :* :identity :conjugate)
+  (:export :w :x :y :z :from-mat3 :from-axis-angle :from-fixed-angles
+           :normalize :dot :conjugate :+  :- :* :to-mat3 :to-mat4 :rotate))
+
 (uiop:define-package :rtg-math.quaternions
     (:use :cl :%rtg-math :rtg-math.types :rtg-math.base-maths)
+  (:import-from :rtg-math.matrix4.destructive
+                :x :y :z :w :dot)
   (:nicknames :q)
   (:shadow :lerp :/= := :+ :- :* :identity :conjugate)
   (:export :w :x :y :z :q! :0! :0p
