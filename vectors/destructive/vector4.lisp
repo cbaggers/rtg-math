@@ -2,14 +2,14 @@
 
 ;;----------------------------------------------------------------
 
-(defn set-components ((x single-float) (y single-float)
-                      (z single-float) (w single-float)
-                      (vec vec4)) vec4
+(defn-inline set-components ((x single-float) (y single-float)
+                             (z single-float) (w single-float)
+                             (vec vec4)) vec4
   (declare (optimize (speed 3) (safety 1) (debug 1)))
   (setf (x vec) x
         (y vec) y
         (z vec) z
-        (z vec) w)
+        (w vec) w)
   vec)
 
 ;;----------------------------------------------------------------
@@ -53,7 +53,7 @@
   (assert accum-vec)
   (case= (cl:length vec4s)
     (0 accum-vec)
-    (1 `(%+ ,accum-vec (first vec4s)))
+    (1 `(%+ ,accum-vec ,(first vec4s)))
     (otherwise whole)))
 
 ;;---------------------------------------------------------------
@@ -77,7 +77,7 @@
   (assert accum-vec)
   (case= (cl:length vec4s)
     (0 accum-vec)
-    (1 `(%- ,accum-vec (first vec4s)))
+    (1 `(%- ,accum-vec ,(first vec4s)))
     (otherwise whole)))
 
 ;;---------------------------------------------------------------
@@ -101,7 +101,7 @@
   (assert accum-vec)
   (case= (cl:length vec4s)
     (0 accum-vec)
-    (1 `(%* ,accum-vec (first vec4s)))
+    (1 `(%* ,accum-vec ,(first vec4s)))
     (otherwise whole)))
 
 ;;---------------------------------------------------------------

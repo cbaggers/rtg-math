@@ -2,8 +2,8 @@
 
 ;;----------------------------------------------------------------
 
-(defn set-components ((x single-float) (y single-float) (z single-float)
-                      (vec vec3)) vec3
+(defn-inline set-components ((x single-float) (y single-float) (z single-float)
+                             (vec vec3)) vec3
   (declare (optimize (speed 3) (safety 1) (debug 1)))
   (setf (x vec) x
         (y vec) y
@@ -48,7 +48,7 @@
   (assert accum-vec)
   (case= (cl:length vec3s)
     (0 accum-vec)
-    (1 `(%+ ,accum-vec (first vec3s)))
+    (1 `(%+ ,accum-vec ,(first vec3s)))
     (otherwise whole)))
 
 ;;---------------------------------------------------------------
@@ -70,7 +70,7 @@
   (assert accum-vec)
   (case= (cl:length vec3s)
     (0 accum-vec)
-    (1 `(%- ,accum-vec (first vec3s)))
+    (1 `(%- ,accum-vec ,(first vec3s)))
     (otherwise whole)))
 
 ;;---------------------------------------------------------------
@@ -93,7 +93,7 @@
   (assert accum-vec)
   (case= (cl:length vec3s)
     (0 accum-vec)
-    (1 `(%* ,accum-vec (first vec3s)))
+    (1 `(%* ,accum-vec ,(first vec3s)))
     (otherwise whole)))
 
 ;;---------------------------------------------------------------
