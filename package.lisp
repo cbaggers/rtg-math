@@ -224,7 +224,7 @@
 
 (uiop:define-package :rtg-math.quaternions
     (:use :cl :%rtg-math :rtg-math.types :rtg-math.base-maths)
-  (:import-from :rtg-math.matrix4.destructive
+  (:import-from :rtg-math.quaternions.destructive
                 :x :y :z :w :dot)
   (:nicknames :q)
   (:shadow :lerp :/= := :+ :- :* :identity :conjugate)
