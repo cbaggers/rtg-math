@@ -493,7 +493,7 @@
 (defn * (&rest (matrices mat3)) mat3
   (declare (optimize (speed 3) (safety 1) (debug 1)))
   (if matrices
-      (reduce #'rtg-math.matrix3.destructive:* matrices
+      (reduce #'rtg-math.matrix3.non-consing:* matrices
               :initial-value (identity))
       (identity)))
 

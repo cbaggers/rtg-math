@@ -734,23 +734,7 @@
 
 ;;----------------------------------------------------------------
 
-(defn * (&rest (matrices mat4)) mat4
-  (declare (optimize (speed 3) (safety 1) (debug 1)))
-  (if matrices
-      (reduce #'rtg-math.matrix4.destructive:* matrices
-              :initial-value (identity))
-      (identity)))
-
-(define-compiler-macro * (&whole whole &rest matrices)
-  (case= (length matrices)
-    (0 `(identity))
-    (1 (first matrices))
-    (2 `(*m ,@matrices))
-    (otherwise whole)))
-
-;;----------------------------------------------------------------
-
-(defn *m ((mat-a mat4) (mat-b mat4)) mat4
+(defn %* ((mat-a mat4) (mat-b mat4)) mat4
   "Multiplies 2 matrices and returns the result as a new
    matrix"
   (declare (optimize (speed 3) (safety 1) (debug 1)))
@@ -818,6 +802,20 @@
               (cl:* (melm mat-a 3 1) (melm mat-b 1 3))
               (cl:* (melm mat-a 3 2) (melm mat-b 2 3))
               (cl:* (melm mat-a 3 3) (melm mat-b 3 3)))))
+
+(defn * (&rest (matrices mat4)) mat4
+  (declare (optimize (speed 3) (safety 1) (debug 1)))
+  (if matrices
+      (reduce #'rtg-math.matrix4.non-consing:* matrices
+              :initial-value (identity))
+      (identity)))
+
+(define-compiler-macro * (&whole whole &rest matrices)
+  (case= (length matrices)
+    (0 `(identity))
+    (1 (first matrices))
+    (2 `(%* ,@matrices))
+    (otherwise whole)))
 
 ;;----------------------------------------------------------------
 

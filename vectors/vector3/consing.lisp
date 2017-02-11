@@ -69,9 +69,11 @@
             (z 0f0))
         (declare (single-float x y z))
         (loop :for vec :in vec3s :do
-           (incf x (x vec))
-           (incf y (y vec))
-           (incf z (z vec)))
+           (let ((vec vec))
+             (declare (vec3 vec))
+             (cl:incf x (x vec))
+             (cl:incf y (y vec))
+             (cl:incf z (z vec))))
         (make x y z))
       (make 0s0 0s0 0s0)))
 
@@ -102,9 +104,11 @@
             (z (z vec3)))
         (declare (single-float x y z))
         (loop :for vec :in vec3s :do
-           (cl:decf x (x vec))
-           (cl:decf y (y vec))
-           (cl:decf z (z vec)))
+           (let ((vec vec))
+             (declare (vec3 vec))
+             (cl:decf x (x vec))
+             (cl:decf y (y vec))
+             (cl:decf z (z vec))))
         (make x y z))
       vec3))
 
@@ -144,9 +148,11 @@
               (z (z vec3)))
           (declare (single-float x y z))
           (loop :for vec :in vec3s :do
-             (setf x (cl:* x (x vec)))
-             (setf y (cl:* y (y vec)))
-             (setf z (cl:* z (z vec))))
+             (let ((vec vec))
+               (declare (vec3 vec))
+               (setf x (cl:* x (x vec)))
+               (setf y (cl:* y (y vec)))
+               (setf z (cl:* z (z vec)))))
           (make x y z)))
       (make 1s0 1s0 1s0)))
 

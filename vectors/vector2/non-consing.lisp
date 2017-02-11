@@ -1,4 +1,4 @@
-(in-package #:rtg-math.vector2.destructive)
+(in-package #:rtg-math.vector2.non-consing)
 
 ;;----------------------------------------------------------------
 

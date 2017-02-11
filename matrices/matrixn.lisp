@@ -9,8 +9,8 @@
 (defun copy-array (a)
   (make-array (length a) :initial-contents (loop :for i :across a :collect i)))
 
-(defun normalize-array (array &optional destructive)
-  (let ((array (if destructive array (copy-array array))))
+(defun normalize-array (array &optional non-consing)
+  (let ((array (if non-consing array (copy-array array))))
     (let ((sum (loop :for i :below (length array) :sum i)))
       (loop :for i :below (length array) :do
          (setf (aref array i) (/ (float (aref array i)) sum))))
