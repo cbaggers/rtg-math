@@ -2,10 +2,6 @@
 
 ;; A ray of infinite length out from a point in ℝ3
 
-(defstruct ray3
-  (origin (v! 0 0 0) :type vec3)
-  (direction (v! 1 1 1) :type vec3))
-
 (defn-inline origin ((ray3 ray3)) vec3
   (declare (optimize (speed 3) (safety 1) (debug 1)))
   (ray3-origin ray3))
@@ -103,7 +99,7 @@
 
 ;;------------------------------------------------------------
 
-(defn distance-squared-to-line3 ((ray3 ray3) (line3 line3:line3))
+(defn distance-squared-to-line3 ((ray3 ray3) (line3 line3))
     (values (single-float 0s0 #.most-positive-single-float)
             (single-float 0s0 #.most-positive-single-float)
             (single-float 0s0 #.most-positive-single-float))
@@ -144,7 +140,7 @@
           (let ((wc (v3:+ w0 (v3:*s ray-dir sc) (v3:*s line-dir tc))))
             (values (v3:dot wc wc) tc sc))))))
 
-(defn distance-to-line3 ((ray3 ray3) (line3 line3:line3))
+(defn distance-to-line3 ((ray3 ray3) (line3 line3))
     (values (single-float 0s0 #.most-positive-single-float)
             (single-float 0s0 #.most-positive-single-float)
             (single-float 0s0 #.most-positive-single-float))

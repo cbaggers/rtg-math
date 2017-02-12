@@ -14,7 +14,8 @@
            :ivec2 :ivec3 :ivec4
            :uvec2 :uvec3 :uvec4
            :int8-vec2 :int8-vec3 :int8-vec4
-           :uint8-vec2 :uint8-vec3 :uint8-vec4))
+           :uint8-vec2 :uint8-vec3 :uint8-vec4
+           :line3 :ray3 :line-segment3))
 
 (uiop:define-package :rtg-math.base-maths
     (:use :cl :%rtg-math :rtg-math.types)
@@ -272,6 +273,10 @@
     (:use :cl :%rtg-math :rtg-math.types :rtg-math.base-maths
           :rtg-math.base-vectors)
   (:import-from :rtg-math.base-maths :sfzero-p)
+  (:import-from :rtg-math.types
+                :make-line3
+                :line3-direction
+                :line3-origin)
   (:shadow := :/=)
   (:nicknames :line3)
   (:export :line3 :origin :direction :make :transform-m3 :transform-q
@@ -283,6 +288,10 @@
     (:use :cl :%rtg-math :rtg-math.types :rtg-math.base-maths
           :rtg-math.base-vectors)
   (:import-from :rtg-math.base-maths :sfzero-p)
+  (:import-from :rtg-math.types
+                :make-ray3
+                :ray3-direction
+                :ray3-origin)
   (:shadow := :/=)
   (:nicknames :ray3)
   (:export :ray3 :origin :direction :make := :/=
@@ -296,6 +305,10 @@
     (:use :cl :%rtg-math :rtg-math.types :rtg-math.base-maths
           :rtg-math.base-vectors)
   (:import-from :rtg-math.base-maths :sfzero-p)
+  (:import-from :rtg-math.types
+                :make-line-segment3
+                :line-segment3-end-point0
+                :line-segment3-offset)
   (:shadow := :/= :length :abs)
   (:nicknames :line-seg3))
 

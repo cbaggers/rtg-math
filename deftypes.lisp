@@ -42,3 +42,22 @@
 
 (deftype quaternion ()
   '(simple-array single-float (4)))
+
+(defstruct line3
+  (origin (make-array 3 :element-type 'single-float :initial-element 0f0)
+          :type vec3)
+  (direction (make-array 3 :element-type 'single-float :initial-element 1f0)
+             :type vec3))
+
+(defstruct ray3
+  (origin (make-array 3 :element-type 'single-float :initial-element 0f0)
+          :type vec3)
+  (direction (make-array 3 :element-type 'single-float :initial-element 1f0)
+             :type vec3))
+
+(defstruct line-segment3
+  (end-point0 (make-array 3 :element-type 'single-float :initial-element 0f0)
+              :type vec3)
+  (offset (make-array 3 :element-type 'single-float
+                      :initial-contents '(0f0 1f0 0f0))
+          :type vec3))

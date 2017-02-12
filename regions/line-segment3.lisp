@@ -2,10 +2,6 @@
 
 ;; A line segment in ℝ3
 
-(defstruct line-segment3
-  (end-point0 (v! 0 0 0) :type vec3)
-  (offset (v! 0 1 0) :type vec3))
-
 (defn line-segment3-end-point1 ((line-seg3 line-segment3)) vec3
   (declare (optimize (speed 3) (safety 1) (debug 1)))
   (v3:+ (line-segment3-end-point0 line-seg3)
@@ -180,7 +176,7 @@
 ;;----------------------------------------------------------------
 
 (defn %seg-to-ray-internals ((line-seg3 line-segment3)
-                                (ray3 ray3:ray3))
+                                (ray3 ray3))
     (values vec3
             vec3
             vec3
@@ -248,7 +244,7 @@
     (values dir-a dir-b w0 tc sc)))
 
 (defn distance-squared-to-ray3 ((line-seg3 line-segment3)
-                                (ray3 ray3:ray3))
+                                (ray3 ray3))
     (values (single-float 0f0 #.most-positive-single-float)
             (single-float 0f0 #.most-positive-single-float)
             (single-float 0f0 #.most-positive-single-float))
@@ -262,7 +258,7 @@
               tc
               sc))))
 
-(defn distance-to-ray3 ((line-seg3 line-segment3) (ray3 ray3:ray3))
+(defn distance-to-ray3 ((line-seg3 line-segment3) (ray3 ray3))
     (values single-float single-float single-float)
   (declare (optimize (speed 3) (safety 1) (debug 1)))
   (multiple-value-bind (val t-c s-c) (distance-squared-to-ray3 line-seg3 ray3)
@@ -271,7 +267,7 @@
 ;;----------------------------------------------------------------
 
 (defn distance-squared-to-line3 ((line-seg3 line-segment3)
-                                 (line3 line3:line3))
+                                 (line3 line3))
     (values (single-float 0f0 #.most-positive-single-float)
             (single-float 0f0 #.most-positive-single-float)
             (single-float 0f0 #.most-positive-single-float))
@@ -319,7 +315,7 @@
                     tc
                     sc))))))
 
-(defn distance-to-line3 ((line-seg3 line-segment3) (line3 line3:line3))
+(defn distance-to-line3 ((line-seg3 line-segment3) (line3 line3))
     (values (single-float 0s0 #.most-positive-single-float)
             (single-float 0s0 #.most-positive-single-float)
             (single-float 0s0 #.most-positive-single-float))
@@ -377,7 +373,7 @@
 ;;------------------------------------------------------------
 
 (defn closest-ray-points ((line-seg-a line-segment3)
-                          (ray3 ray3:ray3))
+                          (ray3 ray3))
     (values vec3 vec3)
   (declare (optimize (speed 3) (safety 1) (debug 1)))
   (multiple-value-bind (dir-a dir-b w0 tc sc)
@@ -389,7 +385,7 @@
 ;;------------------------------------------------------------
 
 (defn closest-line-points ((line-seg3 line-segment3)
-                           (line3 line3:line3))
+                           (line3 line3))
     (values vec3 vec3)
   (declare (optimize (speed 3) (safety 1) (debug 1)))
   ;;

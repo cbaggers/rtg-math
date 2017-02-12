@@ -125,7 +125,7 @@
 
 (defun intersects-with-line3-p (aab line3)
   (declare (optimize speed) (axis-aligned-box aab)
-           (line3:line3 line3))
+           (line3 line3))
   (with-aab (mina maxa) aab
     (let ((dir (line3:direction line3))
           (max-q most-negative-single-float)
@@ -159,7 +159,7 @@
 
 (defun intersects-with-ray3-p (aab ray3)
   (declare (optimize speed) (axis-aligned-box aab)
-           (ray3:ray3 ray3))
+           (ray3 ray3))
   (with-aab (mina maxa) aab
     (let ((dir (ray3:direction ray3))
           (max-q most-negative-single-float)

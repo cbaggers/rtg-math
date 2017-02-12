@@ -2,10 +2,6 @@
 
 ;; A line of infinite length in ℝ3
 
-(defstruct line3
-  (origin (v! 0 0 0) :type vec3)
-  (direction (v! 1 1 1) :type vec3))
-
 (defn-inline origin ((line3 line3)) vec3
   (declare (optimize (speed 3) (safety 1) (debug 1)))
   (line3-origin line3))
