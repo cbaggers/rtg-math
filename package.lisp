@@ -335,7 +335,7 @@
                 :axis-aligned-box-maxima
                 :axis-aligned-box-minima)
   (:shadow := :/=)
-  (:nicknames :region.aab)
+  (:nicknames :aab)
   (:export :axis-aligned-box :axis-aligned-box-p :axis-aligned-box
            :maxima :minima :make
            :from-aabs := :/= :from-points :add-point
