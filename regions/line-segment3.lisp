@@ -302,3 +302,36 @@
     (values (sqrt val) t-c s-c)))
 
 ;;----------------------------------------------------------------
+
+(defn distance-squared-to-point ((line-seg3 line-segment3) (point-v3 vec3))
+    (values (single-float 0s0 #.most-positive-single-float)
+            (single-float 0s0 #.most-positive-single-float))
+  (declare (optimize (speed 3) (safety 1) (debug 1)))
+  (let* ((w (v3:- point-v3 (end-point0 line-seg3)))
+         (dir (direction line-seg3))
+         (proj (v3:dot w dir)))
+    ;;
+    (if (<= proj 0s0)
+        ;; endpoint 0 is closest point
+        (values (v3:dot w w) 0f0)
+        ;;
+        (let ((vsq (v3:dot dir dir)))
+          (if (>= proj vsq)
+              ;; endpoint 1 is closest point
+              (values (+ (- (v3:dot w w) (* 2f0 proj))
+                         vsq)
+                      1f0)
+              ;; otherwise somewhere else in segment
+              (let ((tc (/ proj vsq)))
+                (values (- (v3:dot w w) (* tc proj))
+                        tc)))))))
+
+(defn distance-to-point ((line-seg3 line-segment3) (point-v3 vec3))
+    (values single-float single-float)
+  (declare (optimize (speed 3) (safety 1) (debug 1)))
+  (multiple-value-bind (val t-c)
+      (distance-squared-to-point line-seg3 point-v3)
+    (declare ((single-float 0s0 #.most-positive-single-float) val))
+    (values (sqrt val) t-c)))
+
+;;------------------------------------------------------------

@@ -159,7 +159,7 @@
 (defn distance-squared-to-point ((ray3 ray3) (point-v3 vec3))
     (values (single-float 0s0 #.most-positive-single-float)
             (single-float 0s0 #.most-positive-single-float))
-  (declare (ray3 ray3) (vec3 point-v3) (optimize speed))
+  (declare (optimize (speed 3) (safety 1) (debug 1)))
   (let* ((dir (ray3-direction ray3))
          (w (v3:- point-v3 (ray3-origin ray3)))
          (proj (the single-float (v3:dot w dir))))
