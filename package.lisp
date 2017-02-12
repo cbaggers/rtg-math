@@ -268,6 +268,48 @@
   (:shadow :lerp)
   (:export :perspective :orthographic :blinn-newell-env-map :spherical-env-map))
 
+(uiop:define-package :rtg-math.regions.line3
+    (:use :cl :%rtg-math :rtg-math.types :rtg-math.base-maths
+          :rtg-math.base-vectors)
+  (:import-from :rtg-math.base-maths :sfzero-p)
+  (:shadow := :/=)
+  (:nicknames :line3)
+  (:export :line3 :origin :direction :make :transform-m3 :transform-q
+           :closest-point :closest-points
+           :distance-to-point :distance-squared-to-point
+           :distance-to-line3 :distance-squared-to-line3))
+
+(uiop:define-package :rtg-math.regions.ray3
+    (:use :cl :%rtg-math :rtg-math.types :rtg-math.base-maths
+          :rtg-math.base-vectors)
+  (:import-from :rtg-math.base-maths :sfzero-p)
+  (:shadow := :/=)
+  (:nicknames :ray3)
+  (:export :ray3 :origin :direction :make := :/=
+           :transform-m3 :transform-q
+           :distance-squared-to-ray3 :distance-to-ray3
+           :distance-squared-to-line3 :distance-to-line3
+           :distance-squared-to-point :distance-to-point
+           :closest-ray-points :closest-point))
+
+(uiop:define-package :rtg-math.regions.line-segment3
+    (:use :cl :%rtg-math :rtg-math.types :rtg-math.base-maths
+          :rtg-math.base-vectors)
+  (:import-from :rtg-math.base-maths :sfzero-p)
+  (:shadow :length :abs)
+  (:nicknames :line-seg3))
+
+(uiop:define-package :rtg-math.regions.axis-aligned-box
+    (:use :cl :%rtg-math :rtg-math.types :rtg-math.base-maths
+          :rtg-math.base-vectors)
+  (:import-from :rtg-math.base-maths :sfzero-p)
+  (:shadow := :/=)
+  (:nicknames :region.aab)
+  (:export :axis-aligned-box :maxima :minima :make
+           :from-axis-aligned-boxes :from-aabs
+           := :/= :from-points :add-point :merge-point
+           :intersects-p :intersects-with-line3-p :intersects-with-ray3-p))
+
 (uiop:define-package #:rtg-math
     (:use #:cl)
   (:import-from :rtg-math.base-maths :radians :degrees)

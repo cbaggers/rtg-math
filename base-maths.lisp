@@ -4,6 +4,14 @@
 (defconstant +inv-pi+ 0.3183098862s0)
 (defconstant +one-degree-in-radians+ 0.017453292519943295s0)
 (defconstant +one-radian-in-degrees+ 57.29577951308232s0)
+(defconstant +k-epsilon+ 1.e-6)
+
+;;----------------------------------------------------------------
+
+(declaim (inline sfzero-p))
+(defun sfzero-p (f)
+  (declare (single-float f) (optimize speed))
+  (< (abs f) +k-epsilon+))
 
 ;;----------------------------------------------------------------
 
