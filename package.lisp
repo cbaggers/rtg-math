@@ -310,7 +310,15 @@
                 :line-segment3-end-point0
                 :line-segment3-offset)
   (:shadow := :/= :length :abs)
-  (:nicknames :line-seg3))
+  (:nicknames :line-seg3)
+  (:export :line-segment3-end-point1 :end-point0 :end-point1 :direction
+           :make :make-from-point-offset := :/= :transform-m3 :transform-q
+           :length-squared :length :distance-squared-to-line-seg3
+           :distance-to-line-seg3 :distance-squared-to-ray3 :distance-to-ray3
+           :distance-squared-to-line3 :distance-to-line3
+           :distance-squared-to-point :distance-to-point
+           :closest-line-segment-points :closest-ray-points
+           :closest-line-points :closest-point))
 
 (uiop:define-package :rtg-math.regions.axis-aligned-box
     (:use :cl :%rtg-math :rtg-math.types :rtg-math.base-maths
