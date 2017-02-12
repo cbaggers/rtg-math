@@ -335,11 +335,15 @@
 
 (defn get-fixed-angles ((mat-a mat3)) vec3
   "Gets one set of possible z-y-x fixed angles that will generate
-   this matrix. Assumes that this is a rotation matrix"
-  ;;(declare (optimize (speed 3) (safety 1) (debug 1)))
+   this matrix.
+
+   Assumes that this is a rotation matrix. It is critical that this
+   is true (and elements are between -1f0 and 1f0) as otherwise you will
+   at best get a runtime error, and most likely a silently incorrect result."
+  (declare (optimize (speed 3) (safety 1) (debug 1)))
   (let* ((sy (melm mat-a 0 2)))
-    (declare (single-float sy))
-    (let ((cy (sqrt (cl:- 1s0 (the single-float (cl:* sy sy))))))
+    (declare ((single-float -1s0 1s0) sy))
+    (let ((cy (sqrt (cl:- 1s0 (cl:* sy sy)))))
       (declare (single-float cy))
       (if (not (cl:= 0f0 cy)) ; [TODO: not correct PI-epsilon]
           (let* ((factor (cl:/ 1.0 cy))
@@ -360,35 +364,42 @@
 ;; [TODO] Comment the fuck out of this and work out how it works
 (defn get-axis-angle ((mat-a mat3)) vec3
   "Gets one possible axis-angle pair that will generate this
-   matrix. Assumes that this is a rotation matrix"
-  ;;(declare (optimize (speed 3) (safety 1) (debug 1)))
-  (let* ((c-a (cl:* 0.5 (cl:- (trace mat-a) 1.0)))
-         (angle (acos c-a)))
-    (cond ((cl:= 0f0 angle) ;; <-angle is zero so axis can be anything
-           (v! 1.0 0.0 0.0))
-          ((< angle rtg-math.base-maths:+pi+)
+   matrix.
+
+   Assumes that this is a rotation matrix. It is critical that this
+   is true (and elements are between -1f0 and 1f0) as otherwise you will
+   at best get a runtime error, and most likely a silently incorrect result."
+  (declare (optimize (speed 3) (safety 1) (debug 1)))
+  (let* ((c-a (cl:* 0.5 (cl:- (trace mat-a) 1.0))))
+    (declare (type (single-float -1f0 1f0) c-a))
+    (let ((angle (acos c-a)))
+      (cond ((cl:= 0f0 angle) ;; <-angle is zero so axis can be anything
+             (v! 1.0 0.0 0.0))
+            ((< angle rtg-math.base-maths:+pi+)
                                         ;its not 180 degrees
-           (let ((axis (v! (cl:- (melm mat-a 1 2) (melm mat-a 2 1))
-                           (cl:- (melm mat-a 2 0) (melm mat-a 0 2))
-                           (cl:- (melm mat-a 0 1) (melm mat-a 1 0)))))
-             (v3:normalize axis)))
-          (t (let* ((i (if (> (melm mat-a 1 1) (melm mat-a 0 0))
-                           1
-                           (if (> (melm mat-a 2 2)
-                                  (melm mat-a 0 0))
-                               2
-                               0)))
-                    (j (mod (cl:+ i 1) 3))
-                    (k (mod (cl:+ j 1) 3))
-                    (s (sqrt (cl:+ 1.0 (cl:- (melm mat-a i i)
+             (let ((axis (v! (cl:- (melm mat-a 1 2) (melm mat-a 2 1))
+                             (cl:- (melm mat-a 2 0) (melm mat-a 0 2))
+                             (cl:- (melm mat-a 0 1) (melm mat-a 1 0)))))
+               (v3:normalize axis)))
+            (t (let* ((i (if (> (melm mat-a 1 1) (melm mat-a 0 0))
+                             1
+                             (if (> (melm mat-a 2 2)
+                                    (melm mat-a 0 0))
+                                 2
+                                 0)))
+                      (j (mod (cl:+ i 1) 3))
+                      (k (mod (cl:+ j 1) 3))
+                      (tmp-s (cl:+ 1.0 (cl:- (melm mat-a i i)
                                              (melm mat-a j j)
-                                             (melm mat-a k k)))))
-                    (recip (cl:/ 1.0 s))
-                    (result (v! 0.0 0.0 0.0)))
-               (setf (aref result i) (cl:* 0.5 s))
-               (setf (aref result j) (cl:* recip (melm mat-a i j)))
-               (setf (aref result j) (cl:* recip (melm mat-a k i)))
-               result)))))
+                                             (melm mat-a k k))))
+                      (s (sqrt (the (single-float 0s0 #.most-positive-single-float)
+                                    tmp-s)))
+                      (recip (cl:/ 1.0 s))
+                      (result (v! 0.0 0.0 0.0)))
+                 (setf (aref result i) (cl:* 0.5 s))
+                 (setf (aref result j) (cl:* recip (melm mat-a i j)))
+                 (setf (aref result j) (cl:* recip (melm mat-a k i)))
+                 result))))))
 
 ;;----------------------------------------------------------------
 

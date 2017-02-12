@@ -305,12 +305,13 @@
 ;;----------------------------------------------------------------
 
 (defn inverse ((matrix mat4)) mat4
-  ;;(declare (optimize (speed 3) (safety 1) (debug 1)))
+  (declare (optimize (speed 3) (safety 1) (debug 1)))
   (let ((det (m4:determinant matrix)))
     (if (cl:= det 0s0)
         (error "Cannot invert matrix with zero determinant:~%  ~S"
                matrix)
         (macrolet ((a (x y z)
+                     (declare (optimize (safety 3) (speed 0)))
                      (multiple-value-bind (r1 c1) (truncate (cl:- x 11) 10)
                        (multiple-value-bind (r2 c2) (truncate (cl:- y 11) 10)
                          (multiple-value-bind (r3 c3) (truncate (cl:- z 11) 10)
@@ -482,30 +483,6 @@
 
 ;;----------------------------------------------------------------
 
-(defn rotation-from-axis-angle ((axis3 vec3) (angle single-float)) mat4
-  "Returns a matrix which will rotate a point about the axis
-   specified by the angle provided"
-  (declare (optimize (speed 3) (safety 1) (debug 1)))
-  (cond ((v3:= axis3 (v3:make 1f0 0f0 0f0)) (rotation-x angle))
-        ((v3:= axis3 (v3:make 0f0 1f0 0f0)) (rotation-y angle))
-        ((v3:= axis3 (v3:make 0f0 0f0 1f0)) (rotation-z angle))
-        (t
-         (let ((c (cos angle))
-               (s (sin angle))
-               (g (cl:- 1f0 (cos angle))))
-           (let* ((x (x axis3))
-                  (y (y axis3))
-                  (z (z axis3))
-                  (gxx (cl:* g x x)) (gxy (cl:* g x y)) (gxz (cl:* g x z))
-                  (gyy (cl:* g y y)) (gyz (cl:* g y z)) (gzz (cl:* g z z)))
-             (make
-              (cl:+ gxx c)        (cl:- gxy (cl:* s z))  (cl:+ gxz (cl:* s y)) 0f0
-              (cl:+ gxy (cl:* s z))  (cl:+ gyy c)        (cl:- gyz (cl:* s x)) 0f0
-              (cl:- gxz (cl:* s y))  (cl:+ gyz (cl:* s x))  (cl:+ gzz c)       0f0
-              0f0              0f0              0f0             1f0))))))
-
-;;----------------------------------------------------------------
-
 (defn scale ((scale-vec3 vec3)) mat4
   "Returns a matrix which will scale by the amounts specified"
   (declare (optimize (speed 3) (safety 1) (debug 1)))
@@ -556,27 +533,55 @@
 
 ;;----------------------------------------------------------------
 
+(defn rotation-from-axis-angle ((axis3 vec3) (angle single-float)) mat4
+  "Returns a matrix which will rotate a point about the axis
+   specified by the angle provided"
+  (declare (optimize (speed 3) (safety 1) (debug 1)))
+  (cond ((v3:= axis3 (v3:make 1f0 0f0 0f0)) (rotation-x angle))
+        ((v3:= axis3 (v3:make 0f0 1f0 0f0)) (rotation-y angle))
+        ((v3:= axis3 (v3:make 0f0 0f0 1f0)) (rotation-z angle))
+        (t
+         (let ((c (cos angle))
+               (s (sin angle))
+               (g (cl:- 1f0 (cos angle))))
+           (let* ((x (x axis3))
+                  (y (y axis3))
+                  (z (z axis3))
+                  (gxx (cl:* g x x)) (gxy (cl:* g x y)) (gxz (cl:* g x z))
+                  (gyy (cl:* g y y)) (gyz (cl:* g y z)) (gzz (cl:* g z z)))
+             (make
+              (cl:+ gxx c)        (cl:- gxy (cl:* s z))  (cl:+ gxz (cl:* s y)) 0f0
+              (cl:+ gxy (cl:* s z))  (cl:+ gyy c)        (cl:- gyz (cl:* s x)) 0f0
+              (cl:- gxz (cl:* s y))  (cl:+ gyz (cl:* s x))  (cl:+ gzz c)       0f0
+              0f0              0f0              0f0             1f0))))))
+
+;;----------------------------------------------------------------
+
 ;; [TODO] returned as vector x-y-z
 
 (defn get-fixed-angles ((mat-a mat4)) vec3
   "Gets one set of possible z-y-x fixed angles that will generate
-   this matrix. Assumes that this is a rotation matrix. Result
-   is returned as vector3"
-  ;;(declare (optimize (speed 3) (safety 1) (debug 1)))
-  (let* ((sy (melm mat-a 0 2))
-         (cy (sqrt (cl:- 1f0 (cl:* sy sy)))))
-    (if (cl:= 0f0 cy)
-        (let ((sz 0f0)
-              (cz 1f0)
-              (sx (melm mat-a 2 1))
-              (cx (melm mat-a 1 1)))
-          (v3:make (atan sx cx) (atan sy cy) (atan sz cz)))
-        (let* ((factor (cl:/ 1f0 cy)) ; normal case
-               (sx (cl:- (cl:* factor (melm mat-a 1 2))))
-               (cx (cl:* factor (melm mat-a 2 2)))
-               (sz (cl:- (cl:* factor (melm mat-a 0 1))))
-               (cz (cl:* factor (melm mat-a 0 0))))
-          (v3:make (atan sx cx) (atan sy cy) (atan sz cz))))))
+   this matrix. Result is returned as vector3
+
+   Assumes that this is a rotation matrix. It is critical that this
+   is true (and elements are between -1f0 and 1f0) as otherwise you will
+   at best get a runtime error, and most likely a silently incorrect result."
+  (declare (optimize (speed 3) (safety 1) (debug 1)))
+  (let ((sy (melm mat-a 0 2)))
+    (declare ((single-float -1s0 1s0) sy))
+    (let ((cy (sqrt (cl:- 1f0 (cl:* sy sy)))))
+      (if (cl:= 0f0 cy)
+          (let ((sz 0f0)
+                (cz 1f0)
+                (sx (melm mat-a 2 1))
+                (cx (melm mat-a 1 1)))
+            (v3:make (atan sx cx) (atan sy cy) (atan sz cz)))
+          (let* ((factor (cl:/ 1f0 cy)) ; normal case
+                 (sx (cl:- (cl:* factor (melm mat-a 1 2))))
+                 (cx (cl:* factor (melm mat-a 2 2)))
+                 (sz (cl:- (cl:* factor (melm mat-a 0 1))))
+                 (cz (cl:* factor (melm mat-a 0 0))))
+            (v3:make (atan sx cx) (atan sy cy) (atan sz cz)))))))
 
 ;;----------------------------------------------------------------
 
@@ -596,37 +601,40 @@
 (defn get-axis-angle ((mat-a mat4)) vec3
   "Gets one possible axis-angle pair that will generate this
    matrix. Assumes that this is a rotation matrix"
-  ;;(declare (optimize (speed 3) (safety 1) (debug 1)))
+  (declare (optimize (speed 3) (safety 1) (debug 1)))
   (let* ((trace-a (cl:+ (melm mat-a 0 0) (melm mat-a 1 1)
                         (melm mat-a 2 2)))
-         (cos-theta (cl:* 0.5 (cl:- trace-a 1f0)))
-         (angle (acos cos-theta)))
-    (cond ((cl:= 0f0 angle) (values (v! 1f0 0f0 0f0) angle))
-          ((cl:= 0f0 (cl:- rtg-math.base-maths:+pi+ angle))
-           (values
-            (v3:normalize
-             (v! (cl:- (melm mat-a 2 1) (melm mat-a 1 2))
-                 (cl:- (melm mat-a 0 2) (melm mat-a 2 0))
-                 (cl:- (melm mat-a 1 0) (melm mat-a 0 1))))
-            angle))
-          (t (labels ((biggest-trace (matr)
-                        (let ((x 0))
-                          (if (> (melm matr 1 1) (melm matr 0 0))
-                              (setf x 1))
-                          (if (> (melm matr 2 2) (melm matr x x))
-                              (setf x 2))
-                          x)))
-               (let* ((i (biggest-trace mat-a))
-                      (j (mod (cl:+ i 1) 3))
-                      (k (mod (cl:+ i 1) 3))
-                      (s (sqrt (cl:+ 1f0 (cl:- (melm mat-a i i)
+         (cos-theta (cl:* 0.5 (cl:- trace-a 1f0))))
+    (declare (type (single-float -1f0 1f0) cos-theta))
+    (let ((angle (acos cos-theta)))
+      (cond ((cl:= 0f0 angle) (values (v! 1f0 0f0 0f0) angle))
+            ((cl:= 0f0 (cl:- rtg-math.base-maths:+pi+ angle))
+             (values
+              (v3:normalize
+               (v! (cl:- (melm mat-a 2 1) (melm mat-a 1 2))
+                   (cl:- (melm mat-a 0 2) (melm mat-a 2 0))
+                   (cl:- (melm mat-a 1 0) (melm mat-a 0 1))))
+              angle))
+            (t (labels ((biggest-trace (matr)
+                          (let ((x 0))
+                            (if (> (melm matr 1 1) (melm matr 0 0))
+                                (setf x 1))
+                            (if (> (melm matr 2 2) (melm matr x x))
+                                (setf x 2))
+                            x)))
+                 (let* ((i (biggest-trace mat-a))
+                        (j (mod (cl:+ i 1) 3))
+                        (k (mod (cl:+ i 1) 3))
+                        (tmp-s (cl:+ 1f0 (cl:- (melm mat-a i i)
                                                (melm mat-a j j)
-                                               (melm mat-a k k)))))
-                      (recip (cl:/ 1f0 s)))
-                 (values (v! (cl:* 0.5 s)
-                             (cl:* recip (aref mat-a (cl:+ i (cl:* 4 j))))
-                             (cl:* recip (aref mat-a (cl:+ k (cl:* 4 i)))))
-                         angle)))))))
+                                               (melm mat-a k k))))
+                        (s (the (single-float 0s0 #.most-positive-single-float)
+                                tmp-s))
+                        (recip (cl:/ 1f0 s)))
+                   (values (v! (cl:* 0.5 s)
+                               (cl:* recip (aref mat-a (cl:+ i (cl:* 4 j))))
+                               (cl:* recip (aref mat-a (cl:+ k (cl:* 4 i)))))
+                           angle))))))))
 
 
 ;;----------------------------------------------------------------
