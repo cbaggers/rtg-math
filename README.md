@@ -53,3 +53,4 @@ And more for all categories.
 - q:qconjugate is now deprecated in favor q:conjugate.
 - directory structure normalized a bit. Now vectors/matrices/quaternions
 - fixed spelling mistake in m3: determinate -> determinant
+- added the regions api support lines, rays, line-segments & axis-aligned boxes in ℝ3
