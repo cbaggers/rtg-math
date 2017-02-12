@@ -27,7 +27,7 @@
 (defun inv-sqrt (x)
   "Calculates the inverse square root of a number"
   (declare (single-float x))
-  (/ 1.0 (sqrt x)))
+  (/ 1f0 (sqrt x)))
 
 ;;----------------------------------------------------------------
 

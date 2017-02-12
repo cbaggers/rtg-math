@@ -110,20 +110,30 @@
   (q! (w quat) (x quat) (y quat) (z quat)))
 
 (defn get-axis-angle ((quat quaternion)) list
-  ;;(declare (optimize (speed 3) (safety 1) (debug 1)))
-  (list
-   (let ((length (sqrt (cl:- 1.0 (cl:* (w quat) (w quat))))))
-     (if (cl:= 0f0 length)
-         (v3:make 0.0 0.0 0.0)
-         (let ((length (/ 1.0 length)))
-           (v3:make (cl:* length (x quat))
-                    (cl:* length (y quat))
-                    (cl:* length (z quat))))))
-   (cl:* 2.0 (acos (w quat)))))
+  "Gets one possible axis-angle pair that will generate this
+   quaternion
+
+   Assumes that this is a normalized quaternion. It is critical that this
+   is true as otherwise you will at best get a runtime error, and most likely a
+   silently incorrect result."
+  (declare (optimize (speed 3) (safety 1) (debug 1)))
+  (let ((w (w quat)))
+    (declare (type (single-float -1f0 1f0) w))
+    (list
+     (let ((length (sqrt (cl:- 1.0 (cl:* w w)))))
+       (if (cl:= 0f0 length)
+           (v3:make 0.0 0.0 0.0)
+           (let ((length (/ 1.0 length)))
+             (v3:make (cl:* length (x quat))
+                      (cl:* length (y quat))
+                      (cl:* length (z quat))))))
+     (cl:* 2.0 (acos w)))))
 
 (defn normalize ((quat quaternion)) quaternion
-  ;;(declare (optimize (speed 3) (safety 1) (debug 1)))
+  (declare (optimize (speed 3) (safety 1) (debug 1)))
   (let ((length-squared (dot quat quat)))
+    (declare ((single-float 0s0 #.most-positive-single-float)
+              length-squared))
     (if (cl:= 0f0 length-squared)
         (0!)
         (let ((factor (inv-sqrt length-squared)))

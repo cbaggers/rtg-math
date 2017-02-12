@@ -14,8 +14,29 @@
 
 ;;----------------------------------------------------------------
 
+(defn normalize ((quat-to-mutate quaternion)) quaternion
+  (declare (optimize (speed 3) (safety 1) (debug 1)))
+  (let ((length-squared (dot quat-to-mutate quat-to-mutate)))
+    (declare ((single-float 0s0 #.most-positive-single-float)
+              length-squared))
+    (if (cl:= 0f0 length-squared)
+        quat-to-mutate
+        (let ((factor (inv-sqrt length-squared)))
+          (set-components (cl:* (w quat-to-mutate) factor)
+                          (cl:* (x quat-to-mutate) factor)
+                          (cl:* (y quat-to-mutate) factor)
+                          (cl:* (z quat-to-mutate) factor)
+                          quat-to-mutate)))))
+
+;;----------------------------------------------------------------
+
 (defn from-mat3 ((quat-to-mutate quaternion) (mat3 mat3)) quaternion
-  ;;(declare (optimize (speed 3) (safety 1) (debug 1)))
+  "Creates a quaternion from a 3x3 rotation matrix
+
+   Assumes that this is a rotation matrix. It is critical that this
+   is true (and elements are between -1f0 and 1f0) as otherwise you will
+   at best get a runtime error, and most likely a silently incorrect result."
+  (declare (optimize (speed 3) (safety 1) (debug 1)))
   (let ((trace (m3:trace mat3)))
     (if (> trace 0s0)
         (let* ((s (sqrt (cl:+ trace 1s0)))
@@ -31,10 +52,12 @@
                (i (if (> (m3:melm mat3 2 2) (m3:melm mat3 i i)) 2 i))
                (j (mod (cl:+ 1 i) 3))
                (k (mod (cl:+ 1 j) 3))
-               (s (sqrt (cl:+ (cl:- (m3:melm mat3 i i)
-                                    (m3:melm mat3 j j)
-                                    (m3:melm mat3 k k))
-                              1.0)))
+               (tmp-s (cl:+ (cl:- (m3:melm mat3 i i)
+                                  (m3:melm mat3 j j)
+                                  (m3:melm mat3 k k))
+                            1.0))
+               (s (sqrt (the (single-float 0s0 #.most-positive-single-float)
+                             tmp-s)))
                (recip (/ 0.5 s)))
           (setf (w quat-to-mutate) (cl:* (cl:- (m3:melm mat3 k j)
                                                (m3:melm mat3 j k))
@@ -52,7 +75,7 @@
 
 (defn from-axis-angle ((quat-to-mutate quaternion)
                        (axis-vec3 vec3) (angle single-float)) quaternion
-  ;;(declare (optimize (speed 3) (safety 1) (debug 1)))
+  (declare (optimize (speed 3) (safety 1) (debug 1)))
   (let ((length (v3:length-squared axis-vec3)))
     (if (cl:= 0f0 length)
         (set-components 1s0 0s0 0s0 0s0
@@ -84,20 +107,6 @@
                     (cl:- (cl:* cos-x sin-y cos-z) (cl:* sin-x cos-y sin-z))
                     (cl:- (cl:* cos-x cos-y sin-z) (cl:* sin-x sin-y cos-x))
                     quat-to-mutate)))
-
-;;----------------------------------------------------------------
-
-(defn normalize ((quat-to-mutate quaternion)) quaternion
-  ;;(declare (optimize (speed 3) (safety 1) (debug 1)))
-  (let ((length-squared (dot quat-to-mutate quat-to-mutate)))
-    (if (cl:= 0f0 length-squared)
-        quat-to-mutate
-        (let ((factor (inv-sqrt length-squared)))
-          (set-components (cl:* (w quat-to-mutate) factor)
-                          (cl:* (x quat-to-mutate) factor)
-                          (cl:* (y quat-to-mutate) factor)
-                          (cl:* (z quat-to-mutate) factor)
-                          quat-to-mutate)))))
 
 ;;----------------------------------------------------------------
 
