@@ -81,10 +81,12 @@
             (w 0f0))
         (declare (single-float x y z w))
         (loop :for vec :in vec4s :do
-           (incf x (x vec))
-           (incf y (y vec))
-           (incf z (z vec))
-           (incf w (w vec)))
+           (let ((vec vec))
+             (declare (vec4 vec))
+             (incf x (x vec))
+             (incf y (y vec))
+             (incf z (z vec))
+             (incf w (w vec))))
         (make x y z w))
       (make 0s0 0s0 0s0 0s0)))
 
@@ -117,10 +119,12 @@
             (w (w vec4)))
         (declare (single-float x y z w))
         (loop :for vec :in vec4s :do
-           (cl:decf x (x vec))
-           (cl:decf y (y vec))
-           (cl:decf z (z vec))
-           (cl:decf w (w vec)))
+           (let ((vec vec))
+             (declare (vec4 vec))
+             (cl:decf x (x vec))
+             (cl:decf y (y vec))
+             (cl:decf z (z vec))
+             (cl:decf w (w vec))))
         (make x y z w))
       vec4))
 
@@ -163,10 +167,12 @@
               (w (w vec4)))
           (declare (single-float x y z w))
           (loop :for vec :in vec4s :do
-             (setf x (cl:* x (x vec)))
-             (setf y (cl:* y (y vec)))
-             (setf z (cl:* z (z vec)))
-             (setf w (cl:* w (w vec))))
+             (let ((vec vec))
+               (declare (vec4 vec))
+               (setf x (cl:* x (x vec)))
+               (setf y (cl:* y (y vec)))
+               (setf z (cl:* z (z vec)))
+               (setf w (cl:* w (w vec)))))
           (make x y z w)))
       (make 1s0 1s0 1s0 1s0)))
 
@@ -238,7 +244,8 @@
 
 ;;----------------------------------------------------------------
 
-(defn length-squared ((vector-a vec4)) single-float
+(defn length-squared ((vector-a vec4))
+    (single-float 0s0 #.most-positive-single-float)
   "Return the squared length of the vector. A regular length
    is the square root of this value. The sqrt function is slow
    so if all thats needs doing is to compare lengths then always
@@ -261,7 +268,8 @@
 
 ;;----------------------------------------------------------------
 
-(defn distance-squared ((vector-a vec4) (vector-b vec4)) single-float
+(defn distance-squared ((vector-a vec4) (vector-b vec4))
+    (single-float 0s0 #.most-positive-single-float)
   "finds the squared distance between 2 points defined by vectors
    vector-a & vector-b"
   (declare (optimize (speed 3) (safety 1) (debug 1)))

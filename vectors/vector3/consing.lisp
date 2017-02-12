@@ -217,7 +217,8 @@
 
 ;;---------------------------------------------------------------
 
-(defn length-squared ((vector-a vec3)) single-float
+(defn length-squared ((vector-a vec3))
+    (single-float 0s0 #.most-positive-single-float)
   "Return the squared length of the vector. A regular length
    is the square root of this value. The sqrt function is slow
    so if all thats needs doing is to compare lengths then always
@@ -239,7 +240,8 @@
 
 ;;---------------------------------------------------------------
 
-(defn distance-squared ((vector-a vec3) (vector-b vec3)) single-float
+(defn distance-squared ((vector-a vec3) (vector-b vec3))
+    (single-float 0s0 #.most-positive-single-float)
   "finds the squared distance between 2 points defined by vectors
    vector-a & vector-b"
   (declare (optimize (speed 3) (safety 1) (debug 1)))

@@ -69,8 +69,10 @@
             (y 0f0))
         (declare (single-float x y))
         (loop :for vec :in vec2s :do
-           (incf x (x vec))
-           (incf y (y vec)))
+           (let ((vec vec))
+             (declare (vec2 vec))
+             (incf x (x vec))
+             (incf y (y vec))))
         (make x y))
       (make 0s0 0s0)))
 
@@ -100,8 +102,10 @@
             (y (y vec2)))
         (declare (single-float x y))
         (loop :for vec :in vec2s :do
-           (decf x (x vec))
-           (decf y (y vec)))
+           (let ((vec vec))
+             (declare (vec2 vec))
+             (decf x (x vec))
+             (decf y (y vec))))
         (make x y))
       vec2))
 
@@ -123,8 +127,10 @@
               (y (y vec2)))
           (declare (single-float x y))
           (loop :for vec :in vec2s :do
-             (setf x (cl:* x (x vec)))
-             (setf y (cl:* y (y vec))))
+             (let ((vec vec))
+               (declare (vec2 vec))
+               (setf x (cl:* x (x vec)))
+               (setf y (cl:* y (y vec)))))
           (make x y)))
       (make 1s0 1s0)))
 
@@ -194,7 +200,8 @@
 
 ;;----------------------------------------------------------------
 
-(defn length-squared ((vector-a vec2)) single-float
+(defn length-squared ((vector-a vec2))
+    (single-float 0s0 #.most-positive-single-float)
   "Return the squared length of the vector. A regular length
    is the square root of this value. The sqrt function is slow
    so if all thats needs doing is to compare lengths then always
@@ -215,7 +222,8 @@
 
 ;;----------------------------------------------------------------
 
-(defn distance-squared ((vector-a vec2) (vector-b vec2)) single-float
+(defn distance-squared ((vector-a vec2) (vector-b vec2))
+    (single-float 0s0 #.most-positive-single-float)
   "finds the squared distance between 2 points defined by vectors
    vector-a & vector-b"
   (declare (optimize (speed 3) (safety 1) (debug 1)))
