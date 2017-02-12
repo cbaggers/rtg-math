@@ -15,7 +15,8 @@
            :uvec2 :uvec3 :uvec4
            :int8-vec2 :int8-vec3 :int8-vec4
            :uint8-vec2 :uint8-vec3 :uint8-vec4
-           :line3 :ray3 :line-segment3))
+           :line3 :ray3 :line-segment3
+           :axis-aligned-box))
 
 (uiop:define-package :rtg-math.base-maths
     (:use :cl :%rtg-math :rtg-math.types)
@@ -269,49 +270,52 @@
   (:shadow :lerp)
   (:export :perspective :orthographic :blinn-newell-env-map :spherical-env-map))
 
-(uiop:define-package :rtg-math.regions.line3
+(uiop:define-package :rtg-math.region.line3
     (:use :cl :%rtg-math :rtg-math.types :rtg-math.base-maths
           :rtg-math.base-vectors)
   (:import-from :rtg-math.base-maths :sfzero-p)
   (:import-from :rtg-math.types
                 :make-line3
                 :line3-direction
-                :line3-origin)
+                :line3-origin
+                :line3-p)
   (:shadow := :/=)
   (:nicknames :line3)
-  (:export :line3 :origin :direction :make :transform-m3 :transform-q
-           :closest-point :closest-points
+  (:export :line3 :line3-p :origin :direction :make :transform-m3 :transform-q
+           :closest-point :closest-line-points
            :distance-to-point :distance-squared-to-point
            :distance-to-line3 :distance-squared-to-line3))
 
-(uiop:define-package :rtg-math.regions.ray3
+(uiop:define-package :rtg-math.region.ray3
     (:use :cl :%rtg-math :rtg-math.types :rtg-math.base-maths
           :rtg-math.base-vectors)
   (:import-from :rtg-math.base-maths :sfzero-p)
   (:import-from :rtg-math.types
                 :make-ray3
                 :ray3-direction
-                :ray3-origin)
+                :ray3-origin
+                :ray3-p)
   (:shadow := :/=)
   (:nicknames :ray3)
-  (:export :ray3 :origin :direction :make := :/=
+  (:export :ray3 :ray3-p :origin :direction :make := :/=
            :transform-m3 :transform-q
            :distance-squared-to-ray3 :distance-to-ray3
            :distance-squared-to-line3 :distance-to-line3
            :distance-squared-to-point :distance-to-point
            :closest-ray-points :closest-point))
 
-(uiop:define-package :rtg-math.regions.line-segment3
+(uiop:define-package :rtg-math.region.line-segment3
     (:use :cl :%rtg-math :rtg-math.types :rtg-math.base-maths
           :rtg-math.base-vectors)
   (:import-from :rtg-math.base-maths :sfzero-p)
   (:import-from :rtg-math.types
+                :line-segment3-p
                 :make-line-segment3
                 :line-segment3-end-point0
                 :line-segment3-offset)
   (:shadow := :/= :length :abs)
   (:nicknames :line-seg3)
-  (:export :line-segment3-end-point1 :end-point0 :end-point1 :direction
+  (:export :end-point0 :end-point1 :direction :line-segment3-p
            :make :make-from-point-offset := :/= :transform-m3 :transform-q
            :length-squared :length :distance-squared-to-line-seg3
            :distance-to-line-seg3 :distance-squared-to-ray3 :distance-to-ray3
@@ -320,16 +324,33 @@
            :closest-line-segment-points :closest-ray-points
            :closest-line-points :closest-point))
 
-(uiop:define-package :rtg-math.regions.axis-aligned-box
+(uiop:define-package :rtg-math.region.axis-aligned-box
     (:use :cl :%rtg-math :rtg-math.types :rtg-math.base-maths
           :rtg-math.base-vectors)
   (:import-from :rtg-math.base-maths :sfzero-p)
+  (:import-from :rtg-math.types
+                :axis-aligned-box
+                :make-axis-aligned-box
+                :axis-aligned-box-p
+                :axis-aligned-box-maxima
+                :axis-aligned-box-minima)
   (:shadow := :/=)
   (:nicknames :region.aab)
-  (:export :axis-aligned-box :maxima :minima :make
-           :from-axis-aligned-boxes :from-aabs
-           := :/= :from-points :add-point :merge-point
-           :intersects-p :intersects-with-line3-p :intersects-with-ray3-p))
+  (:export :axis-aligned-box :axis-aligned-box-p :axis-aligned-box
+           :maxima :minima :make
+           :from-aabs := :/= :from-points :add-point
+           :intersects-p :intersects-with-line3-p :intersects-with-ray3-p
+           :intersects-with-line-segment-p))
+
+(uiop:define-package :rtg-math.region
+    (:use :cl :%rtg-math :rtg-math.types :rtg-math.base-maths
+          :rtg-math.base-vectors)
+  (:nicknames :regions)
+  (:export :intersects-p
+           :distance-squared
+           :distance
+           :closest-points
+           :closest-point))
 
 (uiop:define-package #:rtg-math
     (:use #:cl)

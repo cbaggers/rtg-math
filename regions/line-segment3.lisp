@@ -1,4 +1,4 @@
-(in-package :rtg-math.regions.line-segment3)
+(in-package :rtg-math.region.line-segment3)
 
 ;; A line segment in ℝ3
 

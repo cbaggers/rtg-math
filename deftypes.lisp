@@ -61,3 +61,9 @@
   (offset (make-array 3 :element-type 'single-float
                       :initial-contents '(0f0 1f0 0f0))
           :type vec3))
+
+(defstruct axis-aligned-box
+  (minima (make-array 3 :element-type 'single-float :initial-element -1f0)
+          :type vec3)
+  (maxima (make-array 3 :element-type 'single-float :initial-element 1f0)
+          :type vec3))

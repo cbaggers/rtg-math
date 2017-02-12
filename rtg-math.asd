@@ -36,4 +36,5 @@
                (:file "regions/line3")
                (:file "regions/ray3")
                (:file "regions/line-segment3")
-               (:file "regions/axis-aligned-box")))
+               (:file "regions/axis-aligned-box")
+               (:file "regions/regions")))

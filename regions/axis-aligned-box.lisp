@@ -1,15 +1,11 @@
-(in-package :rtg-math.regions.axis-aligned-box)
+(in-package :rtg-math.region.axis-aligned-box)
 
-(defstruct axis-aligned-box
-  (minima (v! -1 -1 -1) :type vec3)
-  (maxima (v! 1 1 1) :type vec3))
-
-(declaim (inline maxima))
-(defun maxima (aab)
+(defn-inline maxima ((aab axis-aligned-box)) vec3
+  (declare (optimize (speed 3) (safety 1) (debug 1)))
   (axis-aligned-box-maxima aab))
 
-(declaim (inline minima))
-(defun minima (aab)
+(defn-inline minima ((aab axis-aligned-box)) vec3
+  (declare (optimize (speed 3) (safety 1) (debug 1)))
   (axis-aligned-box-minima aab))
 
 ;;------------------------------------------------------------
@@ -26,16 +22,16 @@
 
 ;;------------------------------------------------------------
 
-(declaim (inline make-aab))
-(defun make (&key (minima (v! -1 -1 -1)) (maxima (v! 1 1 1)))
-  (make-axis-aligned-box
-   :minima minima
-   :maxima maxima))
+(defn-inline make ((minima vec3) (maxima vec3)) axis-aligned-box
+  (declare (optimize (speed 3) (safety 1) (debug 1)))
+  (make-axis-aligned-box :minima minima :maxima maxima))
+
+;;------------------------------------------------------------
 
 ;; {TODO} - change this to work on sequences
 ;;        - dont use loop so that we can declare types
-(defun from-points (list-of-vec3)
-  (declare (optimize speed))
+(defn from-points ((list-of-vec3 list)) axis-aligned-box
+  (declare (optimize (speed 3) (safety 1) (debug 1)))
   (assert list-of-vec3)
   (let ((first (first list-of-vec3)))
     (declare (vec3 first))
@@ -55,36 +51,31 @@
            (setf min-y (min min-y (y vec)))
            (setf max-z (max max-z (z vec)))
            (setf min-z (min min-z (z vec)))))
-      (make :minima (v! min-x min-y min-z)
-            :maxima (v! max-x max-y max-z)))))
+      (make-axis-aligned-box
+       :minima (v! min-x min-y min-z)
+       :maxima (v! max-x max-y max-z)))))
 
-(defun from-axis-aligned-boxes (aab-0 aab-1)
-  (from-points (list (maxima aab-0)
-                     (maxima aab-1)
-                     (minima aab-0)
-                     (minima aab-1))))
-
-(defun from-aabs (aab-0 aab-1)
-  (from-axis-aligned-boxes aab-0 aab-1))
+(defn from-aabs (&rest (aabs axis-aligned-box)) axis-aligned-box
+  (from-points (loop :for box :in aabs
+                  :collect (maxima box)
+                  :collect (minima box))))
 
 ;;------------------------------------------------------------
 
-(defun add-point (aab point-v3)
-  (declare (optimize speed) (inline x y z)
-           (vec3 point-v3) (axis-aligned-box aab))
+(defn add-point ((aab axis-aligned-box) (point-v3 vec3)) axis-aligned-box
+  (declare (optimize (speed 3) (safety 1) (debug 1)))
   (with-aab (mina maxa) aab
-    (make :minima (v3:make (min (x point-v3) (x mina))
-                           (min (y point-v3) (y mina))
-                           (min (z point-v3) (z mina)))
-          :maxima (v! (max (x point-v3) (x maxa))
-                      (max (y point-v3) (y maxa))
-                      (max (z point-v3) (z maxa))))))
+    (make-axis-aligned-box
+     :minima (v3:make (min (x point-v3) (x mina))
+                      (min (y point-v3) (y mina))
+                      (min (z point-v3) (z mina)))
+     :maxima (v! (max (x point-v3) (x maxa))
+                 (max (y point-v3) (y maxa))
+                 (max (z point-v3) (z maxa))))))
 
-
-
-(defun merge-point (aab point-v3)
-  (declare (optimize speed) (inline x y z (setf x) (setf y) (setf z))
-           (vec3 point-v3) (axis-aligned-box aab))
+;; make a non-consing axis-aligned-box package containing merge-point
+(defn merge-point ((aab axis-aligned-box) (point-v3 vec3)) axis-aligned-box
+  (declare (optimize (speed 3) (safety 1) (debug 1)))
   (with-aab (mina maxa) aab
     (if (< (x point-v3) (x mina))
         (setf (x mina) (x point-v3))
@@ -97,23 +88,26 @@
     (if (< (z point-v3) (z mina))
         (setf (z mina) (z point-v3))
         (when (> (z point-v3) (z maxa))
-          (setf (z maxa) (z point-v3))))))
+          (setf (z maxa) (z point-v3))))
+    aab))
 
 ;;------------------------------------------------------------
 
-(defun = (aab-0 aab-1)
+(defn = ((aab-0 axis-aligned-box) (aab-1 axis-aligned-box)) boolean
+  (declare (optimize (speed 3) (safety 1) (debug 1)))
   (with-aab (mina-0 maxa-0) aab-0
     (with-aab (mina-1 maxa-1) aab-1
       (and (v3:= mina-0 mina-1)
            (v3:= maxa-0 maxa-1)))))
 
-(defun /= (aab-0 aab-1)
+(defn-inline /= ((aab-0 axis-aligned-box) (aab-1 axis-aligned-box)) boolean
+  (declare (optimize (speed 3) (safety 1) (debug 1)))
   (not (= aab-0 aab-1)))
 
 ;;------------------------------------------------------------
 
-(defun intersects-p (aab-0 aab-1)
-  (declare (optimize speed))
+(defn intersects-p ((aab-0 axis-aligned-box) (aab-1 axis-aligned-box)) boolean
+  (declare (optimize (speed 3) (safety 1) (debug 1)))
   (with-aab (mina-0 maxa-0) aab-0
     (with-aab (mina-1 maxa-1) aab-1
       ;; not seperate on any axis
@@ -123,9 +117,8 @@
 
 ;;------------------------------------------------------------
 
-(defun intersects-with-line3-p (aab line3)
-  (declare (optimize speed) (axis-aligned-box aab)
-           (line3 line3))
+(defn intersects-with-line3-p ((aab axis-aligned-box) (line3 line3)) boolean
+  (declare (optimize (speed 3) (safety 1) (debug 1)))
   (with-aab (mina maxa) aab
     (let ((dir (line3:direction line3))
           (max-q most-negative-single-float)
@@ -157,12 +150,11 @@
 
 ;;------------------------------------------------------------
 
-(defun intersects-with-ray3-p (aab ray3)
-  (declare (optimize speed) (axis-aligned-box aab)
-           (ray3 ray3))
+(defn intersects-with-ray3-p ((aab axis-aligned-box) (ray3 ray3)) boolean
+  (declare (optimize (speed 3) (safety 1) (debug 1)))
   (with-aab (mina maxa) aab
     (let ((dir (ray3:direction ray3))
-          (max-q most-negative-single-float)
+          (max-q 0f0)
           (min-r most-positive-single-float))
       ;; do tests against three sets of planes
       (loop :for i :below 3 :do
@@ -185,22 +177,53 @@
                (when (< r min-r)
                  (setf min-r r))
                ;; check for intersection failure
-               (when (or (< min-r 0s0) (> max-q min-r))
+               (when (> max-q min-r)
                  (return-from intersects-with-ray3-p nil))))
          :finally (return t)))))
 
 ;;------------------------------------------------------------
 
-;; {TODO}
-
-;; (defun intersects-with-line-segment-p (aab line-seg3)
-;;   nil)
+(defn intersects-with-line-segment-p ((aab axis-aligned-box)
+                                      (line-seg3 line-segment3))
+    boolean
+  (declare (optimize (speed 3) (safety 1) (debug 1)))
+  (with-aab (mina maxa) aab
+    (let ((dir (line-seg3:direction line-seg3))
+          (max-q 0f0)
+          (min-r most-positive-single-float))
+      ;; do tests against three sets of planes
+      (loop :for i :below 3 :do
+         ;; line is parallel to plane
+         (if (sfzero-p (aref dir i))
+             ;; line passes by box
+             (when (or (< (aref (line-seg3:end-point0 line-seg3) i)
+                          (aref mina i))
+                       (> (aref (line-seg3:end-point0 line-seg3) i)
+                          (aref maxa i)))
+               (return-from intersects-with-line-segment-p nil))
+             ;; compute intersection parameters and sort (swap if neccesary)
+             (let* ((orig (line-seg3:end-point0 line-seg3))
+                    (q (/ (- (aref mina i) (aref orig i))
+                          (aref dir i)))
+                    (r (/ (- (aref maxa i) (aref orig i))
+                          (aref dir i))))
+               (when (> q r)
+                 (let ((tmp q))
+                   (setf q r
+                         r tmp)))
+               (when (> q max-q)
+                 (setf max-q q))
+               (when (< r min-r)
+                 (setf min-r r))
+               ;; check for intersection failure
+               (when (> max-q min-r)
+                 (return-from intersects-with-line-segment-p nil))))
+         :finally (return t)))))
 
 ;;------------------------------------------------------------
 
-;; {TODO}
-
-;; (defun get-signed-distance-to-plane (aab plane)
+;; (defn get-signed-distance-to-plane ((aab axis-aligned-box)
+;;                                     (plane plane)) single-float
 ;;   )
 
 ;;------------------------------------------------------------

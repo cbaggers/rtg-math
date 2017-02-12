@@ -1,4 +1,4 @@
-(in-package :rtg-math.regions.line3)
+(in-package :rtg-math.region.line3)
 
 ;; A line of infinite length in ℝ3
 

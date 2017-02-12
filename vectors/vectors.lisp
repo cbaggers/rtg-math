@@ -113,9 +113,10 @@
         (z (v3:make (float x) (float y) (float z)))
         (t (v2:make (float x) (float y)))))
 
-;;
+;; {TODO} remove this
 (defun merge-into-vector (&rest vectors)
   "Takes a list of vectors and combines them into a new vector"
+  (warn "merge-into-vector is deprecated, use v! instead")
   (labels ((seqify (x)
              (if (or (listp x) (arrayp x))
                  x

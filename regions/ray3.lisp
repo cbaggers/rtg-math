@@ -1,4 +1,4 @@
-(in-package :rtg-math.regions.ray3)
+(in-package :rtg-math.region.ray3)
 
 ;; A ray of infinite length out from a point in ℝ3
 
