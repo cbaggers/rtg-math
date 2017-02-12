@@ -231,7 +231,7 @@
 
 ;;---------------------------------------------------------------
 
-(defn length ((vector-a vec3)) single-float
+(defn length ((vector-a vec3)) (single-float 0s0 #.most-positive-single-float)
   "Returns the length of a vector
    If you only need to compare relative lengths then definately
    stick to length-squared as the sqrt is a slow operation."
@@ -249,7 +249,8 @@
 
 ;;---------------------------------------------------------------
 
-(defn distance ((vector-a vec3) (vector-b vec3)) single-float
+(defn distance ((vector-a vec3) (vector-b vec3))
+    (single-float 0s0 #.most-positive-single-float)
   "Return the distance between 2 points defined by vectors
    vector-a & vector-b. If comparing distances, use
    c-distance-squared as it desnt require a sqrt and thus is
