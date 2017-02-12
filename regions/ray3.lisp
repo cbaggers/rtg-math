@@ -1,52 +1,55 @@
 (in-package :rtg-math.regions.ray3)
 
+;; A ray of infinite length out from a point in ℝ3
+
 (defstruct ray3
   (origin (v! 0 0 0) :type vec3)
   (direction (v! 1 1 1) :type vec3))
 
-(declaim (ftype (function (ray3) vec3) origin)
-         (inline origin))
-(defun origin (ray3)
-  (declare (optimize speed))
+(defn-inline origin ((ray3 ray3)) vec3
+  (declare (optimize (speed 3) (safety 1) (debug 1)))
   (ray3-origin ray3))
 
-(declaim (ftype (function (ray3) vec3) direction)
-         (inline direction))
-(defun direction (ray3)
-  (declare (optimize speed))
-  (ray3-origin ray3))
+(defn direction ((ray3 ray3)) vec3
+  (declare (optimize (speed 3) (safety 1) (debug 1)))
+  (ray3-direction ray3))
 
-(defun make (origin-v3 direction-v3)
+(defn-inline make ((origin-v3 vec3) (direction-v3 vec3)) ray3
+  (declare (optimize (speed 3) (safety 1) (debug 1)))
   (make-ray3 :origin origin-v3
              :direction (v3:normalize direction-v3)))
 
-;; {TODO} add - transform taking m4
-;;            - transform taking quat, translate, scale
+;;------------------------------------------------------------
 
-(defun transform-m3 (matrix3 ray3)
-  (make-ray3 :origin (m3:*v matrix3 (ray3-origin ray3))
-             :direction (m3:*v matrix3 (ray3-direction ray3))))
+(defn transform-m3 ((matrix3 mat3) (ray3 ray3)) ray3
+  (declare (optimize (speed 3) (safety 1) (debug 1)))
+  (make (m3:*v matrix3 (origin ray3))
+        (m3:*v matrix3 (direction ray3))))
 
-(defun transform-q (quaternion ray3)
-  (transform-m3 (q:to-mat3 quaternion)
-                ray3))
+(defn transform-q ((quat quaternion) (ray3 ray3)) ray3
+  (declare (optimize (speed 3) (safety 1) (debug 1)))
+  (make (q:rotate (origin ray3) quat)
+        (q:rotate (direction ray3) quat)))
 
-(declaim (inline =))
-(defun = (ray3-a ray3-b)
+;;------------------------------------------------------------
+
+(defn-inline = ((ray3-a ray3) (ray3-b ray3)) boolean
+  (declare (optimize (speed 3) (safety 1) (debug 1)))
   (and (v3:= (origin ray3-a) (origin ray3-b))
        (v3:= (direction ray3-a) (direction ray3-b))))
 
-(defun /= (ray3-a ray3-b)
-  (declare (inline =))
+(defn /= ((ray3-a ray3) (ray3-b ray3)) boolean
+  (declare (optimize (speed 3) (safety 1) (debug 1))
+           (inline =))
   (not (= ray3-a ray3-b)))
 
 ;;------------------------------------------------------------
 
-(declaim (ftype (function (ray3 ray3)
-                          (values single-float single-float single-float))
-                distance-squared-to-ray3))
-(defun distance-squared-to-ray3 (ray3-a ray3-b)
-  (declare (ray3 ray3-a ray3-b) (optimize speed))
+(defn distance-squared-to-ray3 ((ray3-a ray3) (ray3-b ray3))
+    (values (single-float 0s0 #.most-positive-single-float)
+            (single-float 0s0 #.most-positive-single-float)
+            (single-float 0s0 #.most-positive-single-float))
+  (declare (optimize (speed 3) (safety 1) (debug 1)))
   (let* ((orig-a (ray3-origin ray3-a))
          (orig-b (ray3-origin ray3-b))
          (dir-a (ray3-direction ray3-a))
@@ -87,24 +90,19 @@
                 tc
                 sc)))))
 
-
-(declaim (ftype (function (ray3 ray3)
-                          (values single-float single-float single-float))
-                distance-to-ray3))
-(defun distance-to-ray3 (ray3-a ray3-b)
-  (declare (ray3 ray3-a ray3-b) (optimize speed))
-  (multiple-value-bind (val t-c s-c)
-      (distance-squared-to-ray3 ray3-a ray3-b)
-    (declare ((single-float 0s0 #.most-positive-single-float) val))
+(defn distance-to-ray3 ((ray3-a ray3) (ray3-b ray3))
+    (values single-float single-float single-float)
+  (declare (optimize (speed 3) (safety 1) (debug 1)))
+  (multiple-value-bind (val t-c s-c) (distance-squared-to-ray3 ray3-a ray3-b)
     (values (sqrt val) t-c s-c)))
 
 ;;------------------------------------------------------------
 
-(declaim (ftype (function (ray3 line3:line3)
-                          (Values single-float single-float single-float))
-                distance-squared-to-line3))
-(defun distance-squared-to-line3 (ray3 line3)
-  (declare (ray3 ray3) (line3:line3 line3) (optimize speed))
+(defn distance-squared-to-line3 ((ray3 ray3) (line3 line3:line3))
+    (values (single-float 0s0 #.most-positive-single-float)
+            (single-float 0s0 #.most-positive-single-float)
+            (single-float 0s0 #.most-positive-single-float))
+  (declare (optimize (speed 3) (safety 1) (debug 1)))
   (let* ((ray-orig (ray3-origin ray3))
          (line-orig (line3:origin line3))
          (ray-dir (ray3-direction ray3))
@@ -138,11 +136,11 @@
           (let ((wc (v3:+ w0 (v3:*s ray-dir sc) (v3:*s line-dir tc))))
             (values (v3:dot wc wc) tc sc))))))
 
-(declaim (ftype (function (ray3 line3:line3)
-                          (values single-float single-float single-float))
-                distance-to-line3))
-(defun distance-to-line3 (ray3 line3)
-  (declare (ray3 ray3) (line3:line3 line3) (optimize speed))
+(defn distance-to-line3 ((ray3 ray3) (line3 line3:line3))
+    (values (single-float 0s0 #.most-positive-single-float)
+            (single-float 0s0 #.most-positive-single-float)
+            (single-float 0s0 #.most-positive-single-float))
+  (declare (optimize (speed 3) (safety 1) (debug 1)))
   (multiple-value-bind (val t-c s-c)
       (distance-squared-to-line3 ray3 line3)
     (declare ((single-float 0s0 #.most-positive-single-float) val))
@@ -150,9 +148,9 @@
 
 ;;------------------------------------------------------------
 
-(declaim (ftype (function (ray3 vec3) (values single-float single-float))
-                distance-squared-to-point))
-(defun distance-squared-to-point (ray3 point-v3)
+(defn distance-squared-to-point ((ray3 ray3) (point-v3 vec3))
+    (values (single-float 0s0 #.most-positive-single-float)
+            (single-float 0s0 #.most-positive-single-float))
   (declare (ray3 ray3) (vec3 point-v3) (optimize speed))
   (let* ((dir (ray3-direction ray3))
          (w (v3:- point-v3 (ray3-origin ray3)))
@@ -164,11 +162,9 @@
           (values (- (v3:dot w w) (* t-c proj))
                   t-c)))))
 
-
-(declaim (ftype (function (ray3 vec3) (values single-float single-float))
-                distance-to-point))
-(defun distance-to-point (ray3 point-v3)
-  (declare (ray3 ray3) (vec3 point-v3) (optimize speed))
+(defn distance-to-point ((ray3 ray3) (point-v3 vec3))
+    (values single-float single-float)
+  (declare (optimize (speed 3) (safety 1) (debug 1)))
   (multiple-value-bind (val t-c)
       (distance-squared-to-point ray3 point-v3)
     (declare ((single-float 0s0 #.most-positive-single-float) val))
@@ -176,10 +172,8 @@
 
 ;;------------------------------------------------------------
 
-(declaim (ftype (function (ray3 ray3) (values vec3 vec3))
-                closest-ray-points))
-(defun closest-ray-points (ray3-a ray3-b)
-  (declare (ray3 ray3-a ray3-b) (optimize speed))
+(defn closest-ray-points ((ray3-a ray3) (ray3-b ray3)) (values vec3 vec3)
+  (declare (optimize (speed 3) (safety 1) (debug 1)))
   (let* ((orig-a (ray3-origin ray3-a))
          (orig-b (ray3-origin ray3-b))
          (dir-a (ray3-direction ray3-a))
@@ -220,9 +214,8 @@
 
 ;;------------------------------------------------------------
 
-(declaim (ftype (function (ray3 vec3) vec3) closest-point))
-(defun closest-point (ray3 point-v3)
-  (declare (ray3 ray3) (vec3 point-v3) (optimize speed))
+(defn closest-point ((ray3 ray3) (point-v3 vec3)) vec3
+  (declare (optimize (speed 3) (safety 1) (debug 1)))
   (let* ((dir (ray3-direction ray3))
          (orig (ray3-origin ray3))
          (w (v3:- point-v3 orig))

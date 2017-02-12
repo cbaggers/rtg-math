@@ -1,45 +1,52 @@
 (in-package :rtg-math.regions.line3)
 
+;; A line of infinite length in ℝ3
+
 (defstruct line3
   (origin (v! 0 0 0) :type vec3)
   (direction (v! 1 1 1) :type vec3))
 
-(declaim (ftype (function (line3) vec3) origin)
-         (inline origin))
-(defun origin (line3)
-  (declare (optimize speed))
+(defn-inline origin ((line3 line3)) vec3
+  (declare (optimize (speed 3) (safety 1) (debug 1)))
   (line3-origin line3))
 
-(declaim (ftype (function (line3) vec3) direction)
-         (inline direction))
-(defun direction (line3)
-  (declare (optimize speed))
-  (line3-origin line3))
+(defn direction ((line3 line3)) vec3
+  (declare (optimize (speed 3) (safety 1) (debug 1)))
+  (line3-direction line3))
 
-(defun make (origin-v3 direction-v3)
+(defn-inline make ((origin-v3 vec3) (direction-v3 vec3)) line3
+  (declare (optimize (speed 3) (safety 1) (debug 1)))
   (make-line3 :origin origin-v3
               :direction (v3:normalize direction-v3)))
 
-(defun transform-m3 (matrix3 line3)
-  (make-line3 :origin (m3:*v matrix3 (line3-origin line3))
-              :direction (m3:*v matrix3 (line3-direction line3))))
+;;----------------------------------------------------------------
 
-(defun transform-q (quaternion line3)
-  (transform-m3 (q:to-mat3 quaternion)
-                line3))
+(defn transform-m3 ((matrix3 mat3) (line3 line3)) line3
+  (declare (optimize (speed 3) (safety 1) (debug 1)))
+  (make (m3:*v matrix3 (origin line3))
+        (m3:*v matrix3 (direction line3))))
 
-(declaim (inline =))
-(defun = (line3-a line3-b)
+(defn transform-q ((quat quaternion) (line3 line3)) line3
+  (declare (optimize (speed 3) (safety 1) (debug 1)))
+  (make (q:rotate (origin line3) quat)
+        (q:rotate (direction line3) quat)))
+
+;;----------------------------------------------------------------
+
+(defn-inline = ((line3-a line3) (line3-b line3)) boolean
+  (declare (optimize (speed 3) (safety 1) (debug 1)))
   (and (v3:= (origin line3-a) (origin line3-b))
        (v3:= (direction line3-a) (direction line3-b))))
 
-(defun /= (line3-a line3-b)
-  (declare (inline =))
+(defn /= ((line3-a line3) (line3-b line3)) boolean
+  (declare (optimize (speed 3) (safety 1) (debug 1))
+           (inline =))
   (not (= line3-a line3-b)))
 
-(declaim (ftype (function (line3 vec3) vec3) closest-point))
-(defun closest-point (line3 point-v3)
-  (declare (line3 line3) (vec3 point-v3) (optimize speed))
+;;----------------------------------------------------------------
+
+(defn closest-point ((line3 line3) (point-v3 vec3)) vec3
+  (declare (optimize (speed 3) (safety 1) (debug 1)))
   (let* ((dir (line3-direction line3))
          (w (v3:- point-v3 (line3-origin line3)))
          (vsq (v3:dot dir dir))
@@ -47,11 +54,9 @@
     (v3:+ (line3-origin line3)
           (v3:*s dir (/ proj vsq)))))
 
-
-(declaim (ftype (function (line3 line3) (values vec3 vec3))
-                closest-line-points))
-(defun closest-line-points (line3-a line3-b)
-  (declare (line3 line3-a line3-b) (optimize speed))
+(defn closest-line-points ((line3-a line3) (line3-b line3))
+    (values vec3 vec3)
+  (declare (optimize (speed 3) (safety 1) (debug 1)))
   (let* ((w0 (v3:- (line3-origin line3-a)
                    (line3-origin line3-b)))
          (a (v3:dot (line3-direction line3-a)
@@ -80,11 +85,12 @@
                                      denom)))))
           (values p0 p1)))))
 
+;;----------------------------------------------------------------
 
-(declaim (ftype (function (line3 vec3) (values single-float single-float))
-                distance-squared-to-point))
-(defun distance-squared-to-point (line3 point-v3)
-  (declare (line3 line3) (vec3 point-v3) (optimize speed))
+(defn distance-squared-to-point ((line3 line3) (point-v3 vec3))
+    (values (single-float 0s0 #.most-positive-single-float)
+            (single-float 0s0 #.most-positive-single-float))
+  (declare (optimize (speed 3) (safety 1) (debug 1)))
   (let* ((dir (line3-direction line3))
          (w (v3:- point-v3 (line3-origin line3)))
          (vsq (v3:dot dir dir))
@@ -93,22 +99,19 @@
       (values (- (v3:dot w w) (* t-c proj))
               t-c))))
 
-
-(declaim (ftype (function (line3 vec3) (values single-float single-float))
-                distance-to-point))
-(defun distance-to-point (line3 point-v3)
-  (declare (line3 line3) (vec3 point-v3) (optimize speed))
-  (multiple-value-bind (val t-c)
-      (distance-squared-to-point line3 point-v3)
-    (declare ((single-float 0s0 #.most-positive-single-float) val))
+(defn distance-to-point ((line3 line3) (point-v3 vec3))
+    (values single-float single-float)
+  (declare (optimize (speed 3) (safety 1) (debug 1)))
+  (multiple-value-bind (val t-c) (distance-squared-to-point line3 point-v3)
     (values (sqrt val) t-c)))
 
+;;----------------------------------------------------------------
 
-(declaim (ftype (function (line3 line3)
-                          (values single-float single-float single-float))
-                distance-squared-to-line3))
-(defun distance-squared-to-line3 (line3-a line3-b)
-  (declare (line3 line3-a line3-b) (optimize speed))
+(defn distance-squared-to-line3 ((line3-a line3) (line3-b line3))
+    (values (single-float 0s0 #.most-positive-single-float)
+            (single-float 0s0 #.most-positive-single-float)
+            (single-float 0s0 #.most-positive-single-float))
+  (declare (optimize (speed 3) (safety 1) (debug 1)))
   (let* ((dir-a (line3-direction line3-a))
          (dir-b (line3-direction line3-b))
          (origin-a (line3-origin line3-a))
@@ -130,13 +133,11 @@
                (wc (v3:+ w0 (v3:- (v3:*s dir-a s-c) (v3:*s dir-b t-c)))))
           (values (v3:dot wc wc) t-c s-c)))))
 
-
-(declaim (ftype (function (line3 line3)
-                          (values single-float single-float single-float))
-                distance-to-line3))
-(defun distance-to-line3 (line3-a line3-b)
-  (declare (line3 line3-a line3-b) (optimize speed))
+(defn distance-to-line3 ((line3-a line3) (line3-b line3))
+    (values single-float single-float single-float)
+  (declare (optimize (speed 3) (safety 1) (debug 1)))
   (multiple-value-bind (val t-c s-c)
       (distance-squared-to-line3 line3-a line3-b)
-    (declare ((single-float 0s0 #.most-positive-single-float) val))
     (values (sqrt val) t-c s-c)))
+
+;;----------------------------------------------------------------
