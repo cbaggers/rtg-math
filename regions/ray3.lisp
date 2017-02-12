@@ -61,34 +61,39 @@
          (c (v3:dot dir-b dir-b))
          (d (v3:dot dir-a w0))
          (e (v3:dot dir-b w0))
-         (denom (- (* a c) (* b b))))
-    ;; ugh, really imperative
-    (let ((sn 0s0) (sd 0s0) (tn 0s0) (td 0s0))
-      (if (sfzero-p denom)
-          (setf td c
-                sd c
-                sn 0s0
-                tn e)
-          (progn
-            (setf td denom
-                  sd denom
-                  sn (- (* b e) (* c d))
-                  tn (- (* a e) (* b d)))
-            (when (< sn 0s0)
-              (setf sn 0s0
-                    tn e
-                    td c))))
-      (let* ((tnl0 (< tn 0s0))
-             (tc (if tnl0 0s0 (/ tn td)))
-             (sc (if tnl0
-                     (if (< d 0s0)
-                         0s0
-                         (/ (- d) a))
-                     (/ sn sd)))
-             (wc (v3:+ w0 (v3:- (v3:*s dir-a sc) (v3:*s dir-b tc)))))
-        (values (v3:dot wc wc)
-                tc
-                sc)))))
+         (denom (- (* a c) (* b b)))
+         ;; parameters to compute s_c, t_c
+         (sn 0s0) (sd 0s0) (tn 0s0) (td 0s0))
+    ;; if denom is zero, try finding closest point on ray1 to origin0
+    (if (sfzero-p denom)
+        ;; clamp s_c to 0
+        (setf td c
+              sd c
+              sn 0s0
+              tn e)
+        (progn
+          ;; clamp s_c within [0,+inf]
+          (setf td denom
+                sd denom
+                sn (- (* b e) (* c d))
+                tn (- (* a e) (* b d)))
+          (when (< sn 0s0)
+            ;; clamp s_c to 0
+            (setf sn 0s0
+                  tn e
+                  td c))))
+    ;;
+    (let* ((tnl0 (< tn 0s0))
+           (tc (if tnl0 0s0 (/ tn td)))
+           (sc (if tnl0
+                   (if (< d 0s0)
+                       0s0
+                       (/ (- d) a))
+                   (/ sn sd)))
+           (wc (v3:+ w0 (v3:- (v3:*s dir-a sc) (v3:*s dir-b tc)))))
+      (values (v3:dot wc wc)
+              tc
+              sc))))
 
 (defn distance-to-ray3 ((ray3-a ray3) (ray3-b ray3))
     (values single-float single-float single-float)
@@ -115,7 +120,7 @@
          (d (v3:dot ray-dir w0))
          (e (v3:dot line-dir w0))
          (denom (- (* a c) (* b b))))
-    ;; ugh, really imperative
+    ;; if denom is zero, try finding closest point on ray1 to origin0
     (if (sfzero-p denom)
         (let* ((sc 0s0)
                (tc (/ e c))
@@ -123,11 +128,14 @@
           (values (v3:dot wc wc) tc sc))
         (let ((tc 0s0)
               (sc 0s0)
+              ;; clamp s_c within [0,1]
               (sn (- (* b e) (* c d))))
           (cond ((< sn 0s0)
+                 ;; clamp s_c to 0
                  (setf sc 0s0
                        tc (/ e c)))
                 ((> sn denom)
+                 ;; clamp s_c to 1
                  (setf sc 1s0
                        tc (/ (+ e b) c)))
                 (t (setf sc (/ sn denom)
