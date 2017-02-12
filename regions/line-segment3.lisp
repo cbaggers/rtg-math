@@ -430,3 +430,20 @@
                   (v3:+ orig-b (v3:*s dir-b tc)))))))
 
 ;;------------------------------------------------------------
+
+(defn closest-point ((line-seg3 line-segment3) (point-v3 vec3)) vec3
+  (declare (optimize (speed 3) (safety 1) (debug 1)))
+  (let* ((dir (direction line-seg3))
+         (orig (end-point0 line-seg3))
+         (w (v3:- point-v3 orig))
+         (proj (v3:dot w dir)))
+    (if (<= proj 0s0)
+        orig
+        (let* ((vsq (v3:dot dir dir)))
+          (if (>= proj vsq)
+              ;; endpoint 1 is closest point
+              (v3:+ orig dir)
+              ;; else somewhere else in segment
+              (v3:+ orig (v3:*s dir (/ proj vsq))))))))
+
+;;------------------------------------------------------------

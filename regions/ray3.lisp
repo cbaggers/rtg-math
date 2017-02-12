@@ -219,6 +219,8 @@
         (values (v3:+ orig-a (v3:*s dir-a sc))
                 (v3:+ orig-b (v3:*s dir-b tc)))))))
 
+;;------------------------------------------------------------
+
 (defn closest-point ((ray3 ray3) (point-v3 vec3)) vec3
   (declare (optimize (speed 3) (safety 1) (debug 1)))
   (let* ((dir (ray3-direction ray3))
