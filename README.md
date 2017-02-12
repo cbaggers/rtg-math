@@ -23,7 +23,6 @@ The library provides:
  - construction from angle (seperately or as a vec3), axis-angle, scale, or induvidual components
  - inverse & affine-inverse
  - extraction of rows or columns as vectors
- - The mat4 non-consing api is still under development so currently only non-consing `*` is supported
  - Optional generic API
 
 - Quaternions
@@ -40,7 +39,7 @@ And more for all categories.
 
 ### 2017-02-13
 
-- Add non-consing functions for matrix3
+- Add non-consing functions for matrix3 & matrix4
 
 ### 2017-02-12
 

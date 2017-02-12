@@ -187,7 +187,7 @@
     (:use :cl :%rtg-math :rtg-math.types)
   (:shadow :identity :trace :+ := :/= :- :* :/)
   (:import-from :rtg-math.base-vectors :x :y :z :w :v!)
-  (:export :melm))
+  (:export :melm :minor))
 
 (uiop:define-package :rtg-math.matrix4.non-consing
     (:use :cl :%rtg-math :rtg-math.types :%rtg-math.matrix4.common)

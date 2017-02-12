@@ -304,8 +304,7 @@
 ;;----------------------------------------------------------------
 
 (defn *v ((mat-a mat3) (vec3-to-mutate vec3)) vec3
-  "Multiplies the vector3 by the matrix and returns the result
-   as a new vector3"
+  "Multiplies the vector3 by the matrix and returning the mutated vector3"
   (declare (optimize (speed 3) (safety 1) (debug 1)))
   (v3-n:set-components (cl:+ (cl:* (x vec3-to-mutate) (melm mat-a 0 0))
                              (cl:* (y vec3-to-mutate) (melm mat-a 0 1))

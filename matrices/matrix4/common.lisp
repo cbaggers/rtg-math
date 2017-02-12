@@ -36,3 +36,38 @@
         ((typep col '(integer 0 3))
          `(aref ,mat-a (cl:+ ,row ,(cl:* col 4))))
         (t `(aref ,mat-a (cl:+ ,row (cl:* ,col 4))))))
+
+;;----------------------------------------------------------------
+
+;; Ok so the determinant is of an element in the matrix is the
+;; value of that element multiplied by the determinant of the
+;; submatrix formed when you remove the row and column the element
+;; lie in.
+;; The minor is the 'determinant of the submatrix' mentioned above
+;; If you create a matrix B from Matrix A where evey element in
+;; B is the minor of the corrosponding element in A then
+;; Matrix B is the matrix of cofactors.
+;; If Matrix B is tranposed then the new Matrix (we will call
+;; Matrix C) is known as the adjoint matrix
+;; The Inverse of a matrix can be calculated as:
+;; (cl:* (adjoint matrix-a) (cl:/ 1f0 (determinant matrix-a)))
+;; This method is known as cramer's method and is fast enough
+;; for 3x3 and 4x4 matrices. Thus we can use it for games.
+
+(defn minor ((mat-a mat4) (row-0 (integer 0 3)) (row-1 (integer 0 3))
+             (row-2 (integer 0 3)) (col-0 (integer 0 3)) (col-1 (integer 0 3))
+             (col-2 (integer 0 3))) single-float
+  (declare (optimize (speed 3) (safety 1) (debug 1)))
+  (cl:+ (cl:* (melm mat-a row-0 col-0)
+              (cl:- (cl:* (melm mat-a row-1 col-1) (melm mat-a row-2 col-2))
+                    (cl:* (melm mat-a row-2 col-1) (melm mat-a row-1 col-2))))
+
+        (cl:* (melm mat-a row-0 col-2)
+              (cl:- (cl:* (melm mat-a row-1 col-0) (melm mat-a row-2 col-1))
+                    (cl:* (melm mat-a row-2 col-0) (melm mat-a row-1 col-1))))
+
+        (cl:- (cl:* (melm mat-a row-0 col-1)
+                    (cl:- (cl:* (melm mat-a row-1 col-0) (melm mat-a row-2 col-2))
+                          (cl:* (melm mat-a row-2 col-0) (melm mat-a row-1 col-2)))))))
+
+;;----------------------------------------------------------------
