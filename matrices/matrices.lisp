@@ -156,7 +156,7 @@
   (let ((len (cl:length matrix-a)))
     (cond
       ((cl:= len 9)
-       (m3:determinate matrix-a))
+       (m3:determinant matrix-a))
       ((cl:= len 16)
        (m4:determinant matrix-a)))))
 

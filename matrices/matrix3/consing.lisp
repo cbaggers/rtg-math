@@ -144,8 +144,8 @@
 
 ;;----------------------------------------------------------------
 
-(defn determinate ((mat-a mat3)) single-float
-  "Returns the determinate of the matrix (uses the cramer method)"
+(defn determinant ((mat-a mat3)) single-float
+  "Returns the determinant of the matrix (uses the cramer method)"
   (declare (optimize (speed 3) (safety 1) (debug 1)))
   (let* ((cofactor-0 (cl:- (cl:* (melm mat-a 1 1) (melm mat-a 2 2))
                            (cl:* (melm mat-a 2 1) (melm mat-a 1 2))))

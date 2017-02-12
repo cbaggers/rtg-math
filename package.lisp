@@ -170,7 +170,7 @@
            := :+ :- :* :*s :*v :mrow*vec3 :negate
            :melm
            :from-rows :from-columns :get-rows :get-columns :get-row :get-column
-           :transpose :adjoint :determinate :trace
+           :transpose :adjoint :determinant :trace
            :rotation-from-euler :rotation-from-axis-angle
            :rotation-x :rotation-y :rotation-z
            :scale
