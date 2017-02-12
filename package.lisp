@@ -160,7 +160,11 @@
   (:nicknames :m3-n)
   (:shadow :identity :trace :+ := :/= :- :* :/)
   (:import-from :rtg-math.base-vectors :x :y :z :w :v!)
-  (:export :set-components :*))
+  (:export :set-components :* :set-from-rows :set-from-columns :affine-inverse
+           :transpose :adjoint :set-rotation-from-euler :set-from-scale
+           :set-from-rotation-x :set-from-rotation-y :set-from-rotation-z
+           :set-rotation-from-axis-angle :+ :- :negate :*v
+           :mrow*vec3-to-mutate3 :*s))
 
 (uiop:define-package :rtg-math.matrix3
     (:use :cl :%rtg-math :rtg-math.types :%rtg-math.matrix3.common)
