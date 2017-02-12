@@ -296,7 +296,7 @@
     (:use :cl :%rtg-math :rtg-math.types :rtg-math.base-maths
           :rtg-math.base-vectors)
   (:import-from :rtg-math.base-maths :sfzero-p)
-  (:shadow :length :abs)
+  (:shadow := :/= :length :abs)
   (:nicknames :line-seg3))
 
 (uiop:define-package :rtg-math.regions.axis-aligned-box
