@@ -194,7 +194,6 @@
          (d (v3:dot dir-a w0))
          (e (v3:dot dir-b w0))
          (denom (- (* a c) (* b b))))
-    ;; ugh, really imperative
     (let ((sn 0s0) (sd 0s0) (tn 0s0) (td 0s0))
       (if (sfzero-p denom)
           (setf td c
@@ -219,8 +218,6 @@
                      (/ sn sd))))
         (values (v3:+ orig-a (v3:*s dir-a sc))
                 (v3:+ orig-b (v3:*s dir-b tc)))))))
-
-;;------------------------------------------------------------
 
 (defn closest-point ((ray3 ray3) (point-v3 vec3)) vec3
   (declare (optimize (speed 3) (safety 1) (debug 1)))
