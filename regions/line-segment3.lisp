@@ -150,11 +150,155 @@
        (setf tc (/ tn td)
              sc (/ sn sd))))
     ;; compute difference vector and distance squared
-    (let ((wc (v3:+ w0
-                    (v3:*s (direction line-seg-a) sc)
-                    (v3:*s (direction line-seg-b) tc))))
+    (let ((wc (v3:+ w0 (v3:*s dir-a sc) (v3:*s dir-b tc))))
       (values (v3:dot wc wc)
               tc
               sc))))
+
+(defn distance-to-line-seg3 ((line-seg-a line-segment3)
+                             (line-seg-b line-segment3))
+    (values single-float single-float single-float)
+  (declare (optimize (speed 3) (safety 1) (debug 1)))
+  (multiple-value-bind (val t-c s-c)
+      (distance-squared-to-line-seg3 line-seg-a line-seg-b)
+    (values (sqrt val) t-c s-c)))
+
+;;----------------------------------------------------------------
+
+(defn distance-squared-to-ray3 ((line-seg3 line-segment3)
+                                (ray3 ray3:ray3))
+    (values (single-float 0f0 #.most-positive-single-float)
+            (single-float 0f0 #.most-positive-single-float)
+            (single-float 0f0 #.most-positive-single-float))
+  (declare (optimize (speed 3) (safety 1) (debug 1)))
+  ;;
+  (let* ((orig-a (end-point0 line-seg3))
+         (orig-b (ray3:origin ray3))
+         (dir-a (direction line-seg3))
+         (dir-b (ray3:direction ray3))
+         ;; compute intermediate parameters
+         (w0 (v3:- orig-a orig-b))
+         (a (v3:dot dir-a dir-a))
+         (b (v3:dot dir-a dir-b))
+         (c (v3:dot dir-b dir-b))
+         (d (v3:dot dir-a w0))
+         (e (v3:dot dir-b w0))
+         (denom (- (* a c) (* b b)))
+         ;; parameters to compute s_c, t_c
+         (sn 0f0) (sd 0f0) (tn 0f0) (td 0f0)
+         ;; return vals
+         (tc 0f0) (sc 0f0))
+    ;; if denom is zero, try finding closest point on segment1 to origin0
+    (if (sfzero-p denom)
+        ;;clamp s_c to 0
+        (setf td c
+              sd c
+              sn 0f0
+              tn e)
+        ;; clamp s_c within [0,1]
+        (progn
+          (setf td denom
+                sd denom
+                sn (- (* b e) (* c d))
+                tn (- (* a e) (* b d)))
+          (if (< sn 0f0)
+              ;;clamp s_c to 0
+              (setf sn 0f0
+                    tn e
+                    td c)
+              (when (> sn sd)
+                ;;clamp s_c to 1
+                (setf sn sd
+                      tn (+ e b)
+                      td c)))))
+    ;;
+    (if (< tn 0f0)
+        (progn
+          ;; clamp s_c within [0,1]
+          ;; clamp t_c to 0
+          (setf tc 0f0)
+          (cond
+            ((< (- d) 0f0)
+             ;; clamp s_c to 0
+             (setf sc 0f0))
+            ((> (- d) a)
+             ;; clamp s_c to 1
+             (setf sc 1f0))
+            (t
+             (setf sc (/ (- d) a)))))
+        (setf tc (/ tn td)
+              sc (/ sn sd)))
+    ;; compute difference vector and distance squared
+    (let ((wc (v3:+ w0 (v3:*s dir-a sc) (v3:*s dir-b tc))))
+      (values (v3:dot wc wc)
+              tc
+              sc))))
+
+(defn distance-to-ray3 ((line-seg3 line-segment3) (ray3 ray3:ray3))
+    (values single-float single-float single-float)
+  (declare (optimize (speed 3) (safety 1) (debug 1)))
+  (multiple-value-bind (val t-c s-c) (distance-squared-to-ray3 line-seg3 ray3)
+    (values (sqrt val) t-c s-c)))
+
+;;----------------------------------------------------------------
+
+(defn distance-squared-to-line3 ((line-seg3 line-segment3)
+                                 (line3 line3:line3))
+    (values (single-float 0f0 #.most-positive-single-float)
+            (single-float 0f0 #.most-positive-single-float)
+            (single-float 0f0 #.most-positive-single-float))
+  (declare (optimize (speed 3) (safety 1) (debug 1)))
+  ;;
+  (let* ((orig-a (end-point0 line-seg3))
+         (orig-b (line3:origin line3))
+         (dir-a (direction line-seg3))
+         (dir-b (line3:direction line3))
+         ;; compute intermediate parameters
+         (w0 (v3:- orig-a orig-b))
+         (a (v3:dot dir-a dir-a))
+         (b (v3:dot dir-a dir-b))
+         (c (v3:dot dir-b dir-b))
+         (d (v3:dot dir-a w0))
+         (e (v3:dot dir-b w0))
+         (denom (- (* a c) (* b b))))
+    ;; if denom is zero, try finding closest point on segment1 to origin0
+    (if (sfzero-p denom)
+        (let* ((sc 0f0)
+               (tc (/ e c))
+               (wc (v3:- w0 (v3:*s dir-b tc))))
+          (values (v3:dot wc wc)
+                  tc
+                  sc))
+        ;; clamp s_c within [0,1]
+        (let ((tc 0f0)
+              (sc 0f0)
+              (sn (- (* b e) (* c d))))
+          (cond
+            ((< sn 0f0)
+             ;; clamp s_c to 0
+             (setf sc 0f0
+                   tc (/ e c)))
+            ((> sn denom)
+             (setf sc 1f0
+                   tc (/ (+ e b) c)))
+            (t
+             (setf sc (/ sn denom)
+                   tc (/ (- (* a e) (* b d))
+                         denom))))
+          ;; compute difference vector and distance squared
+          (let ((wc (v3:+ w0 (v3:*s dir-a sc) (v3:*s dir-b tc))))
+            (values (v3:dot wc wc)
+                    tc
+                    sc))))))
+
+(defn distance-to-line3 ((line-seg3 line-segment3) (line3 line3:line3))
+    (values (single-float 0s0 #.most-positive-single-float)
+            (single-float 0s0 #.most-positive-single-float)
+            (single-float 0s0 #.most-positive-single-float))
+  (declare (optimize (speed 3) (safety 1) (debug 1)))
+  (multiple-value-bind (val t-c s-c)
+      (distance-squared-to-line3 line-seg3 line3)
+    (declare ((single-float 0s0 #.most-positive-single-float) val))
+    (values (sqrt val) t-c s-c)))
 
 ;;----------------------------------------------------------------
