@@ -164,7 +164,7 @@
            :transpose :adjoint :set-rotation-from-euler :set-from-scale
            :set-from-rotation-x :set-from-rotation-y :set-from-rotation-z
            :set-rotation-from-axis-angle :+ :- :negate :*v
-           :mrow*vec3-to-mutate3 :*s))
+           :mrow*vec3 :*s))
 
 (uiop:define-package :rtg-math.matrix3
     (:use :cl :%rtg-math :rtg-math.types :%rtg-math.matrix3.common)

@@ -319,7 +319,7 @@
 
 ;;----------------------------------------------------------------
 
-(defn mrow*vec3-to-mutate3 ((vec3-to-mutate vec3) (mat-a mat3)) vec3
+(defn mrow*vec3 ((vec3-to-mutate vec3) (mat-a mat3)) vec3
   (declare (optimize (speed 3) (safety 1) (debug 1)))
   (v3-n:set-components (cl:+ (cl:* (x vec3-to-mutate) (melm mat-a 0 0))
                              (cl:* (y vec3-to-mutate) (melm mat-a 1 0))
