@@ -5,25 +5,25 @@
 (defgeneric intersects-p (reg-a reg-b))
 
 (defmethod intersects-p ((reg-a axis-aligned-box) (reg-b line3))
-  (aab:intersects-with-line3-p reg-a reg-b))
+  (aabb:intersects-with-line3-p reg-a reg-b))
 
 (defmethod intersects-p ((reg-a line3) (reg-b axis-aligned-box))
-  (aab:intersects-with-line3-p reg-b reg-a))
+  (aabb:intersects-with-line3-p reg-b reg-a))
 
 (defmethod intersects-p ((reg-a axis-aligned-box) (reg-b ray3))
-  (aab:intersects-with-ray3-p reg-a reg-b))
+  (aabb:intersects-with-ray3-p reg-a reg-b))
 
 (defmethod intersects-p ((reg-a ray3) (reg-b axis-aligned-box))
-  (aab:intersects-with-ray3-p reg-b reg-a))
+  (aabb:intersects-with-ray3-p reg-b reg-a))
 
 (defmethod intersects-p ((reg-a axis-aligned-box) (reg-b line-segment3))
-  (aab:intersects-with-line-segment-p reg-a reg-b))
+  (aabb:intersects-with-line-segment-p reg-a reg-b))
 
 (defmethod intersects-p ((reg-a line-segment3) (reg-b axis-aligned-box))
-  (aab:intersects-with-line-segment-p reg-b reg-a))
+  (aabb:intersects-with-line-segment-p reg-b reg-a))
 
 (defmethod intersects-p ((reg-a axis-aligned-box) (reg-b axis-aligned-box))
-  (aab:intersects-p reg-a reg-b))
+  (aabb:intersects-p reg-a reg-b))
 
 ;;----------------------------------------------------------------
 
