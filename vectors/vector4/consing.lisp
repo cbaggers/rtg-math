@@ -18,6 +18,17 @@
 
 ;;----------------------------------------------------------------
 
+(defn-inline copy-vec4 ((vec4 vec4)) vec4
+  (declare (optimize (speed 3) (safety 1) (debug 1)))
+  (let ((vec (make-array 4 :element-type `single-float)))
+    (setf (aref vec 0) (aref vec4 0)
+          (aref vec 1) (aref vec4 1)
+          (aref vec 2) (aref vec4 2)
+          (aref vec 3) (aref vec4 3))
+    vec))
+
+;;----------------------------------------------------------------
+
 ;;[TODO] What is faster (cl:* x x) or (expt x 2) ?
 (defn 0p ((vector-a vec4)) boolean
   "Checks if the length of the vector is zero. As this is a

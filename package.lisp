@@ -82,7 +82,7 @@
   (:import-from :rtg-math.base-vectors :x :y :z :w :v!)
   (:import-from :rtg-math.base-maths :inv-sqrt)
   (:shadow := :+ :- :* :/ :length :abs)
-  (:export :make
+  (:export :make :copy-vec2
            :0p :unitp
            := :+ :- :* :/ :*s :/s :+s :-s
            :negate
@@ -101,7 +101,7 @@
   (:import-from :rtg-math.base-vectors :x :y :z :w :v!)
   (:import-from :rtg-math.base-maths :inv-sqrt)
   (:shadow := :+ :- :* :/ :length :abs)
-  (:export :make
+  (:export :make :copy-vec3
            :0p :unitp
            := :+ :- :* :/ :*s :/s :+s :-s
            :negate
@@ -119,7 +119,7 @@
   (:import-from :rtg-math.base-vectors :x :y :z :w :v!)
   (:import-from :rtg-math.base-maths :inv-sqrt)
   (:shadow := :+ :- :* :/ :length :abs)
-  (:export :make
+  (:export :make :copy-vec4
            :0p :unitp
            := :+ :- :* :/ :*s :/s :+s :-s
            :negate

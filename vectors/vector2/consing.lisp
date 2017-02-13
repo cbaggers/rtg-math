@@ -10,6 +10,15 @@
   (declare (optimize (speed 3) (safety 1) (debug 1)))
   (v2-n:set-components x y (make-array 2 :element-type `single-float)))
 
+;;---------------------------------------------------------------
+
+(defn-inline copy-vec2 ((vec2 vec2)) vec2
+  (declare (optimize (speed 3) (safety 1) (debug 1)))
+  (let ((vec (make-array 2 :element-type `single-float)))
+    (setf (aref vec 0) (aref vec2 0)
+          (aref vec 1) (aref vec2 1))
+    vec))
+
 ;;----------------------------------------------------------------
 
 (defn 0p ((vector-a vec2)) boolean

@@ -3,11 +3,21 @@
 ;;---------------------------------------------------------------
 
 (defn-inline make ((x single-float) (y single-float) (z single-float)) vec3
-  ;;
+  (declare (optimize (speed 3) (safety 1) (debug 1)))
   (let ((vec (make-array 3 :element-type `single-float)))
     (setf (aref vec 0) x
           (aref vec 1) y
           (aref vec 2) z)
+    vec))
+
+;;---------------------------------------------------------------
+
+(defn-inline copy-vec3 ((vec3 vec3)) vec3
+  (declare (optimize (speed 3) (safety 1) (debug 1)))
+  (let ((vec (make-array 3 :element-type `single-float)))
+    (setf (aref vec 0) (aref vec3 0)
+          (aref vec 1) (aref vec3 1)
+          (aref vec 2) (aref vec3 2))
     vec))
 
 ;;---------------------------------------------------------------
