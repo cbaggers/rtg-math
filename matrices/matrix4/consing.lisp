@@ -11,7 +11,7 @@
                                   0f0 0f0 1f0 0f0
                                   0f0 0f0 0f0 1f0)))
 
-(defn 0! () mat4
+(defn-inline 0! () mat4
   "Return a 4x4 zero matrix"
   (declare (optimize (speed 3) (safety 1) (debug 1)))
   (make-array 16 :element-type 'single-float :initial-element 0f0))
@@ -23,25 +23,18 @@
             (i single-float) (j single-float) (k single-float) (l single-float)
             (m single-float) (n single-float) (o single-float) (p single-float)) mat4
   "Make a 4x4 matrix. Data must be provided in row major order"
-  (declare (optimize (speed 3) (safety 1) (debug 1)))
+  (declare (optimize (speed 3) (safety 1) (debug 1))
+           (inline m4-n:set-components 0!))
   ;; as you can see it is stored in column major order
-  (let ((result (0!)))
-    (setf (melm result 0 0) a)
-    (setf (melm result 0 1) b)
-    (setf (melm result 0 2) c)
-    (setf (melm result 0 3) d)
-    (setf (melm result 1 0) e)
-    (setf (melm result 1 1) f)
-    (setf (melm result 1 2) g)
-    (setf (melm result 1 3) h)
-    (setf (melm result 2 0) i)
-    (setf (melm result 2 1) j)
-    (setf (melm result 2 2) k)
-    (setf (melm result 2 3) l)
-    (setf (melm result 3 0) m)
-    (setf (melm result 3 1) n)
-    (setf (melm result 3 2) o)
-    (setf (melm result 3 3) p)
+  (m4-n:set-components a b c d e f g h i j k l m n o p (0!)))
+
+;;----------------------------------------------------------------
+
+(defn-inline copy-mat4 ((mat4 mat4)) mat4
+  (declare (optimize (speed 3) (safety 0) (debug 1)))
+  (let ((result (make-array 16 :element-type 'single-float)))
+    (dotimes (i 16)
+      (setf (aref result i) (aref mat4 i)))
     result))
 
 ;;----------------------------------------------------------------
@@ -333,79 +326,27 @@
 ;;this one is from 'Essential Maths'
 (defn affine-inverse ((mat-a mat4)) mat4
   "Returns the affine inverse of the matrix"
-  (declare (optimize (speed 3) (safety 1) (debug 1)))
-  ;;calculate upper left 3x3 matrix determinant
-  (let* ((cofac-0 (cl:- (cl:* (melm mat-a 1 1) (melm mat-a 2 2))
-                        (cl:* (melm mat-a 2 1) (melm mat-a 1 2))))
-
-         (cofac-4 (cl:- (cl:* (melm mat-a 2 0) (melm mat-a 1 2))
-                        (cl:* (melm mat-a 1 0) (melm mat-a 2 2))))
-
-         (cofac-8 (cl:- (cl:* (melm mat-a 1 0) (melm mat-a 2 1))
-                        (cl:* (melm mat-a 2 0) (melm mat-a 1 1))))
-         (det (cl:+ (cl:* (melm mat-a 0 0) cofac-0)
-                    (cl:* (melm mat-a 0 1) cofac-4)
-                    (cl:* (melm mat-a 0 2) cofac-8))))
-    (if
-     (cl:= 0f0 det)
-     (error "Matrix4 Inverse: Singular Matrix")
-     (let*
-         ((inv-det (cl:/ 1f0 det))
-          (r00 (cl:* inv-det cofac-0))
-          (r10 (cl:* inv-det cofac-4))
-          (r20 (cl:* inv-det cofac-8))
-          (r01 (cl:* inv-det (cl:- (cl:* (melm mat-a 2 1) (melm mat-a 0 2))
-                                   (cl:* (melm mat-a 0 1) (melm mat-a 2 2)))))
-          (r11 (cl:* inv-det (cl:- (cl:* (melm mat-a 0 0) (melm mat-a 2 2))
-                                   (cl:* (melm mat-a 2 0) (melm mat-a 0 2)))))
-          (r21 (cl:* inv-det (cl:- (cl:* (melm mat-a 2 0) (melm mat-a 0 1))
-                                   (cl:* (melm mat-a 0 0) (melm mat-a 2 1)))))
-          (r02 (cl:* inv-det (cl:- (cl:* (melm mat-a 0 1) (melm mat-a 1 2))
-                                   (cl:* (melm mat-a 1 1) (melm mat-a 0 2)))))
-          (r12 (cl:* inv-det (cl:- (cl:* (melm mat-a 1 0) (melm mat-a 0 2))
-                                   (cl:* (melm mat-a 0 0) (melm mat-a 1 2)))))
-          (r22 (cl:* inv-det (cl:- (cl:* (melm mat-a 0 0) (melm mat-a 1 1))
-                                   (cl:* (melm mat-a 1 0) (melm mat-a 0 1))))))
-       (make r00 r01 r02
-             (cl:- 0f0
-                   (cl:* (melm mat-a 0 0) (melm mat-a 0 3))
-                   (cl:* (melm mat-a 0 1) (melm mat-a 1 3))
-                   (cl:* (melm mat-a 0 2) (melm mat-a 2 3)))
-             r10 r11 r12
-             (cl:- 0f0
-                   (cl:* (melm mat-a 1 0) (melm mat-a 0 3))
-                   (cl:* (melm mat-a 1 1) (melm mat-a 1 3))
-                   (cl:* (melm mat-a 1 2) (melm mat-a 2 3)))
-             r20 r21 r22
-             (cl:- 0f0
-                   (cl:* (melm mat-a 2 0) (melm mat-a 0 3))
-                   (cl:* (melm mat-a 2 1) (melm mat-a 1 3))
-                   (cl:* (melm mat-a 2 2) (melm mat-a 2 3)))
-             0f0 0f0 0f0 1f0)))))
+  (declare (optimize (speed 3) (safety 1) (debug 1))
+           (inline copy-mat4))
+  (m4-n:affine-inverse (copy-mat4 mat-a)))
 
 ;;----------------------------------------------------------------
 ;; {TODO} could just feed straight from array into make
 
 (defn transpose ((m-a mat4)) mat4
   "Returns the transpose of the provided matrix"
-  (declare (optimize (speed 3) (safety 1) (debug 1)))
-  (make
-   (melm m-a 0 0) (melm m-a 1 0) (melm m-a 2 0) (melm m-a 3 0)
-   (melm m-a 0 1) (melm m-a 1 1) (melm m-a 2 1) (melm m-a 3 1)
-   (melm m-a 0 2) (melm m-a 1 2) (melm m-a 2 2) (melm m-a 3 2)
-   (melm m-a 0 3) (melm m-a 1 3) (melm m-a 2 3) (melm m-a 3 3)))
+  (declare (optimize (speed 3) (safety 1) (debug 1))
+           (inline copy-mat4))
+  (m4-n:transpose (copy-mat4 m-a)))
 
 ;;----------------------------------------------------------------
 
 (defn translation ((vec-a (simple-array single-float))) mat4
   "Takes a vector3 and returns a matrix4 which will translate
    by the specified amount"
-  (declare (optimize (speed 3) (safety 1) (debug 1)))
-  (make
-   1f0  0f0  0f0  (x vec-a)
-   0f0  1f0  0f0  (y vec-a)
-   0f0  0f0  1f0  (z vec-a)
-   0f0  0f0  0f0  1f0))
+  (declare (optimize (speed 3) (safety 1) (debug 1))
+           (inline 0!))
+  (m4-n:set-from-translation (0!) vec-a))
 
 ;;----------------------------------------------------------------
 
@@ -413,114 +354,61 @@
   "Takes a 3x3 rotation matrix and returns a 4x4 rotation matrix
    with the same values. The 4th component is filled as an
    identity matrix would be."
-  (declare (optimize (speed 3) (safety 1) (debug 1)))
-  (make
-   (m3:melm m-a 0 0)  (m3:melm m-a 0 1)  (m3:melm m-a 0 2)  0f0
-   (m3:melm m-a 1 0)  (m3:melm m-a 1 1)  (m3:melm m-a 1 2)  0f0
-   (m3:melm m-a 2 0)  (m3:melm m-a 2 1)  (m3:melm m-a 2 2)  0f0
-   0f0                0f0                0f0                1f0))
+  (declare (optimize (speed 3) (safety 1) (debug 1))
+           (inline 0!))
+  (m4-n:set-from-mat3 (0!) m-a))
 
 ;;----------------------------------------------------------------
 
 (defn rotation-from-euler ((vec3-a vec3)) mat4
   "This is an unrolled contatenation of rotation matrices x y & z."
-  (declare (optimize (speed 3) (safety 1) (debug 1)))
-  (let ((x (x vec3-a))
-        (y (y vec3-a))
-        (z (z vec3-a)))
-    (let ((sx (sin x)) (cx (cos x))
-          (sy (sin y)) (cy (cos y))
-          (sz (sin z)) (cz (cos z)))
-      (make (cl:* cy cz)
-            (cl:- (cl:* cy sz))
-            sy
-            0f0
-
-            (cl:+ (cl:* sx sy cz) (cl:* cx sz))
-            (cl:- (cl:* cx cz) (cl:* sx sy sz))
-            (cl:- (cl:* sx cy))
-            0f0
-
-            (cl:- (cl:* sx sz) (cl:* cx sy cz))
-            (cl:+ (cl:* cx sy sz) (cl:* sx cz))
-            (cl:* cx cy)
-            0f0
-
-            0f0 0f0 0f0 1f0))))
+  (declare (optimize (speed 3) (safety 1) (debug 1))
+           (inline 0!))
+  (m4-n:set-rotation-from-euler (0!) vec3-a))
 
 ;;----------------------------------------------------------------
 
 (defn scale ((scale-vec3 vec3)) mat4
   "Returns a matrix which will scale by the amounts specified"
-  (declare (optimize (speed 3) (safety 1) (debug 1)))
-  (make
-   (x scale-vec3)  0f0               0f0               0f0
-   0f0               (y scale-vec3)  0f0               0f0
-   0f0               0f0               (z scale-vec3)  0f0
-   0f0               0f0               0f0               1f0))
+  (declare (optimize (speed 3) (safety 1) (debug 1))
+           (inline 0!))
+  (m4-n:set-from-scale (0!) scale-vec3))
 
 ;;----------------------------------------------------------------
 
 (defn rotation-x ((angle single-float)) mat4
   "Returns a matrix which would rotate a point around the x axis
    by the specified amount"
-  (declare (optimize (speed 3) (safety 1) (debug 1)))
-  (let ((s-a (sin angle))
-        (c-a (cos angle)))
-    (make 1f0  0f0  0f0     0f0
-          0f0  c-a  (cl:- s-a) 0f0
-          0f0  s-a  c-a     0f0
-          0f0  0f0  0f0     1f0)))
+  (declare (optimize (speed 3) (safety 1) (debug 1))
+           (inline 0!))
+  (m4-n:set-from-rotation-x (0!) angle))
 
 ;;----------------------------------------------------------------
 
 (defn rotation-y ((angle single-float)) mat4
   "Returns a matrix which would rotate a point around the y axis
    by the specified amount"
-  (declare (optimize (speed 3) (safety 1) (debug 1)))
-  (let ((s-a (sin angle))
-        (c-a (cos angle)))
-    (make c-a      0f0  s-a  0f0
-          0f0      1f0  0f0  0f0
-          (cl:- s-a)  0f0  c-a  0f0
-          0f0      0f0  0f0  1f0)))
+  (declare (optimize (speed 3) (safety 1) (debug 1))
+           (inline 0!))
+  (m4-n:set-from-rotation-y (0!) angle))
 
 ;;----------------------------------------------------------------
 
 (defn rotation-z ((angle single-float)) mat4
   "Returns a matrix which would rotate a point around the z axis
    by the specified amount"
-  (declare (optimize (speed 3) (safety 1) (debug 1)))
-  (let ((s-a (sin angle))
-        (c-a (cos angle)))
-    (make c-a  (cl:- s-a)  0f0  0f0
-          s-a  c-a      0f0  0f0
-          0f0  0f0      1f0  0f0
-          0f0  0f0      0f0  1f0)))
+  (declare (optimize (speed 3) (safety 1) (debug 1))
+           (inline 0!))
+  (m4-n:set-from-rotation-z (0!) angle))
 
 ;;----------------------------------------------------------------
 
 (defn rotation-from-axis-angle ((axis3 vec3) (angle single-float)) mat4
   "Returns a matrix which will rotate a point about the axis
    specified by the angle provided"
-  (declare (optimize (speed 3) (safety 1) (debug 1)))
-  (cond ((v3:= axis3 (v3:make 1f0 0f0 0f0)) (rotation-x angle))
-        ((v3:= axis3 (v3:make 0f0 1f0 0f0)) (rotation-y angle))
-        ((v3:= axis3 (v3:make 0f0 0f0 1f0)) (rotation-z angle))
-        (t
-         (let ((c (cos angle))
-               (s (sin angle))
-               (g (cl:- 1f0 (cos angle))))
-           (let* ((x (x axis3))
-                  (y (y axis3))
-                  (z (z axis3))
-                  (gxx (cl:* g x x)) (gxy (cl:* g x y)) (gxz (cl:* g x z))
-                  (gyy (cl:* g y y)) (gyz (cl:* g y z)) (gzz (cl:* g z z)))
-             (make
-              (cl:+ gxx c)        (cl:- gxy (cl:* s z))  (cl:+ gxz (cl:* s y)) 0f0
-              (cl:+ gxy (cl:* s z))  (cl:+ gyy c)        (cl:- gyz (cl:* s x)) 0f0
-              (cl:- gxz (cl:* s y))  (cl:+ gyz (cl:* s x))  (cl:+ gzz c)       0f0
-              0f0              0f0              0f0             1f0))))))
+  (declare (optimize (speed 3) (safety 1) (debug 1))
+           (inline 0!))
+  (m4-n:set-rotation-from-axis-angle (0!) axis3 angle))
 
 ;;----------------------------------------------------------------
 
@@ -609,7 +497,8 @@
 (defn + ((mat-a mat4) (mat-b mat4)) mat4
   "Adds the 2 matrices component wise and returns the result as
    a new matrix"
-  (declare (optimize (speed 3) (safety 1) (debug 1)))
+  (declare (optimize (speed 3) (safety 1) (debug 1))
+           (inline 0!))
   (let ((r (0!)))
     (loop :for i :below 16
        :do (setf (aref r i) (cl:+ (aref mat-a i) (aref mat-b i))))
@@ -620,7 +509,8 @@
 (defn - ((mat-a mat4) (mat-b mat4)) mat4
   "Subtracts the 2 matrices component wise and returns the result
    as a new matrix"
-  (declare (optimize (speed 3) (safety 1) (debug 1)))
+  (declare (optimize (speed 3) (safety 1) (debug 1))
+           (inline 0!))
   (let ((r (0!)))
     (loop :for i :below 16
        :do (setf (aref r i) (cl:- (aref mat-a i) (aref mat-b i))))
@@ -630,7 +520,8 @@
 
 (defn negate ((mat-a mat4)) mat4
   "Negates the components of the matrix"
-  (declare (optimize (speed 3) (safety 1) (debug 1)))
+  (declare (optimize (speed 3) (safety 1) (debug 1))
+           (inline 0!))
   (let ((r (0!)))
     (loop :for i :below 16 :do (setf (aref r i) (cl:- (aref mat-a i))))
     r))
@@ -640,7 +531,8 @@
 (defn *s ((mat-a mat4) (scalar single-float)) mat4
   "Multiplies the components of the matrix by the scalar
    provided"
-  (declare (optimize (speed 3) (safety 1) (debug 1)))
+  (declare (optimize (speed 3) (safety 1) (debug 1))
+           (inline 0!))
   (let ((result (0!)))
     (loop :for i :below 16
        :do (setf (aref result i) (cl:* scalar (aref mat-a i))))
@@ -650,62 +542,18 @@
 
 (defn *v ((mat-a mat4) (vec4 vec4)) vec4
   (declare (optimize (speed 3) (safety 1) (debug 1)))
-  (v4:make (cl:+ (cl:* (x vec4) (melm mat-a 0 0))
-                 (cl:* (y vec4) (melm mat-a 0 1))
-                 (cl:* (z vec4) (melm mat-a 0 2))
-                 (cl:* (w vec4) (melm mat-a 0 3)))
-           (cl:+ (cl:* (x vec4) (melm mat-a 1 0))
-                 (cl:* (y vec4) (melm mat-a 1 1))
-                 (cl:* (z vec4) (melm mat-a 1 2))
-                 (cl:* (w vec4) (melm mat-a 1 3)))
-           (cl:+ (cl:* (x vec4) (melm mat-a 2 0))
-                 (cl:* (y vec4) (melm mat-a 2 1))
-                 (cl:* (z vec4) (melm mat-a 2 2))
-                 (cl:* (w vec4) (melm mat-a 2 3)))
-           (cl:+ (cl:* (x vec4) (melm mat-a 3 0))
-                 (cl:* (y vec4) (melm mat-a 3 1))
-                 (cl:* (z vec4) (melm mat-a 3 2))
-                 (cl:* (w vec4) (melm mat-a 3 3)))))
+  (m4-n:*v mat-a (v4:copy-vec4 vec4)))
 
 (defn *v3 ((mat-a mat4) (vec3 vec3)) vec3
   "Returns the transform of a matrix"
   (declare (optimize (speed 3) (safety 1) (debug 1)))
-  (v3:make (cl:+ (cl:* (melm mat-a 0 0) (x vec3))
-                 (cl:* (melm mat-a 0 1) (y vec3))
-                 (cl:* (melm mat-a 0 2) (z vec3))
-                 (melm mat-a 0 3))
-           (cl:+ (cl:* (melm mat-a 1 0) (x vec3))
-                 (cl:* (melm mat-a 1 1) (y vec3))
-                 (cl:* (melm mat-a 1 2) (z vec3))
-                 (melm mat-a 1 3))
-           (cl:+ (cl:* (melm mat-a 2 0) (x vec3))
-                 (cl:* (melm mat-a 2 1) (y vec3))
-                 (cl:* (melm mat-a 2 2) (z vec3))
-                 (melm mat-a 2 3))))
+  (m4-n:*v3 mat-a (v3:copy-vec3 vec3)))
 
 ;;----------------------------------------------------------------
 
 (defn mrow*vec4 ((vec vec4) (mat-a mat4)) vec4
   (declare (optimize (speed 3) (safety 1) (debug 1)))
-  (v4:make (cl:+ (cl:* (x vec) (melm mat-a 0 0))
-                 (cl:* (y vec) (melm mat-a 1 0))
-                 (cl:* (z vec) (melm mat-a 2 0))
-                 (cl:* (w vec) (melm mat-a 3 0)))
-
-           (cl:+ (cl:* (x vec) (melm mat-a 0 1))
-                 (cl:* (y vec) (melm mat-a 1 1))
-                 (cl:* (z vec) (melm mat-a 2 1))
-                 (cl:* (w vec) (melm mat-a 3 1)))
-
-           (cl:+ (cl:* (x vec) (melm mat-a 0 2))
-                 (cl:* (y vec) (melm mat-a 1 2))
-                 (cl:* (z vec) (melm mat-a 2 2))
-                 (cl:* (w vec) (melm mat-a 3 2)))
-
-           (cl:+ (cl:* (x vec) (melm mat-a 0 3))
-                 (cl:* (y vec) (melm mat-a 1 3))
-                 (cl:* (z vec) (melm mat-a 2 3))
-                 (cl:* (w vec) (melm mat-a 3 3)))))
+  (m4-n:mrow*vec4 (v4:copy-vec4 vec) mat-a))
 
 ;;----------------------------------------------------------------
 

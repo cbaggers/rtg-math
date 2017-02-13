@@ -2,7 +2,7 @@
 
 ;;----------------------------------------------------------------
 
-(defn set-components
+(defn-inline set-components
     ((a single-float) (b single-float) (c single-float) (d single-float)
      (e single-float) (f single-float) (g single-float) (h single-float)
      (i single-float) (j single-float) (k single-float) (l single-float)
