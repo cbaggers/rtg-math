@@ -172,7 +172,7 @@
   (:shadow :identity :trace :+ := :/= :- :* :/)
   (:import-from :rtg-math.base-vectors :x :y :z :w :v!)
   (:export :0p :identityp
-           :make :0! :identity
+           :make :0! :identity :copy-mat3
            := :+ :- :* :*s :*v :mrow*vec3 :negate
            :melm
            :from-rows :from-columns :get-rows :get-columns :get-row :get-column

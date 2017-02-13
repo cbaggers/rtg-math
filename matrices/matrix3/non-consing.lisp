@@ -2,10 +2,10 @@
 
 ;;----------------------------------------------------------------
 
-(defn set-components ((a single-float) (b single-float) (c single-float)
-                      (d single-float) (e single-float) (f single-float)
-                      (g single-float) (h single-float) (i single-float)
-                      (mat3-to-mutate mat3)) mat3
+(defn-inline set-components ((a single-float) (b single-float) (c single-float)
+                             (d single-float) (e single-float) (f single-float)
+                             (g single-float) (h single-float) (i single-float)
+                             (mat3-to-mutate mat3)) mat3
   "Make a 3x3 matrix. Data must be provided in row major order"
   (declare (optimize (speed 3) (safety 1) (debug 1)))
   (setf (melm mat3-to-mutate 0 0) a)
