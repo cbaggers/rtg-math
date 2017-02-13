@@ -411,8 +411,8 @@
 
 ;;----------------------------------------------------------------
 
-(defn set-from-axis-angle ((mat-to-mutate mat4)
-                           (axis3 vec3) (angle single-float)) mat4
+(defn set-rotation-from-axis-angle ((mat-to-mutate mat4)
+                                    (axis3 vec3) (angle single-float)) mat4
   "Returns a matrix which will rotate a point about the axis
    specified by the angle provided"
   (declare (optimize (speed 3) (safety 1) (debug 1)))

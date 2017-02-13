@@ -194,7 +194,12 @@
   (:nicknames :m4-n)
   (:shadow :identity :trace :+ := :/= :- :* :/)
   (:import-from :rtg-math.base-vectors :x :y :z :w :v!)
-  (:export :set-components :*))
+  (:export :set-components :* :set-from-mat3 :set-from-rows :set-from-rows-v3
+           :set-from-columns :set-from-columns-v3 :adjoint :affine-inverse
+           :transpose :set-from-translation :set-rotation-from-euler
+           :set-from-scale :set-from-rotation-x :set-from-rotation-y
+           :set-from-rotation-z :set-rotation-from-axis-angle :+ :- :negate
+           :*s :*v :*v3 :mrow*vec4))
 
 (uiop:define-package :rtg-math.matrix4
     (:use :cl :%rtg-math :rtg-math.types :%rtg-math.matrix4.common)
