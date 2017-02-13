@@ -287,11 +287,12 @@
                 :make-line3
                 :line3-direction
                 :line3-origin
-                :line3-p)
+                :line3-p
+                :copy-line3)
   (:shadow := :/=)
   (:nicknames :line3)
   (:export :line3 :line3-p :origin :direction :make :transform-m3 :transform-q
-           :closest-point :closest-line-points
+           :copy-line3 :closest-point :closest-line-points
            :distance-to-point :distance-squared-to-point
            :distance-to-line3 :distance-squared-to-line3))
 
@@ -303,11 +304,12 @@
                 :make-ray3
                 :ray3-direction
                 :ray3-origin
-                :ray3-p)
+                :ray3-p
+                :copy-ray3)
   (:shadow := :/=)
   (:nicknames :ray3)
   (:export :ray3 :ray3-p :origin :direction :make := :/=
-           :transform-m3 :transform-q
+           :copy-ray3 :transform-m3 :transform-q
            :distance-squared-to-ray3 :distance-to-ray3
            :distance-squared-to-line3 :distance-to-line3
            :distance-squared-to-point :distance-to-point
@@ -321,13 +323,15 @@
                 :line-segment3-p
                 :make-line-segment3
                 :line-segment3-end-point0
-                :line-segment3-offset)
+                :line-segment3-offset
+                :copy-line-segment3)
   (:shadow := :/= :length :abs)
   (:nicknames :line-seg3)
   (:export :end-point0 :end-point1 :direction :line-segment3-p
-           :make :make-from-point-offset := :/= :transform-m3 :transform-q
-           :length-squared :length :distance-squared-to-line-seg3
-           :distance-to-line-seg3 :distance-squared-to-ray3 :distance-to-ray3
+           :copy-line-segment3 :make :make-from-point-offset := :/=
+           :transform-m3 :transform-q :length-squared :length
+           :distance-squared-to-line-seg3 :distance-to-line-seg3
+           :distance-squared-to-ray3 :distance-to-ray3
            :distance-squared-to-line3 :distance-to-line3
            :distance-squared-to-point :distance-to-point
            :closest-line-segment-points :closest-ray-points
@@ -342,11 +346,12 @@
                 :make-axis-aligned-box
                 :axis-aligned-box-p
                 :axis-aligned-box-maxima
-                :axis-aligned-box-minima)
+                :axis-aligned-box-minima
+                :copy-axis-aligned-box)
   (:shadow := :/=)
   (:nicknames :aabb)
   (:export :axis-aligned-box :axis-aligned-box-p :axis-aligned-box
-           :maxima :minima :make
+           :copy-axis-aligned-box :maxima :minima :make
            :from-aabbs := :/= :from-points :add-point
            :intersects-p :intersects-with-line3-p :intersects-with-ray3-p
            :intersects-with-line-segment-p))
