@@ -349,10 +349,10 @@
                 :axis-aligned-box-minima
                 :copy-axis-aligned-box)
   (:shadow := :/=)
-  (:nicknames :aabb)
+  (:nicknames :aab)
   (:export :axis-aligned-box :axis-aligned-box-p :axis-aligned-box
            :copy-axis-aligned-box :maxima :minima :make
-           :from-aabbs := :/= :from-points :add-point
+           :from-aabs := :/= :from-points :add-point
            :intersects-p :intersects-with-line3-p :intersects-with-ray3-p
            :intersects-with-line-segment-p))
 
