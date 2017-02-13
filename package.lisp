@@ -337,10 +337,41 @@
            :closest-line-segment-points :closest-ray-points
            :closest-line-points :closest-point))
 
+(uiop:define-package :%rtg-math.regions.axis-aligned-box.common
+    (:use :cl :%rtg-math :rtg-math.types)
+  (:import-from :rtg-math.types
+                :axis-aligned-box
+                :make-axis-aligned-box
+                :axis-aligned-box-p
+                :axis-aligned-box-maxima
+                :axis-aligned-box-minima
+                :copy-axis-aligned-box)
+  (:shadow :lerp :/= :=)
+  (:export :with-aab))
+
+(uiop:define-package :rtg-math.region.axis-aligned-box.non-consing
+    (:use :cl :%rtg-math :rtg-math.types :rtg-math.base-maths
+          :rtg-math.base-vectors)
+  (:import-from :rtg-math.base-maths :sfzero-p)
+  (:import-from :%rtg-math.regions.axis-aligned-box.common
+                :with-aab)
+  (:import-from :rtg-math.types
+                :axis-aligned-box
+                :make-axis-aligned-box
+                :axis-aligned-box-p
+                :axis-aligned-box-maxima
+                :axis-aligned-box-minima
+                :copy-axis-aligned-box)
+  (:shadow := :/=)
+  (:nicknames :aab-n)
+  (:export :merge-point))
+
 (uiop:define-package :rtg-math.region.axis-aligned-box
     (:use :cl :%rtg-math :rtg-math.types :rtg-math.base-maths
           :rtg-math.base-vectors)
   (:import-from :rtg-math.base-maths :sfzero-p)
+  (:import-from :%rtg-math.regions.axis-aligned-box.common
+                :with-aab)
   (:import-from :rtg-math.types
                 :axis-aligned-box
                 :make-axis-aligned-box
