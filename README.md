@@ -23,6 +23,7 @@ The library provides:
  - construction from angle (seperately or as a vec3), axis-angle, scale, or induvidual components
  - inverse & affine-inverse
  - extraction of rows or columns as vectors
+ - Consing and non-consing apis
  - Optional generic API
 
 - Quaternions
