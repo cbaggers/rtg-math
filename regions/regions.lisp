@@ -116,27 +116,27 @@
 
 (defgeneric closest-point (reg-a vec3))
 
-(defmethod closest-point ((reg line3) (point-vec3 simple-array))
+(defmethod closest-point ((reg line3) (point-vec3 array))
   (assert (typep point-vec3 'vec3))
   (line3:closest-point reg point-vec3))
 
-(defmethod closest-point ((point-vec3 simple-array) (reg line3))
+(defmethod closest-point ((point-vec3 array) (reg line3))
   (assert (typep point-vec3 'vec3))
   (line3:closest-point reg point-vec3))
 
-(defmethod closest-point ((reg ray3) (point-vec3 simple-array))
+(defmethod closest-point ((reg ray3) (point-vec3 array))
   (assert (typep point-vec3 'vec3))
   (ray3:closest-point reg point-vec3))
 
-(defmethod closest-point ((point-vec3 simple-array) (reg ray3))
+(defmethod closest-point ((point-vec3 array) (reg ray3))
   (assert (typep point-vec3 'vec3))
   (ray3:closest-point reg point-vec3))
 
-(defmethod closest-point ((reg line-segment3) (point-vec3 simple-array))
+(defmethod closest-point ((reg line-segment3) (point-vec3 array))
   (assert (typep point-vec3 'vec3))
   (line-seg3:closest-point reg point-vec3))
 
-(defmethod closest-point ((point-vec3 simple-array) (reg line-segment3))
+(defmethod closest-point ((point-vec3 array) (reg line-segment3))
   (assert (typep point-vec3 'vec3))
   (line-seg3:closest-point reg point-vec3))
 
