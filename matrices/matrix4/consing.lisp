@@ -265,7 +265,7 @@
 ;;----------------------------------------------------------------
 
 (defn inverse ((matrix mat4)) mat4
-  (declare (optimize (speed 3) (safety 1) (debug 1)))
+  ;;(declare (optimize (speed 3) (safety 1) (debug 1)))
   (let ((det (m4:determinant matrix)))
     (if (cl:= det 0s0)
         (error "Cannot invert matrix with zero determinant:~%  ~S"
