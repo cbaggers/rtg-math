@@ -277,7 +277,10 @@
     (:use :cl :%rtg-math :rtg-math.types :rtg-math.base-maths
           :rtg-math.base-vectors)
   (:shadow :lerp)
-  (:export :perspective :orthographic :blinn-newell-env-map :spherical-env-map))
+  (:export :perspective :perspective-v2
+           :orthographic
+           :blinn-newell-env-map
+           :spherical-env-map))
 
 (uiop:define-package :rtg-math.region.line3
     (:use :cl :%rtg-math :rtg-math.types :rtg-math.base-maths

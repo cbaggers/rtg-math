@@ -2,9 +2,9 @@
 
 (defun perspective (frame-width frame-height near far fov)
   (let* ((aspect-ratio (/ frame-width frame-height))
-         (near near )
-         (far far )
-         (fov fov )
+         (near near)
+         (far far)
+         (fov fov)
          (range (tan (/ fov 2.0)))
          (left (- (* range aspect-ratio)))
          (right (* range aspect-ratio))
@@ -15,6 +15,9 @@
      0.0                             (/ (* near 2) (- top bottom))  0.0                                0.0
      0.0                             0.0                            (/ (- (+ far near)) (- far near)) -1.0
      0.0                             0.0                            (/ (* 2.0 far near) (- near far))  0.0)))
+
+(defun perspective-v2 (frame-size-v2 near far fov)
+  (perspective (x frame-size-v2) (y frame-size-v2) near far fov))
 
 (defun orthographic (frame-width frame-height near far)
   (let ((left (- (/ frame-width 2.0)))
