@@ -642,10 +642,11 @@
 
 ;;----------------------------------------------------------------
 
-
 (defn print-m4 ((m4 mat4)) mat4
   (declare (optimize (speed 3) (safety 1) (debug 1)))
-  (apply #'format t
-         "~%(m! ~s ~s ~s ~s~%    ~s ~s ~s ~s~%    ~s ~s ~s ~s~%    ~s ~s ~s ~s)"
-         (concatenate 'list (transpose m4)))
+  (format t "~%(m! ~s ~s ~s ~s~%    ~s ~s ~s ~s~%    ~s ~s ~s ~s~%    ~s ~s ~s ~s)"
+          (melm m4 0 0) (melm m4 0 1) (melm m4 0 2) (melm m4 0 3)
+          (melm m4 1 0) (melm m4 1 1) (melm m4 1 2) (melm m4 1 3)
+          (melm m4 2 0) (melm m4 2 1) (melm m4 2 2) (melm m4 2 3)
+          (melm m4 3 0) (melm m4 3 1) (melm m4 3 2) (melm m4 3 3))
   m4)
