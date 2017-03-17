@@ -642,6 +642,7 @@
 
 ;;----------------------------------------------------------------
 
+#-ecl
 (defn print-m4 ((m4 mat4)) mat4
   (declare (optimize (speed 3) (safety 1) (debug 1)))
   (format t "~%(m! ~s ~s ~s ~s~%    ~s ~s ~s ~s~%    ~s ~s ~s ~s~%    ~s ~s ~s ~s)"
@@ -650,3 +651,13 @@
           (melm m4 2 0) (melm m4 2 1) (melm m4 2 2) (melm m4 2 3)
           (melm m4 3 0) (melm m4 3 1) (melm m4 3 2) (melm m4 3 3))
   m4)
+
+#+ecl
+(DEFUN PRINT-M4 (M4)
+  (FORMAT T
+          "~%(m! ~s ~s ~s ~s~%    ~s ~s ~s ~s~%    ~s ~s ~s ~s~%    ~s ~s ~s ~s)"
+          (MELM M4 0 0) (MELM M4 0 1) (MELM M4 0 2) (MELM M4 0 3)
+          (MELM M4 1 0) (MELM M4 1 1) (MELM M4 1 2) (MELM M4 1 3)
+          (MELM M4 2 0) (MELM M4 2 1) (MELM M4 2 2) (MELM M4 2 3)
+          (MELM M4 3 0) (MELM M4 3 1) (MELM M4 3 2) (MELM M4 3 3))
+  M4)
