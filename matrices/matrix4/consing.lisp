@@ -653,11 +653,6 @@
   m4)
 
 #+ecl
-(DEFUN PRINT-M4 (M4)
-  (FORMAT T
-          "~%(m! ~s ~s ~s ~s~%    ~s ~s ~s ~s~%    ~s ~s ~s ~s~%    ~s ~s ~s ~s)"
-          (MELM M4 0 0) (MELM M4 0 1) (MELM M4 0 2) (MELM M4 0 3)
-          (MELM M4 1 0) (MELM M4 1 1) (MELM M4 1 2) (MELM M4 1 3)
-          (MELM M4 2 0) (MELM M4 2 1) (MELM M4 2 2) (MELM M4 2 3)
-          (MELM M4 3 0) (MELM M4 3 1) (MELM M4 3 2) (MELM M4 3 3))
-  M4)
+(defun print-m4 (m4)
+  (print (cons 'rtg-math::m! (concatenate 'list (m4:transpose m4))))
+  m4)
