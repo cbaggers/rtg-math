@@ -84,8 +84,8 @@
 ;;----------------------------------------------------------------
 
 (defn distance-squared-to-point ((line3 line3) (point-v3 vec3))
-    (values (single-float 0s0 #.most-positive-single-float)
-            (single-float 0s0 #.most-positive-single-float))
+    (values (single-float 0f0 #.most-positive-single-float)
+            (single-float 0f0 #.most-positive-single-float))
   (declare (optimize (speed 3) (safety 1) (debug 1)))
   (let* ((dir (line3-direction line3))
          (w (v3:- point-v3 (line3-origin line3)))
@@ -104,9 +104,9 @@
 ;;----------------------------------------------------------------
 
 (defn distance-squared-to-line3 ((line3-a line3) (line3-b line3))
-    (values (single-float 0s0 #.most-positive-single-float)
-            (single-float 0s0 #.most-positive-single-float)
-            (single-float 0s0 #.most-positive-single-float))
+    (values (single-float 0f0 #.most-positive-single-float)
+            (single-float 0f0 #.most-positive-single-float)
+            (single-float 0f0 #.most-positive-single-float))
   (declare (optimize (speed 3) (safety 1) (debug 1)))
   (let* ((dir-a (line3-direction line3-a))
          (dir-b (line3-direction line3-b))
@@ -120,7 +120,7 @@
          (e (v3:dot dir-b w0))
          (denom (- (* a c) (* b b))))
     (if (sfzero-p denom)
-        (let* ((s-c 0s0)
+        (let* ((s-c 0f0)
                (t-c (/ e c))
                (wc (v3:- w0 (v3:*s dir-b t-c))))
           (values (v3:dot wc wc) t-c s-c))

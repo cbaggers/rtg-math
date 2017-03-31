@@ -51,6 +51,6 @@ cons:
          (rz (z reflected-vv))
          (1+rz (+ 1 rz))
          (2m (* 2 (sqrt (+ (* rx rx) (* ry ry) (* 1+rz 1+rz)))))
-         (u (+ (/ rx 2m) 0.5s0))
-         (v (+ (/ ry 2m) 0.5s0)))
+         (u (+ (/ rx 2m) 0.5f0))
+         (v (+ (/ ry 2m) 0.5f0)))
     (v! u v)))

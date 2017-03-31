@@ -161,10 +161,10 @@
   "Make a 4x4 matrix using the data in the 4 vector4s provided
    to populate the rows"
   (declare (optimize (speed 3) (safety 1) (debug 1)))
-  (set-components (x row-1) (y row-1) (z row-1) 0s0
-                  (x row-2) (y row-2) (z row-2) 0s0
-                  (x row-3) (y row-3) (z row-3) 0s0
-                  0s0       0s0       0s0       1s0
+  (set-components (x row-1) (y row-1) (z row-1) 0f0
+                  (x row-2) (y row-2) (z row-2) 0f0
+                  (x row-3) (y row-3) (z row-3) 0f0
+                  0f0       0f0       0f0       1f0
                   mat-to-mutate))
 
 ;;----------------------------------------------------------------
@@ -200,19 +200,19 @@
   (set-components (x col-1)
                   (x col-2)
                   (x col-3)
-                  0s0
+                  0f0
                   (y col-1)
                   (y col-2)
                   (y col-3)
-                  0s0
+                  0f0
                   (z col-1)
                   (z col-2)
                   (z col-3)
-                  0s0
-                  0s0
-                  0s0
-                  0s0
-                  1s0
+                  0f0
+                  0f0
+                  0f0
+                  0f0
+                  1f0
                   mat-to-mutate))
 
 ;;----------------------------------------------------------------

@@ -257,8 +257,8 @@
    at best get a runtime error, and most likely a silently incorrect result."
   (declare (optimize (speed 3) (safety 1) (debug 1)))
   (let* ((sy (melm mat-a 0 2)))
-    (declare ((single-float -1s0 1s0) sy))
-    (let ((cy (sqrt (cl:- 1s0 (cl:* sy sy)))))
+    (declare ((single-float -1f0 1f0) sy))
+    (let ((cy (sqrt (cl:- 1f0 (cl:* sy sy)))))
       (declare (single-float cy))
       (if (not (cl:= 0f0 cy)) ; [TODO: not correct PI-epsilon]
           (let* ((factor (cl:/ 1.0 cy))
@@ -307,7 +307,7 @@
                       (tmp-s (cl:+ 1.0 (cl:- (melm mat-a i i)
                                              (melm mat-a j j)
                                              (melm mat-a k k))))
-                      (s (sqrt (the (single-float 0s0 #.most-positive-single-float)
+                      (s (sqrt (the (single-float 0f0 #.most-positive-single-float)
                                     tmp-s)))
                       (recip (cl:/ 1.0 s))
                       (result (v! 0.0 0.0 0.0)))
