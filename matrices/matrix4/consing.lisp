@@ -72,10 +72,10 @@
   "Make a 4x4 matrix using the data in the 4 vector4s provided
    to populate the rows"
   (declare (optimize (speed 3) (safety 1) (debug 1)))
-  (make (x row-1) (y row-1) (z row-1) 0s0
-        (x row-2) (y row-2) (z row-2) 0s0
-        (x row-3) (y row-3) (z row-3) 0s0
-        0s0       0s0       0s0       1s0))
+  (make (x row-1) (y row-1) (z row-1) 0f0
+        (x row-2) (y row-2) (z row-2) 0f0
+        (x row-3) (y row-3) (z row-3) 0f0
+        0f0       0f0       0f0       1f0))
 
 ;;----------------------------------------------------------------
 
@@ -140,19 +140,19 @@
   (make (x col-1)
         (x col-2)
         (x col-3)
-        0s0
+        0f0
         (y col-1)
         (y col-2)
         (y col-3)
-        0s0
+        0f0
         (z col-1)
         (z col-2)
         (z col-3)
-        0s0
-        0s0
-        0s0
-        0s0
-        1s0))
+        0f0
+        0f0
+        0f0
+        0f0
+        1f0))
 
 ;;----------------------------------------------------------------
 
@@ -267,7 +267,7 @@
 (defn inverse ((matrix mat4)) mat4
   ;;(declare (optimize (speed 3) (safety 1) (debug 1)))
   (let ((det (m4:determinant matrix)))
-    (if (cl:= det 0s0)
+    (if (cl:= det 0f0)
         (error "Cannot invert matrix with zero determinant:~%  ~S"
                matrix)
         (macrolet ((a (x y z)
@@ -423,7 +423,7 @@
    at best get a runtime error, and most likely a silently incorrect result."
   (declare (optimize (speed 3) (safety 1) (debug 1)))
   (let ((sy (melm mat-a 0 2)))
-    (declare ((single-float -1s0 1s0) sy))
+    (declare ((single-float -1f0 1f0) sy))
     (let ((cy (sqrt (cl:- 1f0 (cl:* sy sy)))))
       (if (cl:= 0f0 cy)
           (let ((sz 0f0)
@@ -483,7 +483,7 @@
                         (tmp-s (cl:+ 1f0 (cl:- (melm mat-a i i)
                                                (melm mat-a j j)
                                                (melm mat-a k k))))
-                        (s (the (single-float 0s0 #.most-positive-single-float)
+                        (s (the (single-float 0f0 #.most-positive-single-float)
                                 tmp-s))
                         (recip (cl:/ 1f0 s)))
                    (values (v! (cl:* 0.5 s)

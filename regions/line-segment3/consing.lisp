@@ -316,26 +316,26 @@
                     sc))))))
 
 (defn distance-to-line3 ((line-seg3 line-segment3) (line3 line3))
-    (values (single-float 0s0 #.most-positive-single-float)
-            (single-float 0s0 #.most-positive-single-float)
-            (single-float 0s0 #.most-positive-single-float))
+    (values (single-float 0f0 #.most-positive-single-float)
+            (single-float 0f0 #.most-positive-single-float)
+            (single-float 0f0 #.most-positive-single-float))
   (declare (optimize (speed 3) (safety 1) (debug 1)))
   (multiple-value-bind (val t-c s-c)
       (distance-squared-to-line3 line-seg3 line3)
-    (declare ((single-float 0s0 #.most-positive-single-float) val))
+    (declare ((single-float 0f0 #.most-positive-single-float) val))
     (values (sqrt val) t-c s-c)))
 
 ;;----------------------------------------------------------------
 
 (defn distance-squared-to-point ((line-seg3 line-segment3) (point-v3 vec3))
-    (values (single-float 0s0 #.most-positive-single-float)
-            (single-float 0s0 #.most-positive-single-float))
+    (values (single-float 0f0 #.most-positive-single-float)
+            (single-float 0f0 #.most-positive-single-float))
   (declare (optimize (speed 3) (safety 1) (debug 1)))
   (let* ((w (v3:- point-v3 (end-point0 line-seg3)))
          (dir (direction line-seg3))
          (proj (v3:dot w dir)))
     ;;
-    (if (<= proj 0s0)
+    (if (<= proj 0f0)
         ;; endpoint 0 is closest point
         (values (v3:dot w w) 0f0)
         ;;
@@ -355,7 +355,7 @@
   (declare (optimize (speed 3) (safety 1) (debug 1)))
   (multiple-value-bind (val t-c)
       (distance-squared-to-point line-seg3 point-v3)
-    (declare ((single-float 0s0 #.most-positive-single-float) val))
+    (declare ((single-float 0f0 #.most-positive-single-float) val))
     (values (sqrt val) t-c)))
 
 ;;------------------------------------------------------------
@@ -433,7 +433,7 @@
          (orig (end-point0 line-seg3))
          (w (v3:- point-v3 orig))
          (proj (v3:dot w dir)))
-    (if (<= proj 0s0)
+    (if (<= proj 0f0)
         orig
         (let* ((vsq (v3:dot dir dir)))
           (if (>= proj vsq)

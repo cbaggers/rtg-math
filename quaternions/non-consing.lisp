@@ -17,7 +17,7 @@
 (defn normalize ((quat-to-mutate quaternion)) quaternion
   (declare (optimize (speed 3) (safety 1) (debug 1)))
   (let ((length-squared (dot quat-to-mutate quat-to-mutate)))
-    (declare ((single-float 0s0 #.most-positive-single-float)
+    (declare ((single-float 0f0 #.most-positive-single-float)
               length-squared))
     (if (cl:= 0f0 length-squared)
         quat-to-mutate
@@ -38,8 +38,8 @@
    at best get a runtime error, and most likely a silently incorrect result."
   (declare (optimize (speed 3) (safety 1) (debug 1)))
   (let ((trace (m3:trace mat3)))
-    (if (> trace 0s0)
-        (let* ((s (sqrt (cl:+ trace 1s0)))
+    (if (> trace 0f0)
+        (let* ((s (sqrt (cl:+ trace 1f0)))
                (recip (/ 0.5 s)))
           (set-components
            (cl:* 0.5 s)
@@ -56,7 +56,7 @@
                                   (m3:melm mat3 j j)
                                   (m3:melm mat3 k k))
                             1.0))
-               (s (sqrt (the (single-float 0s0 #.most-positive-single-float)
+               (s (sqrt (the (single-float 0f0 #.most-positive-single-float)
                              tmp-s)))
                (recip (/ 0.5 s)))
           (setf (w quat-to-mutate) (cl:* (cl:- (m3:melm mat3 k j)
@@ -78,7 +78,7 @@
   (declare (optimize (speed 3) (safety 1) (debug 1)))
   (let ((length (v3:length-squared axis-vec3)))
     (if (cl:= 0f0 length)
-        (set-components 1s0 0s0 0s0 0s0
+        (set-components 1f0 0f0 0f0 0f0
                         quat-to-mutate)
         (let* ((half-angle (/ angle 2.0))
                (sin-half-angle (sin half-angle))

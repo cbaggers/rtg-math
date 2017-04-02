@@ -68,12 +68,12 @@
 
 (defn to-look-at ((quat quaternion)) vec3
   (declare (optimize (speed 3) (safety 1) (debug 1)))
-  (let ((v (v3:make 0s0 0s0 -1s0)))
+  (let ((v (v3:make 0f0 0f0 -1f0)))
     (m3:*v (to-mat3 quat) v)))
 
 (defn to-look-at-vec4 ((quat quaternion)) vec4
   (declare (optimize (speed 3) (safety 1) (debug 1)))
-  (let ((v (v4:make 0s0 0s0 -1s0 0s0)))
+  (let ((v (v4:make 0f0 0f0 -1f0 0f0)))
     (m4:*v (to-mat4 quat) v)))
 
 (defn from-fixed-angles ((x-rot single-float) (y-rot single-float)
@@ -132,7 +132,7 @@
 (defn normalize ((quat quaternion)) quaternion
   (declare (optimize (speed 3) (safety 1) (debug 1)))
   (let ((length-squared (dot quat quat)))
-    (declare ((single-float 0s0 #.most-positive-single-float)
+    (declare ((single-float 0f0 #.most-positive-single-float)
               length-squared))
     (if (cl:= 0f0 length-squared)
         (0!)

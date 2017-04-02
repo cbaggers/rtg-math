@@ -99,11 +99,11 @@
              (incf z (z vec))
              (incf w (w vec))))
         (make x y z w))
-      (make 0s0 0s0 0s0 0s0)))
+      (make 0f0 0f0 0f0 0f0)))
 
 (define-compiler-macro + (&whole whole &rest vec4s)
   (case= (cl:length vec4s)
-    (0 (make 0s0 0s0 0s0 0s0))
+    (0 (make 0f0 0f0 0f0 0f0))
     (1 (first vec4s))
     (2 `(%+ ,@vec4s))
     (otherwise whole)))
@@ -185,11 +185,11 @@
                (setf z (cl:* z (z vec)))
                (setf w (cl:* w (w vec)))))
           (make x y z w)))
-      (make 1s0 1s0 1s0 1s0)))
+      (make 1f0 1f0 1f0 1f0)))
 
 (define-compiler-macro * (&whole whole &rest vec4s)
   (case= (cl:length vec4s)
-    (0 `(make 1s0 1s0 1s0 1s0))
+    (0 `(make 1f0 1f0 1f0 1f0))
     (1 (first vec4s))
     (2 `(*v ,@vec4s))
     (otherwise whole)))
@@ -256,7 +256,7 @@
 ;;----------------------------------------------------------------
 
 (defn length-squared ((vector-a vec4))
-    (single-float 0s0 #.most-positive-single-float)
+    (single-float 0f0 #.most-positive-single-float)
   "Return the squared length of the vector. A regular length
    is the square root of this value. The sqrt function is slow
    so if all thats needs doing is to compare lengths then always
@@ -271,7 +271,7 @@
 ;;----------------------------------------------------------------
 
 (defn length ((vector-a vec4))
-    (single-float 0s0 #.most-positive-single-float)
+    (single-float 0f0 #.most-positive-single-float)
   "Returns the length of a vector
    If you only need to compare relative lengths then definately
    stick to length-squared as the sqrt is a slow operation."
@@ -281,7 +281,7 @@
 ;;----------------------------------------------------------------
 
 (defn distance-squared ((vector-a vec4) (vector-b vec4))
-    (single-float 0s0 #.most-positive-single-float)
+    (single-float 0f0 #.most-positive-single-float)
   "finds the squared distance between 2 points defined by vectors
    vector-a & vector-b"
   (declare (optimize (speed 3) (safety 1) (debug 1)))
@@ -290,7 +290,7 @@
 ;;----------------------------------------------------------------
 
 (defn distance ((vector-a vec4) (vector-b vec4))
-    (single-float 0s0 #.most-positive-single-float)
+    (single-float 0f0 #.most-positive-single-float)
   "Return the distance between 2 points defined by vectors
    vector-a & vector-b. If comparing distances, use
    c-distance-squared as it desnt require a sqrt and thus is
