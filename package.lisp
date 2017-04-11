@@ -277,7 +277,11 @@
     (:use :cl :%rtg-math :rtg-math.types :rtg-math.base-maths
           :rtg-math.base-vectors)
   (:shadow :lerp)
-  (:export :perspective :perspective-v2
+  (:export :perspective-v2-radian-fov
+           :perspective-radian-fov
+           :perspective-v2
+           :perspective
+           :orthographic-v2
            :orthographic
            :blinn-newell-env-map
            :spherical-env-map))

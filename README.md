@@ -38,6 +38,10 @@ And more for all categories.
 
 ## CHANGELOG
 
+### 2017-04-11
+
+- Fixes to the projection matrices. Are also now typed
+
 ### 2017-02-13
 
 - Add non-consing functions for matrix3 & matrix4
