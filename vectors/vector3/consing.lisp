@@ -352,37 +352,13 @@
 
 (defn lerp ((vector-a vec3) (vector-b vec3) (ammount single-float)) vec3
   (declare (optimize (speed 3) (safety 1) (debug 1)))
-  (%+ vector-a (*s (%- vector-b vector-a) ammount)))
-
-
-;; read this for details: (+ (* (- 1.0 v) a) (* v b))
-;; https://gitlab.common-lisp.net/alexandria/alexandria/commit/926a066611b7b11cb71e26c827a271e500888c30
-;; thanks to axion for the heads-up
-;;
-;; Yo me, if you've forgoten the reasoning for this again, consider the
-;; following two expressions:
-;; 1. (+ a (/ (- b a) 2))
-;; 2. (/ (+ a b) 2)
-;; in the first case a and b could be really close, then the subtraction could
-;; create a float in the inaccurate range. The second case however would not
-;; suffer from this.
-
-(defn stable-lerp ((vector-a vec3) (vector-b vec3) (ammount single-float)) vec3
-  (declare (optimize (speed 3) (safety 1) (debug 1)))
   (%+ (*s vector-a (cl:- 1f0 ammount))
       (*s vector-b ammount)))
 
 
-;; (declaim (inline slerp)
-;;          (ftype (function (vec3
-;;                            vec3
-;;                            single-float)
-;;                           vec3)
-;;                 slerp))
-;; (defun slerp3 (vector-a vector-b ammount)
-;;   (let ((angle (cl:* (acos (clampf -1.0 1.0 (dot vector-a vector-b))) ammount))
-;;         (relative-vec (normalize (%- vector-b (*s vector-a dot)))))
-;;     (%+ (*s vector-a (cos angle)) (*s relative-vec (sin angle)))))
+(defn stable-lerp ((vector-a vec3) (vector-b vec3) (ammount single-float)) vec3
+  (declare (optimize (speed 3) (safety 1) (debug 1)))
+  (lerp vector-a vector-b ammount))
 
 ;;----------------------------------------------------------------
 

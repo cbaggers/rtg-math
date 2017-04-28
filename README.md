@@ -38,6 +38,9 @@ And more for all categories.
 
 ## CHANGELOG
 
+### 2017-04-28
+- all lerp functions are stable, stable-lerp is deprecated & will be removed in a future release
+
 ### 2017-04-11
 
 - Fixes to the projection matrices. Are also now typed

@@ -332,13 +332,19 @@
 
 (defn lerp ((vector-a vec4) (vector-b vec4) (ammount single-float)) vec4
   (declare (optimize (speed 3) (safety 1) (debug 1)))
-  (%+ vector-a (*s (%- vector-b vector-a) ammount)))
+  (%+ (*s vector-a (cl:- 1f0 ammount))
+      (*s vector-b ammount)))
+
+
+(defn stable-lerp ((vector-a vec4) (vector-b vec4) (ammount single-float)) vec4
+  (declare (optimize (speed 3) (safety 1) (debug 1)))
+  (lerp vector-a vector-b ammount))
 
 ;;----------------------------------------------------------------
 
 (defn bezier ((a1 vec4) (a2 vec4)
-               (b1 vec4) (b2 vec4)
-               (ammount single-float)) vec4
+			  (b1 vec4) (b2 vec4)
+			  (ammount single-float)) vec4
   (declare (optimize (speed 3) (safety 1) (debug 1)))
   (lerp (lerp a1 a2 ammount)
         (lerp b1 b2 ammount)

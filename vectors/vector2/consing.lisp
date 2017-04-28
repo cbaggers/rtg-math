@@ -297,7 +297,13 @@
 
 (defn lerp ((vector-a vec2) (vector-b vec2) (ammount single-float)) vec2
   (declare (optimize (speed 3) (safety 1) (debug 1)))
-  (%+ vector-a (*s (%- vector-b vector-a) ammount)))
+  (%+ (*s vector-a (cl:- 1f0 ammount))
+      (*s vector-b ammount)))
+
+
+(defn stable-lerp ((vector-a vec2) (vector-b vec2) (ammount single-float)) vec2
+  (declare (optimize (speed 3) (safety 1) (debug 1)))
+  (lerp vector-a vector-b ammount))
 
 ;;----------------------------------------------------------------
 
