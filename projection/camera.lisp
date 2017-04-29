@@ -2,6 +2,7 @@
 
 ;;------------------------------------------------------------
 
+;; https://unspecified.wordpress.com/2012/06/21/calculating-the-gluperspective-matrix-and-other-opengl-matrix-maths/
 (defn perspective-radian-fov ((width single-float) (height single-float)
                               (near single-float) (far single-float)
                               (fov single-float))
