@@ -225,7 +225,22 @@
   "Returns t if all elements of both matrices provided are
    equal"
   (declare (optimize (speed 3) (safety 1) (debug 1)))
-  (loop :for i :below 16 :always (cl:= (aref mat-a i) (aref mat-b i))))
+  (and (cl:= (aref mat-a 0) (aref mat-b 0))
+       (cl:= (aref mat-a 1) (aref mat-b 1))
+       (cl:= (aref mat-a 2) (aref mat-b 2))
+       (cl:= (aref mat-a 3) (aref mat-b 3))
+       (cl:= (aref mat-a 4) (aref mat-b 4))
+       (cl:= (aref mat-a 5) (aref mat-b 5))
+       (cl:= (aref mat-a 6) (aref mat-b 6))
+       (cl:= (aref mat-a 7) (aref mat-b 7))
+       (cl:= (aref mat-a 8) (aref mat-b 8))
+       (cl:= (aref mat-a 9) (aref mat-b 9))
+       (cl:= (aref mat-a 10) (aref mat-b 10))
+       (cl:= (aref mat-a 11) (aref mat-b 11))
+       (cl:= (aref mat-a 12) (aref mat-b 12))
+       (cl:= (aref mat-a 13) (aref mat-b 13))
+       (cl:= (aref mat-a 14) (aref mat-b 14))
+       (cl:= (aref mat-a 15) (aref mat-b 15))))
 
 ;;----------------------------------------------------------------
 
