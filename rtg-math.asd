@@ -5,7 +5,7 @@
   :author "Chris Bagley <techsnuffle@gmail.com>"
   :license "BSD 2 Clause"
   :serial t
-  :depends-on (:alexandria)
+  :depends-on (:alexandria :glsl-symbols)
   :components ((:file "package")
                (:file "utils")
                (:file "deftypes")

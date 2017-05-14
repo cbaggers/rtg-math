@@ -5,7 +5,7 @@
   (:export :case= :defn :defn-inline))
 
 (uiop:define-package #:rtg-math.types
-    (:use #:cl :%rtg-math)
+    (:use #:cl :%rtg-math #:glsl-symbols)
   (:export :quaternion
            :mat3 :mat4
            :vec2 :vec3 :vec4
@@ -163,7 +163,8 @@
   (:export :melm))
 
 (uiop:define-package :rtg-math.matrix3.non-consing
-    (:use :cl :%rtg-math :rtg-math.types :%rtg-math.matrix3.common)
+    (:use :cl :%rtg-math :rtg-math.types :%rtg-math.matrix3.common
+         )
   (:nicknames :m3-n)
   (:shadow :identity :trace :+ := :/= :- :* :/)
   (:import-from :rtg-math.base-vectors :x :y :z :w :v!)
@@ -174,7 +175,8 @@
            :mrow*vec3 :*s))
 
 (uiop:define-package :rtg-math.matrix3
-    (:use :cl :%rtg-math :rtg-math.types :%rtg-math.matrix3.common)
+    (:use :cl :%rtg-math :rtg-math.types :%rtg-math.matrix3.common
+          )
   (:nicknames :m3)
   (:shadow :identity :trace :+ := :/= :- :* :/)
   (:import-from :rtg-math.base-vectors :x :y :z :w :v!)
@@ -198,7 +200,8 @@
   (:export :melm :minor))
 
 (uiop:define-package :rtg-math.matrix4.non-consing
-    (:use :cl :%rtg-math :rtg-math.types :%rtg-math.matrix4.common)
+    (:use :cl :%rtg-math :rtg-math.types :%rtg-math.matrix4.common
+          )
   (:nicknames :m4-n)
   (:shadow :identity :trace :+ := :/= :- :* :/)
   (:import-from :rtg-math.base-vectors :x :y :z :w :v!)
@@ -210,7 +213,8 @@
            :*s :*v :*v3 :mrow*vec4))
 
 (uiop:define-package :rtg-math.matrix4
-    (:use :cl :%rtg-math :rtg-math.types :%rtg-math.matrix4.common)
+    (:use :cl :%rtg-math :rtg-math.types :%rtg-math.matrix4.common
+          )
   (:nicknames :m4)
   (:shadow :identity :trace :+ := :/= :- :* :/)
   (:import-from :rtg-math.base-vectors :x :y :z :w :v!)
@@ -276,11 +280,13 @@
            :to-mat3 :to-mat4))
 
 (uiop:define-package :rtg-math.polar
-    (:use :cl :%rtg-math :rtg-math.types :rtg-math.base-vectors)
+    (:use :cl :%rtg-math :rtg-math.types :rtg-math.base-vectors
+          )
   (:export :polar->cartesian :cartesian->polar))
 
 (uiop:define-package :rtg-math.spherical
-    (:use :cl :%rtg-math :rtg-math.types :rtg-math.base-vectors)
+    (:use :cl :%rtg-math :rtg-math.types :rtg-math.base-vectors
+          )
   (:export :spherical->cartesian :cartesian->spherical))
 
 (uiop:define-package :rtg-math.projection
