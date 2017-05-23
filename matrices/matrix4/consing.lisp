@@ -676,3 +676,24 @@
           (MELM M4 2 0) (MELM M4 2 1) (MELM M4 2 2) (MELM M4 2 3)
           (MELM M4 3 0) (MELM M4 3 1) (MELM M4 3 2) (MELM M4 3 3))
   M4)
+
+;;----------------------------------------------------------------
+
+(declaim (inline from-direction))
+(defn from-direction ((up3 vec3) (dir3 vec3)) mat4
+  (declare (optimize (speed 3) (safety 1) (debug 1)))
+  (let* ((dir (v3:normalize dir3))
+         (w-up (v3:normalize up3))
+         (right (v3:cross dir w-up))
+         (up (v3:cross (v3:normalize right) dir)))
+    (m4:make (v:x right) (v:x up) (cl:- (v:x dir)) 0f0
+             (v:y right) (v:y up) (cl:- (v:y dir)) 0f0
+             (v:z right) (v:z up) (cl:- (v:z dir)) 0f0
+             0f0 0f0 0f0 1f0)))
+
+(defn from-look-at ((up vec3) (from3 vec3) (to3 vec3)) mat4
+  (declare (optimize (speed 3) (safety 1) (debug 1))
+           (inline from-direction))
+  (from-direction up (v3:- to3 from3)))
+
+;;----------------------------------------------------------------

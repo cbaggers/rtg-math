@@ -57,14 +57,15 @@
     (aref x-axies 0) (aref y-axies 1) (aref z-axies 2)
     (aref x-axies 0) (aref y-axies 1) (aref z-axies 2))))
 
-(defn from-look-at ((from3 vec3) (to3 vec3)) quaternion
+(defn from-look-at ((up3 vec3) (from3 vec3) (to3 vec3)) quaternion
   (declare (optimize (speed 3) (safety 1) (debug 1)))
-  (let* ((dir (v3:- from3 to3))
-         (n-dir (v3:normalize dir))
-         (right (v3:make (v:z n-dir) 0.0 (cl:- (v:x n-dir))))
-         (n-right (v3:normalize right))
-         (up (v3:cross n-dir n-right)))
-    (q:from-axies n-right up n-dir)))
+  (from-mat3
+   (m3:from-look-at up3 from3 to3)))
+
+(defn from-direction ((up3 vec3) (dir3 vec3)) quaternion
+  (declare (optimize (speed 3) (safety 1) (debug 1)))
+  (from-mat3
+   (m3:from-direction up3 dir3)))
 
 (defn to-look-at ((quat quaternion)) vec3
   (declare (optimize (speed 3) (safety 1) (debug 1)))
