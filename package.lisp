@@ -182,7 +182,7 @@
            :scale
            :affine-inverse
            :get-fixed-angles :get-axis-angle
-           :from-direction :from-look-at))
+           :from-direction :point-at :look-at))
 
 (uiop:define-package :%rtg-math.matrix4.common
     (:use :cl :%rtg-math :rtg-math.types)
@@ -222,7 +222,7 @@
            :inverse
            :affine-inverse
            :get-fixed-angles :get-axis-angle
-           :from-direction :from-look-at))
+           :from-direction :point-at :look-at))
 
 
 (uiop:define-package :rtg-math.matrices
@@ -258,7 +258,8 @@
            :unitp :identity :identity-p
            :from-mat3
            :from-axis-angle
-           :from-direction :from-look-at :to-look-at :to-look-at-vec4
+           :from-look-at :to-look-at :to-look-at-vec4
+           :from-direction :point-at
            :from-axies
            :from-fixed-angles
            :magnitude :norm := :/=

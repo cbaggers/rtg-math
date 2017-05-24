@@ -543,5 +543,3 @@
          (cl:* (z vec4-to-mutate) (melm mat-a 2 3))
          (cl:* (w vec4-to-mutate) (melm mat-a 3 3)))
    vec4-to-mutate))
-
-;;----------------------------------------------------------------

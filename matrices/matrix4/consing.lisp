@@ -678,9 +678,9 @@
   M4)
 
 ;;----------------------------------------------------------------
+;; makes a matrix to orient something towards a point
 
-(declaim (inline from-direction))
-(defn from-direction ((up3 vec3) (dir3 vec3)) mat4
+(defn-inline from-direction ((up3 vec3) (dir3 vec3)) mat4
   (declare (optimize (speed 3) (safety 1) (debug 1)))
   (let* ((dir (v3:normalize dir3))
          (w-up (v3:normalize up3))
@@ -691,9 +691,27 @@
              (v:z right) (v:z up) (cl:- (v:z dir)) 0f0
              0f0 0f0 0f0 1f0)))
 
-(defn from-look-at ((up vec3) (from3 vec3) (to3 vec3)) mat4
+;;----------------------------------------------------------------
+;; makes a matrix to orient something at a point towards another point
+
+(defn point-at ((up vec3) (from3 vec3) (to3 vec3)) mat4
   (declare (optimize (speed 3) (safety 1) (debug 1))
            (inline from-direction))
   (from-direction up (v3:- to3 from3)))
+
+;;----------------------------------------------------------------
+;; Makes a world->view look-at matrix
+
+(defn-inline look-at ((up3 vec3) (from3 vec3) (to3 vec3)) mat4
+  (declare (optimize (speed 3) (safety 1) (debug 1)))
+  (let* ((dir (v3:normalize (v3:- to3 from3)))
+         (w-up (v3:normalize up3))
+         (right (v3:cross dir w-up))
+         (up (v3:cross (v3:normalize right) dir)))
+    (m4:* (m4:translation (v3:negate from3))
+          (m4:make (v:x right) (v:y right) (v:z right) 0f0
+                   (v:x up) (v:y up) (v:z up) 0f0
+                   (cl:- (v:x dir)) (cl:- (v:y dir)) (cl:- (v:z dir)) 0f0
+                   0f0 0f0 0f0 1f0))))
 
 ;;----------------------------------------------------------------
