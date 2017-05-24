@@ -258,7 +258,7 @@
            :unitp :identity :identity-p
            :from-mat3
            :from-axis-angle
-           :from-look-at :to-look-at :to-look-at-vec4
+           :look-at :to-look-at :to-look-at-vec4
            :from-direction :point-at
            :from-axies
            :from-fixed-angles
