@@ -258,8 +258,8 @@
            :unitp :identity :identity-p
            :from-mat3
            :from-axis-angle
-           :look-at :to-look-at :to-look-at-vec4
-           :from-direction :point-at
+           :look-at :point-at
+           :from-direction :to-direction :to-direction-vec4
            :from-axies
            :from-fixed-angles
            :magnitude :norm := :/=

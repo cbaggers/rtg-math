@@ -72,12 +72,12 @@
   (from-mat3
    (m3:from-direction up3 dir3)))
 
-(defn to-look-at ((quat quaternion)) vec3
+(defn to-direction ((quat quaternion)) vec3
   (declare (optimize (speed 3) (safety 1) (debug 1)))
   (let ((v (v3:make 0f0 0f0 -1f0)))
     (m3:*v (to-mat3 quat) v)))
 
-(defn to-look-at-vec4 ((quat quaternion)) vec4
+(defn to-direction-vec4 ((quat quaternion)) vec4
   (declare (optimize (speed 3) (safety 1) (debug 1)))
   (let ((v (v4:make 0f0 0f0 -1f0 0f0)))
     (m4:*v (to-mat4 quat) v)))
