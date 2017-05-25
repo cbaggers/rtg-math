@@ -25,6 +25,13 @@
            :+one-degree-in-radians+
            :+pi+
            :+inv-pi+
+           :2pi
+           :0.5pi
+           :inv-pi
+           :pi-f
+           :2pi-f
+           :0.5pi-f
+           :inv-pi-f
            :inv-sqrt
            :degrees
            :radians

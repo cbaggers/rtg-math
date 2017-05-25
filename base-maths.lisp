@@ -6,6 +6,19 @@
 (defconstant +one-radian-in-degrees+ 57.29577951308232f0)
 (defconstant +k-epsilon+ 1.e-6)
 
+;; I found the 'earmuffs' on the 'pi' related constants above very frustrating
+;; to type when live coding. These are easier and also fit more with CL's pi
+;; constant
+
+(defconstant 2pi 6.283185307179586d0)
+(defconstant 0.5pi 1.5707963267948966d0)
+(defconstant inv-pi 0.3183098861837907d0)
+
+(defconstant pi-f 3.141592653589793f0)
+(defconstant 2pi-f 6.283185307179586f0)
+(defconstant 0.5pi-f 1.5707963267948966f0)
+(defconstant inv-pi-f 0.3183098861837907f0)
+
 ;;----------------------------------------------------------------
 
 (declaim (inline sfzero-p))
