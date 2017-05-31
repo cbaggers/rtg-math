@@ -415,15 +415,14 @@
            :closest-point))
 
 (uiop:define-package #:rtg-math
-    (:use #:cl)
-  (:import-from :rtg-math.base-maths :radians :degrees)
+    (:use #:cl :rtg-math.base-maths)
   (:import-from :rtg-math.base-vectors :v! :v!byte :v!ubyte :v!int8 :v!uint8
                 :v!int :x :y :z :w :v2! :v3! :v4!)
   (:import-from :rtg-math.base-matrices :m!)
   (:import-from :rtg-math.quaternions :q!)
   (:import-from :rtg-math.vectors :s~)
-  (:export :radians :degrees
-           :v! :v!byte :v!ubyte :v!int8 :v!uint8 :v!int :v2! :v3! :v4!
+  (:reexport :rtg-math.base-maths)
+  (:export :v! :v!byte :v!ubyte :v!int8 :v!uint8 :v!int :v2! :v3! :v4!
            :x :y :z :w
            :m!
            :q!
