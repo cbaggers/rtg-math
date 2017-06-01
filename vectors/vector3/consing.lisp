@@ -355,7 +355,6 @@
   (%+ (*s vector-a (cl:- 1f0 ammount))
       (*s vector-b ammount)))
 
-
 (defn stable-lerp ((vector-a vec3) (vector-b vec3) (ammount single-float)) vec3
   (declare (optimize (speed 3) (safety 1) (debug 1)))
   (lerp vector-a vector-b ammount))
@@ -373,6 +372,6 @@
 ;;----------------------------------------------------------------
 
 (defun spline (x knots)
-  (make (rtg-math.maths:spline x (mapcar #'x knots))
-        (rtg-math.maths:spline x (mapcar #'y knots))
-        (rtg-math.maths:spline x (mapcar #'z knots))))
+  (make (rtg-math.base-maths:spline x (mapcar #'x knots))
+        (rtg-math.base-maths:spline x (mapcar #'y knots))
+        (rtg-math.base-maths:spline x (mapcar #'z knots))))

@@ -317,8 +317,8 @@
 ;;----------------------------------------------------------------
 
 (defun spline (x knots)
-  (make (rtg-math.maths:spline x (mapcar #'x knots))
-        (rtg-math.maths:spline x (mapcar #'y knots))))
+  (make (rtg-math.base-maths:spline x (mapcar #'x knots))
+        (rtg-math.base-maths:spline x (mapcar #'y knots))))
 
 ;;----------------------------------------------------------------
 

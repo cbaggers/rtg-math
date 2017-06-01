@@ -20,9 +20,7 @@
 
 (uiop:define-package :rtg-math.base-maths
     (:use :cl #:glsl-symbols :%rtg-math :rtg-math.types)
-  (:export :clamp
-           :clampf
-           :+one-degree-in-radians+
+  (:export :+one-degree-in-radians+
            :+pi+
            :+inv-pi+
            :2pi
@@ -36,11 +34,12 @@
            :degrees
            :radians
            :degrees-f
-           :radians-f))
-
-(uiop:define-package :rtg-math.maths
-    (:use :cl #:glsl-symbols :%rtg-math :rtg-math.types)
-  (:export :lerp :mix :stepv :clamp :smoothstep :pulse
+           :radians-f
+           :clamp
+           :saturate
+           :lerp
+           :mix
+           :smoothstep
            :spline))
 
 (uiop:define-package :rtg-math.base-vectors

@@ -343,8 +343,8 @@
 ;;----------------------------------------------------------------
 
 (defn bezier ((a1 vec4) (a2 vec4)
-			  (b1 vec4) (b2 vec4)
-			  (ammount single-float)) vec4
+                          (b1 vec4) (b2 vec4)
+                          (ammount single-float)) vec4
   (declare (optimize (speed 3) (safety 1) (debug 1)))
   (lerp (lerp a1 a2 ammount)
         (lerp b1 b2 ammount)
@@ -353,7 +353,7 @@
 ;;----------------------------------------------------------------
 
 (defun spline (x knots)
-  (make (rtg-math.maths:spline x (mapcar #'x knots))
-        (rtg-math.maths:spline x (mapcar #'y knots))
-        (rtg-math.maths:spline x (mapcar #'z knots))
-        (rtg-math.maths:spline x (mapcar #'w knots))))
+  (make (rtg-math.base-maths:spline x (mapcar #'x knots))
+        (rtg-math.base-maths:spline x (mapcar #'y knots))
+        (rtg-math.base-maths:spline x (mapcar #'z knots))
+        (rtg-math.base-maths:spline x (mapcar #'w knots))))

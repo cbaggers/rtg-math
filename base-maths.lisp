@@ -21,33 +21,23 @@
 
 ;;----------------------------------------------------------------
 
-(declaim (inline sfzero-p))
-(defun sfzero-p (f)
-  (declare (single-float f) (optimize speed))
+(defn-inline sfzero-p ((f single-float)) boolean
   (< (abs f) +k-epsilon+))
 
 ;;----------------------------------------------------------------
 
-(defun clamp (min max val)
-  (min (max val min) max))
+(defn-inline clamp ((min single-float) (max single-float) (val-f single-float))
+    single-float
+  (min (max val-f min) max))
 
-(declaim (inline clampf)
-         (ftype (function (single-float single-float single-float)
-                          single-float)
-                clampf))
-(defun clampf (min max float)
-  (declare (single-float min max float))
-  (the single-float (min (max float min) max)))
+(defn-inline saturate ((val-f single-float)) single-float
+  (min (max val-f 0f0) 1f0))
 
 ;;----------------------------------------------------------------
 
-(declaim (inline inv-sqrt)
-         (ftype (function (single-float)
-                          single-float)
-                inv-sqrt))
-(defun inv-sqrt (x)
+(defn-inline inv-sqrt ((x (single-float 0f0 #.most-positive-single-float)))
+    single-float
   "Calculates the inverse square root of a number"
-  (declare (single-float x))
   (/ 1f0 (sqrt x)))
 
 ;;----------------------------------------------------------------
@@ -75,3 +65,67 @@
                 degrees))
 (defun degrees (radians)
   (degrees-f (the single-float (float radians))))
+
+;;----------------------------------------------------------------
+
+(defn-inline lerp ((start single-float) (end single-float)
+                   (amount single-float))
+    single-float
+  (let ((amount (saturate amount)))
+    (+ (* start (- 1f0 amount))
+       (* end amount))))
+
+(defn-inline mix ((start single-float) (end single-float)
+                  (amount single-float))
+    single-float
+  (lerp start end amount))
+
+(defn smoothstep ((a single-float) (b single-float)
+                  (x single-float))
+    single-float
+  (let* ((x (saturate x))
+         (x (/ (- x a) (- b a))))
+    (* x x (- 3 (* 2 x)))))
+
+(defvar *coef*
+  (make-array 16 :element-type 'single-float
+              :initial-contents '(-0.5  1.5 -1.5  0.5
+                                  1.0  -2.5  2.0 -0.5
+                                  -0.5  0.0  0.5  0.0
+                                  0.0   1.0  0.0  0.0)))
+(defun spline (x knots)
+  (let* ((nknots (length knots))
+         (nspans (- nknots 3)))
+    (unless (> nspans 0) (error "Spline has too few knots"))
+    (let* ((x (* (clamp x 0f0 1f0) nspans))
+           (span (if (>= x (- nknots 3))
+                     (floor (- nknots 3))
+                     (floor x)))
+           (x (- x span)))
+      (let ((c3 (+ (* (aref *coef* 0)  (elt knots span))
+                   (* (aref *coef* 1)  (elt knots (+ 1 span)))
+                   (* (aref *coef* 2)  (elt knots (+ 2 span)))
+                   (* (aref *coef* 3)  (elt knots (+ 3 span)))))
+            (c2 (+ (* (aref *coef* 4)  (elt knots span))
+                   (* (aref *coef* 5)  (elt knots (+ 1 span)))
+                   (* (aref *coef* 6)  (elt knots (+ 2 span)))
+                   (* (aref *coef* 7)  (elt knots (+ 3 span)))))
+            (c1 (+ (* (aref *coef* 8)  (elt knots span))
+                   (* (aref *coef* 9)  (elt knots (+ 1 span)))
+                   (* (aref *coef* 10) (elt knots (+ 2 span)))
+                   (* (aref *coef* 11) (elt knots (+ 3 span)))))
+            (c0 (+ (* (aref *coef* 12) (elt knots span))
+                   (* (aref *coef* 13) (elt knots (+ 1 span)))
+                   (* (aref *coef* 14) (elt knots (+ 2 span)))
+                   (* (aref *coef* 15) (elt knots (+ 3 span))))))
+        (+ c0 (* x (+ c1 (* x (+ c2 (* x c3))))))))))
+
+(defun bias (b x)
+  (expt x (/ (log b) (log 0.5))))
+
+(defun gain (g x)
+  (if (< x 0.5)
+      (/ (bias (- 1 g) (* 2 x)) 2)
+      (- 1 (/ (bias (- 1 g) (- 2 (* 2 x))) 2))))
+
+;;----------------------------------------------------------------
