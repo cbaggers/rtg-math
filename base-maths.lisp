@@ -58,13 +58,13 @@
          (ftype (function ((or integer single-float)) single-float)
                 radians))
 (defun radians (degrees)
-  (radians-f (the single-float (float degrees))))
+  (radians-f (the single-float (float degrees 0f0))))
 
 (declaim (inline degrees)
          (ftype (function ((or integer single-float)) single-float)
                 degrees))
 (defun degrees (radians)
-  (degrees-f (the single-float (float radians))))
+  (degrees-f (the single-float (float radians 0f0))))
 
 ;;----------------------------------------------------------------
 
