@@ -43,7 +43,7 @@
            :spline))
 
 (uiop:define-package :rtg-math.base-vectors
-    (:use :cl :%rtg-math :rtg-math.types)
+    (:use :cl :glsl-symbols :%rtg-math :rtg-math.types)
   (:export :v! :x :y :z :w
            :v!byte :v!ubyte :v!int :v!uint :v!bool :v!double
            :v!int8 :v!uint8
@@ -420,15 +420,10 @@
            :closest-point))
 
 (uiop:define-package #:rtg-math
-    (:use #:cl :rtg-math.base-maths #:glsl-symbols)
-  (:import-from :rtg-math.base-vectors :v! :v!byte :v!ubyte :v!int8 :v!uint8
-                :v!int :x :y :z :w :v2! :v3! :v4!)
+    (:use #:cl :rtg-math.base-maths #:rtg-math.base-vectors #:glsl-symbols)
   (:import-from :rtg-math.base-matrices :m!)
   (:import-from :rtg-math.quaternions :q!)
   (:import-from :rtg-math.vectors :s~)
   (:reexport :rtg-math.base-maths)
-  (:export :v! :v!byte :v!ubyte :v!int8 :v!uint8 :v!int :v2! :v3! :v4!
-           :x :y :z :w
-           :m!
-           :q!
-           :s~))
+  (:reexport :rtg-math.base-vectors)
+  (:export :m! :q! :s~))

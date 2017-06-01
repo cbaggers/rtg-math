@@ -10,7 +10,6 @@
                (:file "utils")
                (:file "deftypes")
                (:file "base-maths")
-               (:file "maths")
                (:file "vectors/base-vectors")
                (:file "vectors/vector2/non-consing")
                (:file "vectors/vector2/consing")

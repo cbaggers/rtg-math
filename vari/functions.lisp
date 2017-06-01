@@ -1,4 +1,4 @@
-(in-package :varjo.internals)
+(in-package :rtg-math.vari)
 
 (v-def-glsl-template-fun v! (v) "~a" (v-vec2) v-vec2)
 (v-def-glsl-template-fun v! (v) "~a" (v-vec2) v-vec3)

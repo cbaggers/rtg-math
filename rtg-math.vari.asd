@@ -7,4 +7,5 @@
   :serial t
   :depends-on (:glsl-symbols :varjo :rtg-math)
   :components ((:file "vari/package")
-               (:file "vari/functions")))
+               (:file "vari/functions")
+               (:file "vari/swizzle")))
