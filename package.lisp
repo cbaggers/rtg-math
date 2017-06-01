@@ -5,7 +5,7 @@
   (:export :case= :defn :defn-inline))
 
 (uiop:define-package #:rtg-math.types
-    (:use #:cl :%rtg-math #:glsl-symbols)
+    (:use #:cl #:glsl-symbols :%rtg-math)
   (:export :quaternion
            :mat3 :mat4
            :vec2 :vec3 :vec4
@@ -19,7 +19,7 @@
            :axis-aligned-box))
 
 (uiop:define-package :rtg-math.base-maths
-    (:use :cl :%rtg-math :rtg-math.types)
+    (:use :cl #:glsl-symbols :%rtg-math :rtg-math.types)
   (:export :clamp
            :clampf
            :+one-degree-in-radians+
@@ -39,7 +39,7 @@
            :radians-f))
 
 (uiop:define-package :rtg-math.maths
-    (:use :cl :%rtg-math :rtg-math.types)
+    (:use :cl #:glsl-symbols :%rtg-math :rtg-math.types)
   (:export :lerp :mix :stepv :clamp :smoothstep :pulse
            :spline))
 
@@ -421,7 +421,7 @@
            :closest-point))
 
 (uiop:define-package #:rtg-math
-    (:use #:cl :rtg-math.base-maths)
+    (:use #:cl :rtg-math.base-maths #:glsl-symbols)
   (:import-from :rtg-math.base-vectors :v! :v!byte :v!ubyte :v!int8 :v!uint8
                 :v!int :x :y :z :w :v2! :v3! :v4!)
   (:import-from :rtg-math.base-matrices :m!)
