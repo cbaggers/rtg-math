@@ -26,7 +26,7 @@
                     nil)
                    ((and (not (char= #\& (char (symbol-name name) 0)))
                          (not seen-&rest))
-                    (list type name)))))
+                    (list 'type type name)))))
              ;;
              (mayb-first (x)
                (if (listp x)
