@@ -17,9 +17,6 @@
    column major order, but this abstraction means we only have
    to think in row major order which is how most mathematical
    texts and online tutorials choose to show matrices"
-  (declare (mat3 mat-a)
-           (type (integer 0 3) row col)
-           (single-float value))
   (setf (aref mat-a (cl:+ row (cl:* col 3))) value))
 
 (define-compiler-macro melm (mat-a row col)
