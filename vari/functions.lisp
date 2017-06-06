@@ -76,7 +76,7 @@
 
 (v-def-glsl-template-fun rtg-math.matrix4:make (a b c d e f g h i j k l m n o p)
   "mat4(~a,~a,~a,~a,~a,~a,~a,~a,~a,~a,~a,~a,~a,~a,~a,~a)"
-  (v-float v-float v-float v-float v-float v-float v-float v-float v-float
+  (v-float v-float v-float v-float v-float v-float v-float v-float
            v-float v-float v-float v-float v-float v-float v-float v-float)
   v-mat4 :pure t)
 
