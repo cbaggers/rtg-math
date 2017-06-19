@@ -43,26 +43,74 @@
                          ,result-types)
               (remove nil (mapcar #'to-pair typed-args))))))
 
-(defmacro defn (name typed-args result-types &body body)
+(defvar *standard-declarations*
+  '(dynamic-extent  ignore     optimize
+    ftype           inline     special
+    ignorable       notinline  type))
+
+(defgeneric handle-defn-declaration (name args)
+  (:method (name args)
+    nil))
+
+(defmacro define-defn-declaration (name args &body body)
+  (assert (not (member name *standard-declarations*)) (name))
+  (with-gensyms (gname d-args)
+    `(defmethod handle-defn-declaration ((,gname (eql ',name)) ,d-args)
+       (declare (ignore ,gname))
+       (destructuring-bind ,args ,d-args
+         ,@body))))
+
+(defun process-defn-declares (decls)
+  (let ((data
+         (loop :for decl :in decls :collect
+            (let ((name (first decl)))
+              (if (or (listp name) (member name *standard-declarations*))
+                  (list decl nil nil)
+                  (cons nil (multiple-value-list
+                             (funcall #'handle-defn-declaration
+                                      name (rest decl)))))))))
+    (list (remove nil (mapcar #'first data))    ;; cl-decl
+          (remove nil (mapcar #'second data))   ;; heads
+          (remove nil (mapcar #'third data))))) ;; tails
+
+(defun %defn (name typed-args result-types inline-p body)
   (multiple-value-bind (args ftype type-decls)
       (parse-defn-args typed-args result-types)
     (multiple-value-bind (body decls doc) (parse-body body :documentation t)
-      `(progn
-         (declaim (ftype ,ftype ,name))
-         (defun ,name ,args
-           ,@(when doc (list doc))
-           (declare ,@type-decls)
-           ,@decls
-           ,@body)))))
+      (destructuring-bind (decls heads tails)
+          (process-defn-declares (reduce #'append (mapcar #'rest decls)))
+        (let* ((decls (if inline-p
+                          (cons `(inline ,name) decls)
+                          decls))
+               (body (if heads
+                         (append heads body)
+                         body))
+               (body (if tails
+                         `((prog1 (progn ,@body) ,@tails))
+                         body)))
+          `(progn
+             (declaim
+              ,@(when inline-p `((inline ,name)))
+              (ftype ,ftype ,name))
+             (defun ,name ,args
+               ,@(when doc (list doc))
+               (declare ,@type-decls)
+               (declare ,@decls)
+               ,@body)))))))
+
+(defmacro defn (name typed-args result-types &body body)
+  (%defn name typed-args result-types nil body))
 
 (defmacro defn-inline (name typed-args result-types &body body)
-  (multiple-value-bind (args ftype type-decls)
-      (parse-defn-args typed-args result-types)
-    (multiple-value-bind (body decls doc) (parse-body body :documentation t)
-      `(progn
-         (declaim (inline ,name) (ftype ,ftype ,name))
-         (defun ,name ,args
-           ,@(when doc (list doc))
-           (declare ,@type-decls)
-           ,@decls
-           ,@body)))))
+  (%defn name typed-args result-types t body))
+
+;;
+;; Example usage
+;;
+;; (define-defn-declaration tester (&key foo bar)
+;;   (values `(print ',foo)
+;;           `(print ',bar)))
+;;
+;; (defn-inline foo ((a float)) float
+;;   (declare (tester :foo 1 :bar 2))
+;;   (* a a))

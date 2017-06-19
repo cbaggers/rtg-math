@@ -2,7 +2,10 @@
 
 (uiop:define-package #:%rtg-math
     (:use #:cl #:alexandria)
-  (:export :case= :defn :defn-inline))
+  (:export :case=
+           :defn
+           :defn-inline
+           :define-defn-declaration))
 
 (uiop:define-package #:rtg-math.types
     (:use #:cl #:glsl-symbols :%rtg-math)
