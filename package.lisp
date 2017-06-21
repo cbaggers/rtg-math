@@ -271,7 +271,7 @@
            :look-at :point-at
            :from-direction :to-direction :to-direction-vec4
            :from-axies
-           :from-fixed-angles
+           :from-fixed-angles :from-fixed-angles-v3
            :magnitude :norm := :/=
            :copy :get-axis-angle :normalize :qconjugate :conjugate
            :inverse :+ :- :* :*v :*s
