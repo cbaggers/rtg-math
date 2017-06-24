@@ -375,3 +375,21 @@
   (make (rtg-math.base-maths:spline x (mapcar #'x knots))
         (rtg-math.base-maths:spline x (mapcar #'y knots))
         (rtg-math.base-maths:spline x (mapcar #'z knots))))
+
+;;---------------------------------------------------------------
+
+(defmacro incf (place &optional delta)
+  (let ((vec (gensym "PLACE"))
+        (val (or delta (make-array 3 :element-type 'single-float
+                                   :initial-contents '(1f0 1f0 1f0)))))
+    `(let ((,vec ,place))
+       (v3-n:+ ,vec ,val))))
+
+(defmacro decf (place &optional delta)
+  (let ((vec (gensym "PLACE"))
+        (val (or delta (make-array 3 :element-type 'single-float
+                                   :initial-contents '(1f0 1f0 1f0)))))
+    `(let ((,vec ,place))
+       (v3-n:- ,vec ,val))))
+
+;;---------------------------------------------------------------

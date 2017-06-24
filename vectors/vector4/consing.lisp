@@ -94,10 +94,10 @@
         (loop :for vec :in vec4s :do
            (let ((vec vec))
              (declare (vec4 vec))
-             (incf x (x vec))
-             (incf y (y vec))
-             (incf z (z vec))
-             (incf w (w vec))))
+             (cl:incf x (x vec))
+             (cl:incf y (y vec))
+             (cl:incf z (z vec))
+             (cl:incf w (w vec))))
         (make x y z w))
       (make 0f0 0f0 0f0 0f0)))
 
@@ -357,3 +357,21 @@
         (rtg-math.base-maths:spline x (mapcar #'y knots))
         (rtg-math.base-maths:spline x (mapcar #'z knots))
         (rtg-math.base-maths:spline x (mapcar #'w knots))))
+
+;;---------------------------------------------------------------
+
+(defmacro incf (place &optional delta)
+  (let ((vec (gensym "PLACE"))
+        (val (or delta (make-array 4 :element-type 'single-float
+                                   :initial-contents '(1f0 1f0 1f0 0f0)))))
+    `(let ((,vec ,place))
+       (v4-n:+ ,vec ,val))))
+
+(defmacro decf (place &optional delta)
+  (let ((vec (gensym "PLACE"))
+        (val (or delta (make-array 4 :element-type 'single-float
+                                   :initial-contents '(1f0 1f0 1f0 0f0)))))
+    `(let ((,vec ,place))
+       (v4-n:- ,vec ,val))))
+
+;;---------------------------------------------------------------

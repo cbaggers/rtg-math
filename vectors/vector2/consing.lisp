@@ -80,8 +80,8 @@
         (loop :for vec :in vec2s :do
            (let ((vec vec))
              (declare (vec2 vec))
-             (incf x (x vec))
-             (incf y (y vec))))
+             (cl:incf x (x vec))
+             (cl:incf y (y vec))))
         (make x y))
       (make 0f0 0f0)))
 
@@ -113,8 +113,8 @@
         (loop :for vec :in vec2s :do
            (let ((vec vec))
              (declare (vec2 vec))
-             (decf x (x vec))
-             (decf y (y vec))))
+             (cl:decf x (x vec))
+             (cl:decf y (y vec))))
         (make x y))
       vec2))
 
@@ -325,3 +325,21 @@
 (defn from-complex ((c complex)) vec2
   (make (coerce (realpart c) 'single-float)
         (coerce (imagpart c) 'single-float)))
+
+;;---------------------------------------------------------------
+
+(defmacro incf (place &optional delta)
+  (let ((vec (gensym "PLACE"))
+        (val (or delta (make-array 2 :element-type 'single-float
+                                   :initial-contents '(1f0 1f0)))))
+    `(let ((,vec ,place))
+       (v2-n:+ ,vec ,val))))
+
+(defmacro decf (place &optional delta)
+  (let ((vec (gensym "PLACE"))
+        (val (or delta (make-array 2 :element-type 'single-float
+                                   :initial-contents '(1f0 1f0)))))
+    `(let ((,vec ,place))
+       (v2-n:- ,vec ,val))))
+
+;;---------------------------------------------------------------

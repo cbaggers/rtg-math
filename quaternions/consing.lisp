@@ -191,10 +191,10 @@
             (z 0f0))
         (declare (single-float x y z w))
         (loop :for vec :in quats :do
-           (incf w (w vec))
-           (incf x (x vec))
-           (incf y (y vec))
-           (incf z (z vec)))
+           (cl:incf w (w vec))
+           (cl:incf x (x vec))
+           (cl:incf y (y vec))
+           (cl:incf z (z vec)))
         (q! w x y z))
       (identity)))
 
