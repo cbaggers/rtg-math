@@ -64,7 +64,7 @@
   (cl:decf (aref accum-vec 0) (aref to-add-vec 0))
   (cl:decf (aref accum-vec 1) (aref to-add-vec 1))
   (cl:decf (aref accum-vec 2) (aref to-add-vec 2))
-  (cl:decf (aref accum-vec 2) (aref to-add-vec 3))
+  (cl:decf (aref accum-vec 3) (aref to-add-vec 3))
   accum-vec)
 
 (defn - ((accum-vec vec4) &rest (vec4s vec4)) vec4
