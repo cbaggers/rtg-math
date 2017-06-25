@@ -88,7 +88,7 @@
   (cl:setf (aref accum-vec 0) (cl:* (aref accum-vec 0) (aref to-mult-vec 0)))
   (cl:setf (aref accum-vec 1) (cl:* (aref accum-vec 1) (aref to-mult-vec 1)))
   (cl:setf (aref accum-vec 2) (cl:* (aref accum-vec 2) (aref to-mult-vec 2)))
-  (cl:setf (aref accum-vec 3) (cl:* (aref accum-vec 2) (aref to-mult-vec 3)))
+  (cl:setf (aref accum-vec 3) (cl:* (aref accum-vec 3) (aref to-mult-vec 3)))
   accum-vec)
 
 (defn * ((accum-vec vec4) &rest (vec4s vec4)) vec4
