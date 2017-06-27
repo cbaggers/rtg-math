@@ -87,6 +87,10 @@
   (declare (optimize (speed 3) (safety 1) (debug 1)))
   (q-n:from-fixed-angles (0!) x-rot y-rot z-rot))
 
+(defn from-fixed-angles-v3 ((angles vec3)) quaternion
+  (declare (optimize (speed 3) (safety 1) (debug 1)))
+  (from-fixed-angles (v:x angles) (v:y angles) (v:z angles)))
+
 (defn magnitude ((quat quaternion)) single-float
   (declare (optimize (speed 3) (safety 1) (debug 1)))
   (let ((w (w quat)) (x (x quat)) (y (y quat)) (z (z quat)))
@@ -187,10 +191,10 @@
             (z 0f0))
         (declare (single-float x y z w))
         (loop :for vec :in quats :do
-           (incf w (w vec))
-           (incf x (x vec))
-           (incf y (y vec))
-           (incf z (z vec)))
+           (cl:incf w (w vec))
+           (cl:incf x (x vec))
+           (cl:incf y (y vec))
+           (cl:incf z (z vec)))
         (q! w x y z))
       (identity)))
 

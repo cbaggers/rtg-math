@@ -387,3 +387,31 @@
   (lerp (lerp a1 a2 ammount)
         (lerp b1 b2 ammount)
         ammount))
+
+;;---------------------------------------------------------------
+
+(defun %incf (vec delta)
+  (case= (cl:length vec)
+    (2 (v2-n:+ vec (or delta #.(v2:make 1f0 1f0))))
+    (3 (v3-n:+ vec (or delta #.(v3:make 1f0 1f0 1f0))))
+    (4 (v4-n:+ vec (or delta #.(v4:make 1f0 1f0 1f0 0f0))))
+    (otherwise (error "only vectors of size 2-4 are valid"))))
+
+(defun %decf (vec delta)
+  (case= (cl:length vec)
+    (2 (v2-n:- vec (or delta #.(v2:make 1f0 1f0))))
+    (3 (v3-n:- vec (or delta #.(v3:make 1f0 1f0 1f0))))
+    (4 (v4-n:- vec (or delta #.(v4:make 1f0 1f0 1f0 0f0))))
+    (otherwise (error "only vectors of size 2-4 are valid"))))
+
+(defmacro incf (place &optional delta)
+  (let ((vec (gensym "PLACE")))
+    `(let ((,vec ,place))
+       (%incf ,vec ,delta))))
+
+(defmacro decf (place &optional delta)
+  (let ((vec (gensym "PLACE")))
+    `(let ((,vec ,place))
+       (%decf ,vec ,delta))))
+
+;;---------------------------------------------------------------

@@ -90,7 +90,7 @@
   (:nicknames :v2)
   (:import-from :rtg-math.base-vectors :x :y :z :w :v!)
   (:import-from :rtg-math.base-maths :inv-sqrt)
-  (:shadow := :+ :- :* :/ :length :abs)
+  (:shadow := :+ :- :* :/ :length :abs :incf :decf)
   (:export :make :copy-vec2
            :0p :unitp
            := :+ :- :* :/ :*s :/s :+s :-s
@@ -102,14 +102,15 @@
            :cross
            :face-foreward
            :lerp :bezier :spline
-           :from-complex))
+           :from-complex
+           :incf :decf))
 
 (uiop:define-package :rtg-math.vector3
     (:use :cl :%rtg-math :rtg-math.types)
   (:nicknames :v3)
   (:import-from :rtg-math.base-vectors :x :y :z :w :v!)
   (:import-from :rtg-math.base-maths :inv-sqrt)
-  (:shadow := :+ :- :* :/ :length :abs)
+  (:shadow := :+ :- :* :/ :length :abs :incf :decf)
   (:export :make :copy-vec3
            :0p :unitp
            := :+ :- :* :/ :*s :/s :+s :-s
@@ -120,14 +121,15 @@
            :normalize
            :cross
            :face-foreward
-           :lerp :bezier :spline))
+           :lerp :bezier :spline
+           :incf :decf))
 
 (uiop:define-package :rtg-math.vector4
     (:use :cl :%rtg-math :rtg-math.types)
   (:nicknames :v4)
   (:import-from :rtg-math.base-vectors :x :y :z :w :v!)
   (:import-from :rtg-math.base-maths :inv-sqrt)
-  (:shadow := :+ :- :* :/ :length :abs)
+  (:shadow := :+ :- :* :/ :length :abs :incf :decf)
   (:export :make :copy-vec4
            :0p :unitp
            := :+ :- :* :/ :*s :/s :+s :-s
@@ -138,13 +140,14 @@
            :normalize
            :cross
            :face-foreward
-           :lerp :bezier :spline))
+           :lerp :bezier :spline
+           :incf :decf))
 
 (uiop:define-package :rtg-math.vectors
     (:use :cl :%rtg-math :rtg-math.types)
   (:nicknames :v)
   (:import-from :rtg-math.base-vectors :x :y :z :w :v!)
-  (:shadow :+ := :/= :1+ :1- :- :* :/ :length)
+  (:shadow :+ := :/= :1+ :1- :- :* :/ :length :incf :decf)
   (:export :0p :unitp
            := :+ :/= :1+ :1- :- :* :/ :+s :-s
            :negate
@@ -156,7 +159,8 @@
            :merge-into-vector
            :face-foreward
            :lerp :bezier :mix
-           :x :y :z :w))
+           :x :y :z :w
+           :incf :decf))
 
 (uiop:define-package :%rtg-math.matrix3.common
     (:use :cl :%rtg-math :rtg-math.types)
@@ -274,7 +278,7 @@
            :look-at :point-at
            :from-direction :to-direction :to-direction-vec4
            :from-axies
-           :from-fixed-angles
+           :from-fixed-angles :from-fixed-angles-v3
            :magnitude :norm := :/=
            :copy :get-axis-angle :normalize :qconjugate :conjugate
            :inverse :+ :- :* :*v :*s

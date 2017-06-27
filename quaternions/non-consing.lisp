@@ -92,9 +92,9 @@
 
 ;;----------------------------------------------------------------
 
-(defn from-fixed-angles ((quat-to-mutate quaternion)
-                         (x-rot single-float) (y-rot single-float)
-                         (z-rot single-float)) quaternion
+(defn from-fixed-angles-unnormalized ((quat-to-mutate quaternion)
+                                      (x-rot single-float) (y-rot single-float)
+                                      (z-rot single-float)) quaternion
   (declare (optimize (speed 3) (safety 1) (debug 1)))
   (let* ((x-rot (/ x-rot 2.0))
          (y-rot (/ y-rot 2.0))
@@ -107,6 +107,13 @@
                     (cl:- (cl:* cos-x sin-y cos-z) (cl:* sin-x cos-y sin-z))
                     (cl:- (cl:* cos-x cos-y sin-z) (cl:* sin-x sin-y cos-x))
                     quat-to-mutate)))
+
+(defn from-fixed-angles ((quat-to-mutate quaternion)
+                         (x-rot single-float) (y-rot single-float)
+                         (z-rot single-float)) quaternion
+  (declare (optimize (speed 3) (safety 1) (debug 1)))
+  (normalize
+   (from-fixed-angles-unnormalized quat-to-mutate x-rot y-rot z-rot)))
 
 ;;----------------------------------------------------------------
 
