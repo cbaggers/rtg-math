@@ -5,6 +5,7 @@
   (:export :case=
            :defn
            :defn-inline
+           :defun+
            :define-defn-declaration))
 
 (uiop:define-package #:rtg-math.types

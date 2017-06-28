@@ -111,7 +111,7 @@
                          (append heads body)
                          body))
                (body (if tails
-                         `((prog1 (progn ,@body) ,@tails))
+                         `((unwind-protect (progn ,@body) ,@tails))
                          body)))
           `(progn
              (declaim
@@ -129,6 +129,21 @@
 (defmacro defn-inline (name typed-args result-types &body body)
   (%defn name typed-args result-types t body))
 
+(defmacro defun+ (name args &body body)
+  (multiple-value-bind (body decls doc) (parse-body body :documentation t)
+    (destructuring-bind (decls heads tails)
+        (process-defn-declares name (reduce #'append (mapcar #'rest decls)))
+      (let* ((body (if heads
+                       (append heads body)
+                       body))
+             (body (if tails
+                       `((unwind-protect (progn ,@body) ,@tails))
+                       body)))
+        `(progn
+           (defun ,name ,args
+             ,@(when doc (list doc))
+             (declare ,@decls)
+             ,@body))))))
 ;;
 ;; Example usage
 ;;
@@ -139,3 +154,8 @@
 ;; (defn-inline foo ((a float)) float
 ;;   (declare (tester :foo 1 :bar 2))
 ;;   (* a a))
+;;
+;; (defun+ foo (bar)
+;;   "wub wub"
+;;   (declare (tester :foo 10 :bar 20))
+;;   (* 10 bar))
