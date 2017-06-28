@@ -14,36 +14,52 @@
 
 
 (defun parse-defn-args (typed-args result-types)
-  (let ((seen-&rest nil)
+  (let ((seen-&key nil)
+        (seen-&rest nil)
         (seen-&optional nil)
         (f-args nil)
         (f-sigs nil)
         (f-decls nil))
-    (loop :for x :in typed-args :do
-       (destructuring-bind (name &optional (type t)) (ensure-list x)
-         (cond
-           ((string= name "&REST")
-            (when seen-&optional
-              (error "can't combine &rest and &optional in same defn"))
-            (setf seen-&rest t)
-            (push name f-args)
-            (push name f-sigs))
-           ((string= name "&OPTIONAL")
-            (when seen-&rest
-              (error "can't combine &rest and &optional in same defn"))
-            (setf seen-&optional t)
-            (push name f-args)
-            (push name f-sigs))
-           ((char= #\& (char (symbol-name name) 0))
-            (error "~a not valid in defn forms" name))
-           (t
-            (let ((decl-type (if seen-&optional
-                                 `(or ,type null)
-                                 type)))
-              (unless seen-&rest
-                (push `(type ,decl-type ,name) f-decls)))
-            (push type f-sigs)
-            (push name f-args)))))
+    (labels ((kwd (x) (intern (symbol-name x) :keyword)))
+      (loop :for x :in typed-args :do
+         (destructuring-bind (name &optional (type t) opt-val) (ensure-list x)
+           (cond
+             ((string= name "&KEY")
+              (when seen-&optional
+                (error "can't combine &rest/&optional/&key in same defn"))
+              (setf seen-&key t)
+              (push name f-args)
+              (push name f-sigs))
+             ((string= name "&REST")
+              (when seen-&optional
+                (error "can't combine &rest/&optional/&key in same defn"))
+              (setf seen-&rest t)
+              (push name f-args)
+              (push name f-sigs))
+             ((string= name "&OPTIONAL")
+              (when seen-&rest
+                (error "can't combine &rest/&optional/&key in same defn"))
+              (setf seen-&optional t)
+              (push name f-args)
+              (push name f-sigs))
+             ((char= #\& (char (symbol-name name) 0))
+              (error "~a not valid in defn forms" name))
+             (t
+              (let ((decl-type (cond
+                                 (seen-&key `(or ,type null))
+                                 (seen-&optional `(or ,type null))
+                                 (t type)))
+                    (f-sig (if seen-&key
+                               `(,(kwd name) ,type)
+                               type))
+                    (f-arg (cond
+                             (seen-&key `(,name ,opt-val))
+                             (seen-&optional `(,name ,opt-val))
+                             (t name))))
+                (unless seen-&rest
+                  (push `(type ,decl-type ,name) f-decls))
+                (push f-sig f-sigs)
+                (push f-arg f-args)))))))
     ;;
     (values (reverse f-args)
             `(function ,(reverse f-sigs) ,result-types)
