@@ -70,19 +70,22 @@
     ftype           inline     special
     ignorable       notinline  type))
 
-(defgeneric handle-defn-declaration (name args)
-  (:method (name args)
+(defgeneric handle-defn-declaration (name %func-name args)
+  (:method (name %func-name args)
     nil))
 
 (defmacro define-defn-declaration (name args &body body)
   (assert (not (member name *standard-declarations*)) (name))
   (with-gensyms (gname d-args)
-    `(defmethod handle-defn-declaration ((,gname (eql ',name)) ,d-args)
-       (declare (ignore ,gname))
-       (destructuring-bind ,args ,d-args
-         ,@body))))
+    (let ((func-name (intern "%FUNC-NAME")))
+      `(defmethod handle-defn-declaration ((,gname (eql ',name)) ,func-name
+                                           ,d-args)
+         (declare (ignore ,gname)
+                  (ignorable ,func-name))
+         (destructuring-bind ,args ,d-args
+           ,@body)))))
 
-(defun process-defn-declares (decls)
+(defun process-defn-declares (func-name decls)
   (let ((data
          (loop :for decl :in decls :collect
             (let ((name (first decl)))
@@ -90,7 +93,7 @@
                   (list decl nil nil)
                   (cons nil (multiple-value-list
                              (funcall #'handle-defn-declaration
-                                      name (rest decl)))))))))
+                                      name func-name (rest decl)))))))))
     (list (remove nil (mapcar #'first data))    ;; cl-decl
           (remove nil (mapcar #'second data))   ;; heads
           (remove nil (mapcar #'third data))))) ;; tails
@@ -100,7 +103,7 @@
       (parse-defn-args typed-args result-types)
     (multiple-value-bind (body decls doc) (parse-body body :documentation t)
       (destructuring-bind (decls heads tails)
-          (process-defn-declares (reduce #'append (mapcar #'rest decls)))
+          (process-defn-declares name (reduce #'append (mapcar #'rest decls)))
         (let* ((decls (if inline-p
                           (cons `(inline ,name) decls)
                           decls))
