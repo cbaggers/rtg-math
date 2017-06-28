@@ -14,34 +14,40 @@
 
 
 (defun parse-defn-args (typed-args result-types)
-  (let ((seen-&rest nil))
-    (labels ((to-pair (x)
-               (destructuring-bind (name &optional (type t)) (ensure-list x)
-                 (cond
-                   ((or (string= name "&OPTIONAL")
-                        (string= name "&AUX"))
-                    (error "~a not valid in defn forms" name))
-                   ((string= name "&REST")
-                    (setf seen-&rest t)
-                    nil)
-                   ((and (not (char= #\& (char (symbol-name name) 0)))
-                         (not seen-&rest))
-                    (list 'type type name)))))
-             ;;
-             (mayb-first (x)
-               (if (listp x)
-                   (first x)
-                   x))
-             ;;
-             (mayb-second (x)
-               (if (listp x)
-                   (second x)
-                   x)))
-      ;;
-      (values (mapcar #'mayb-first typed-args)
-              `(function ,(mapcar #'mayb-second typed-args)
-                         ,result-types)
-              (remove nil (mapcar #'to-pair typed-args))))))
+  (let ((seen-&rest nil)
+        (seen-&optional nil)
+        (f-args nil)
+        (f-sigs nil)
+        (f-decls nil))
+    (loop :for x :in typed-args :do
+       (destructuring-bind (name &optional (type t)) (ensure-list x)
+         (cond
+           ((string= name "&REST")
+            (when seen-&optional
+              (error "can't combine &rest and &optional in same defn"))
+            (setf seen-&rest t)
+            (push name f-args)
+            (push name f-sigs))
+           ((string= name "&OPTIONAL")
+            (when seen-&rest
+              (error "can't combine &rest and &optional in same defn"))
+            (setf seen-&optional t)
+            (push name f-args)
+            (push name f-sigs))
+           ((char= #\& (char (symbol-name name) 0))
+            (error "~a not valid in defn forms" name))
+           (t
+            (let ((decl-type (if seen-&optional
+                                 `(or ,type null)
+                                 type)))
+              (unless seen-&rest
+                (push `(type ,decl-type ,name) f-decls)))
+            (push type f-sigs)
+            (push name f-args)))))
+    ;;
+    (values (reverse f-args)
+            `(function ,(reverse f-sigs) ,result-types)
+            (reverse f-decls))))
 
 (defvar *standard-declarations*
   '(dynamic-extent  ignore     optimize
