@@ -112,7 +112,7 @@
                          (append heads body)
                          body))
                (body (if tails
-                         `((unwind-protect (progn ,@body) ,@tails))
+                         `((multiple-value-prog1 (progn ,@body) ,@tails))
                          body)))
           `(progn
              (declaim
@@ -138,7 +138,7 @@
                        (append heads body)
                        body))
              (body (if tails
-                       `((unwind-protect (progn ,@body) ,@tails))
+                       `((multiple-value-prog1 (progn ,@body) ,@tails))
                        body)))
         `(progn
            (defun ,name ,args
