@@ -99,7 +99,7 @@
           (remove nil (mapcar #'second data))   ;; heads
           (remove nil (mapcar #'third data))))) ;; tails
 
-(defun %defn (name typed-args result-types inline-p body)
+(defun %defn (name typed-args result-types inlinable-p inline-p body)
   (multiple-value-bind (args ftype type-decls)
       (parse-defn-args typed-args result-types)
     (multiple-value-bind (body decls doc) (parse-body body :documentation t)
@@ -122,13 +122,18 @@
                ,@(when doc (list doc))
                (declare ,@type-decls)
                (declare ,@decls)
-               ,@body)))))))
+               ,@body)
+             ,@(when (and inlinable-p (not inline-p)) `((notinline ,name)))
+             ',name))))))
 
 (defmacro defn (name typed-args result-types &body body)
-  (%defn name typed-args result-types nil body))
+  (%defn name typed-args result-types nil nil body))
 
 (defmacro defn-inline (name typed-args result-types &body body)
-  (%defn name typed-args result-types t body))
+  (%defn name typed-args result-types t t body))
+
+(defmacro defn-inlinable (name typed-args result-types &body body)
+  (%defn name typed-args result-types t nil body))
 
 (defmacro defun+ (name args &body body)
   (multiple-value-bind (body decls doc) (parse-body body :documentation t)

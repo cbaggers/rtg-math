@@ -5,6 +5,7 @@
   (:export :case=
            :defn
            :defn-inline
+           :defn-inlinable
            :defun+
            :define-defn-declaration))
 
