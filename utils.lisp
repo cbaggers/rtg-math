@@ -49,9 +49,10 @@
                                  (seen-&key `(or ,type null))
                                  (seen-&optional `(or ,type null))
                                  (t type)))
-                    (f-sig (if seen-&key
-                               `(,(kwd name) ,type)
-                               type))
+                    (f-sig (cond
+                             (seen-&key `(,(kwd name) ,type))
+                             (seen-&optional `(or ,type null))
+                             (t type)))
                     (f-arg (cond
                              (seen-&key `(,name ,opt-val))
                              (seen-&optional `(,name ,opt-val))
