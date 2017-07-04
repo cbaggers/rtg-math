@@ -127,15 +127,18 @@
              ',name))))))
 
 (defmacro defn (name typed-args result-types &body body)
+  "Define a typed function"
   (%defn name typed-args result-types nil nil body))
 
 (defmacro defn-inline (name typed-args result-types &body body)
+  "Define a typed function and request that it be inlined"
   (%defn name typed-args result-types t t body))
 
 (defmacro defn-inlinable (name typed-args result-types &body body)
+  "Define a typed function that can be inlined but by default shouldn't be"
   (%defn name typed-args result-types t nil body))
 
-(defmacro defun+ (name args &body body)
+(defun parse-body+ (name body)
   (multiple-value-bind (body decls doc) (parse-body body :documentation t)
     (destructuring-bind (decls heads tails)
         (process-defn-declares name (reduce #'append (mapcar #'rest decls)))
@@ -145,11 +148,12 @@
              (body (if tails
                        `((multiple-value-prog1 (progn ,@body) ,@tails))
                        body)))
-        `(progn
-           (defun ,name ,args
-             ,@(when doc (list doc))
-             (declare ,@decls)
-             ,@body))))))
+        `(,@(when doc (list doc))
+            (declare ,@decls)
+            ,@body)))))
+
+(defmacro locally+ (name &body body)
+  `(locally ,@(parse-body+ name body)))
 ;;
 ;; Example usage
 ;;
@@ -160,8 +164,3 @@
 ;; (defn-inline foo ((a float)) float
 ;;   (declare (tester :foo 1 :bar 2))
 ;;   (* a a))
-;;
-;; (defun+ foo (bar)
-;;   "wub wub"
-;;   (declare (tester :foo 10 :bar 20))
-;;   (* 10 bar))

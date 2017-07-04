@@ -6,7 +6,9 @@
            :defn
            :defn-inline
            :defn-inlinable
-           :defun+
+           :parse-body+
+           :locally+
+           :defmethod+
            :define-defn-declaration))
 
 (uiop:define-package #:rtg-math.types
