@@ -123,7 +123,8 @@
                (declare ,@type-decls)
                (declare ,@decls)
                ,@body)
-             ,@(when (and inlinable-p (not inline-p)) `((notinline ,name)))
+             ,@(when (and inlinable-p (not inline-p))
+                     `((declaim (notinline ,name))))
              ',name))))))
 
 (defmacro defn (name typed-args result-types &body body)
