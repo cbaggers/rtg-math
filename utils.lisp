@@ -139,10 +139,11 @@
   "Define a typed function that can be inlined but by default shouldn't be"
   (%defn name typed-args result-types t nil body))
 
-(defun parse-body+ (name body)
+(defun parse-body+ (name body &optional extra-decls)
   (multiple-value-bind (body decls doc) (parse-body body :documentation t)
     (destructuring-bind (decls heads tails)
-        (process-defn-declares name (reduce #'append (mapcar #'rest decls)))
+        (process-defn-declares
+         name (append (reduce #'append (mapcar #'rest decls)) extra-decls))
       (let* ((body (if heads
                        (append heads body)
                        body))
