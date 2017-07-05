@@ -73,6 +73,7 @@
 
 (defgeneric handle-defn-declaration (name %func-name args)
   (:method (name %func-name args)
+    (declare (ignore name %func-name args))
     nil))
 
 (defmacro define-defn-declaration (name args &body body)
