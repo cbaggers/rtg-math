@@ -14,7 +14,7 @@
 (uiop:define-package #:rtg-math.types
     (:use #:cl #:glsl-symbols :%rtg-math)
   (:export :quaternion
-           :mat3 :mat4
+           :mat2 :mat3 :mat4
            :vec2 :vec3 :vec4
            :ivec2 :ivec3 :ivec4
            :uvec2 :uvec3 :uvec4
@@ -165,6 +165,42 @@
            :lerp :bezier :mix
            :x :y :z :w
            :incf :decf))
+
+(uiop:define-package :%rtg-math.matrix2.common
+    (:use :cl :%rtg-math :rtg-math.types)
+  (:shadow :identity :trace :+ := :/= :- :* :/)
+  (:import-from :rtg-math.base-vectors :x :y :z :w :v!)
+  (:export :melm))
+
+(uiop:define-package :rtg-math.matrix2.non-consing
+    (:use :cl :%rtg-math :rtg-math.types :%rtg-math.matrix2.common
+         )
+  (:nicknames :m2-n)
+  (:shadow :identity :trace :+ := :/= :- :* :/)
+  (:import-from :rtg-math.base-vectors :x :y :z :w :v!)
+  (:export :set-components :* :set-from-rows :set-from-columns :affine-inverse
+           :transpose :adjoint :set-rotation-from-euler :set-from-scale
+           :set-from-rotation-x :set-from-rotation-y :set-from-rotation-z
+           :set-rotation-from-axis-angle :+ :- :negate :*v
+           :mrow*vec2 :*s))
+
+(uiop:define-package :rtg-math.matrix2
+    (:use :cl :%rtg-math :rtg-math.types :%rtg-math.matrix2.common)
+  (:nicknames :m2)
+  (:shadow :identity :trace :+ := :/= :- :* :/)
+  (:import-from :rtg-math.base-vectors :x :y :z :w :v!)
+  (:export :0p :identityp
+           :make :0! :identity :copy-mat2
+           := :+ :- :* :*s :*v :mrow*vec2 :negate
+           :melm
+           :from-rows :from-columns :get-rows :get-columns :get-row :get-column
+           :transpose :adjoint :determinant :trace
+           :rotation-from-euler :rotation-from-axis-angle
+           :rotation-x :rotation-y :rotation-z
+           :scale
+           :affine-inverse
+           :get-fixed-angles :get-axis-angle
+           :from-direction :point-at :look-at))
 
 (uiop:define-package :%rtg-math.matrix3.common
     (:use :cl :%rtg-math :rtg-math.types)

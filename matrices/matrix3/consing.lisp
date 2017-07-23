@@ -66,7 +66,7 @@
 
 ;;----------------------------------------------------------------
 
-(defn get-row ((mat-a mat3) (row-num (integer 0 3))) vec3
+(defn get-row ((mat-a mat3) (row-num (integer 0 2))) vec3
   "Return the specified row of the matrix a vector3"
   (declare (optimize (speed 3) (safety 1) (debug 1)))
   (v3:make (melm mat-a row-num 0)
@@ -101,7 +101,7 @@
 
 ;;----------------------------------------------------------------
 
-(defn get-column ((mat-a mat3) (col-num (integer 0 3))) vec3
+(defn get-column ((mat-a mat3) (col-num (integer 0 2))) vec3
   "Return the specified column of the matrix a vector3"
   (declare (optimize (speed 3) (safety 1) (debug 1)))
   (v3:make (melm mat-a 0 col-num)

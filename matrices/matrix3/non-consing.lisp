@@ -66,11 +66,11 @@
 (defn * ((accum-mat mat3) &rest (mat3s mat3)) mat3
   (reduce #'%* mat3s :initial-value accum-mat))
 
-(define-compiler-macro * (&whole whole accum-mat &rest mat4s)
+(define-compiler-macro * (&whole whole accum-mat &rest mat3s)
   (assert accum-mat)
-  (case= (cl:length mat4s)
+  (case= (cl:length mat3s)
     (0 accum-mat)
-    (1 `(%* ,accum-mat ,(first mat4s)))
+    (1 `(%* ,accum-mat ,(first mat3s)))
     (otherwise whole)))
 
 ;;----------------------------------------------------------------
