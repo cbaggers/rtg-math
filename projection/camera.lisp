@@ -2,8 +2,34 @@
 
 ;;------------------------------------------------------------
 
+(defn frustum ((left single-float)
+               (right single-float)
+               (bottom single-float)
+               (top single-float)
+               (near single-float)
+               (far single-float))
+    mat4
+  (let ((r-l (- right left))
+        (f-n (- far near))
+        (t-b (- top bottom)))
+    (m4:make (/ (* 2f0 near) r-l)  0f0                   (/ (+ right left) r-l)    0f0
+             0f0                   (/ (* 2f0 near) t-b)  (/ (+ top bottom) t-b)    0f0
+             0f0                   0f0                   (- (/ (+ far near) f-n))  (- (/ (* 2f0 far near) f-n))
+             0f0                   0f0                   -1f0                      0f0)))
+
 ;; https://unspecified.wordpress.com/2012/06/21/calculating-the-gluperspective-matrix-and-other-opengl-matrix-maths/
 ;; https://www.khronos.org/registry/OpenGL-Refpages/gl2.1/xhtml/gluPerspective.xml
+(defn perspective-radian-fov2 ((width single-float) (height single-float)
+                              (near single-float) (far single-float)
+                              (fov single-float))
+    mat4
+  ;; note: is right handed
+  (declare (optimize (speed 3) (safety 1) (debug 1)))
+  (let* ((aspect (/ width height))
+         (fh (* near (tan fov)))
+         (fw (* fh aspect)))
+    (frustum (- fw) fw (- fh) fh near far)))
+
 (defn perspective-radian-fov ((width single-float) (height single-float)
                               (near single-float) (far single-float)
                               (fov single-float))
@@ -40,6 +66,13 @@
     mat4
   (declare (optimize (speed 3) (safety 1) (debug 1)))
   (perspective-radian-fov width height near far (radians fov-degrees)))
+
+(defn perspective2 ((width single-float) (height single-float)
+                   (near single-float) (far single-float)
+                   (fov-degrees single-float))
+    mat4
+  (declare (optimize (speed 3) (safety 1) (debug 1)))
+  (perspective-radian-fov2 width height near far (radians fov-degrees)))
 
 (defn perspective-v2 ((frame-size-v2 vec2)
                       (near single-float) (far single-float)
