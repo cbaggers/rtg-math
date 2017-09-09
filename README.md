@@ -38,6 +38,10 @@ And more for all categories.
 
 ## CHANGELOG
 
+### 2017-09-09
+
+- WARNING: Fix to perspective matrix, will have impact on project using this lib.
+
 ### 2017-04-28
 - all lerp functions are stable, stable-lerp is deprecated & will be removed in a future release
 
