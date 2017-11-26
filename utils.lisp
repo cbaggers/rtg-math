@@ -12,6 +12,14 @@
         `(let ((,g ,form))
            (cond ,@cases))))))
 
+(defmacro ecase= (form &body cases)
+  (let ((gform (gensym "form")))
+    `(let ((,gform ,form))
+       (case= ,gform
+         ,@cases
+         (otherwise (error "~a fell through ecase=. Expected one of:~%~a"
+                           ',form ',(mapcar #'first cases)))))))
+
 
 (defun parse-defn-args (typed-args result-types)
   (let ((seen-&key nil)

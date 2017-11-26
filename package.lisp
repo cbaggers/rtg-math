@@ -3,6 +3,7 @@
 (uiop:define-package #:%rtg-math
     (:use #:cl #:alexandria)
   (:export :case=
+           :ecase=
            :defn
            :defn-inline
            :defn-inlinable
