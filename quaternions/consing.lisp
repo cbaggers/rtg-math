@@ -23,7 +23,7 @@
 (defn 0p ((quat quaternion)) boolean
   (declare (optimize (speed 3) (safety 1) (debug 1)))
   (let ((w (w quat)) (x (x quat)) (y (y quat)) (z (z quat)))
-    (cl:= 0f0 (cl:+ (cl:* w w) (cl:* x x) (cl:* y y) (cl:* z z)))))
+    (cl:= 0f0 w x y z)))
 
 (defn unitp ((quat quaternion)) boolean
   (declare (optimize (speed 3) (safety 1) (debug 1)))

@@ -8,4 +8,5 @@
   :depends-on (:glsl-symbols :varjo :rtg-math)
   :components ((:file "vari/package")
                (:file "vari/functions")
+               (:file "vari/quaternions")
                (:file "vari/swizzle")))
