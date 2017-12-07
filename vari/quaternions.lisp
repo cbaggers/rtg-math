@@ -48,7 +48,10 @@
                          quaternion :pure t)
 
 (v-defun q:0p ((q quaternion))
-  (= 0.0 (q:w q) (q:x q) (q:y q) (q:z q)))
+  (and (= 0.0 (q:w q))
+       (= 0.0 (q:x q))
+       (= 0.0 (q:y q))
+       (= 0.0 (q:z q))))
 
 (v-defun q:unitp ((q quaternion))
   (= 1f0 (+ (* (q:w q) (q:w q))
@@ -58,7 +61,9 @@
 
 (v-defun q:identity-p ((q quaternion))
   (and (= (q:w q) 1.0)
-       (= 0.0 (q:x q) (q:y q) (q:z q))))
+       (= 0.0 (q:x q))
+       (= 0.0 (q:y q))
+       (= 0.0 (q:z q))))
 
 (v-defun q:magnitude ((q quaternion))
   (let ((w (q:w q)) (x (q:x q)) (y (q:y q)) (z (q:z q)))
