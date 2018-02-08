@@ -35,6 +35,8 @@
 (deftype uint8-vec4 ()
   '(simple-array (unsigned-byte 8) (4)))
 
+(deftype mat2 ()
+  '(simple-array single-float (4)))
 (deftype mat3 ()
   '(simple-array single-float (9)))
 (deftype mat4 ()
