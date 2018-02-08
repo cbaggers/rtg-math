@@ -128,6 +128,18 @@
 
 ;;---------------------------------------------------------------
 
+(defn rotate ((vec vec2) (angle single-float)) vec2
+  (declare (optimize (speed 3) (safety 1) (debug 1)))
+  (let ((sa (sin angle))
+        (ca (cos angle))
+        (x (x vec))
+        (y (y vec)))
+    (setf (x vec) (cl:+ (cl:* x ca) (cl:* y sa))
+          (y vec) (cl:+ (cl:* x (cl:- sa)) (cl:* y ca)))
+    vec))
+
+;;---------------------------------------------------------------
+
 (defn normalize ((vector-a vec2)) vec2
   "This normalizes the vector, it makes sure a zero length
    vector won't throw an error."

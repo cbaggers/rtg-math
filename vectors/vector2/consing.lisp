@@ -338,13 +338,21 @@
 (defn angle-from ((vec-from vec2)
                   (vec-to vec2))
     single-float
+  (declare (optimize (speed 3) (safety 1) (debug 1)))
   (atan (cross vec-from vec-to)
         (dot vec-from vec-to)))
 
 (defn angle-between ((vec-a vec2)
                      (vec-b vec2))
     single-float
+  (declare (optimize (speed 3) (safety 1) (debug 1)))
   (cl:abs (angle-from vec-a vec-b)))
+
+;;---------------------------------------------------------------
+
+(defn rotate ((vec vec2) (angle single-float)) vec2
+  (declare (optimize (speed 3) (safety 1) (debug 1)))
+  (v2-n:rotate (copy-vec2 vec) angle))
 
 ;;---------------------------------------------------------------
 
