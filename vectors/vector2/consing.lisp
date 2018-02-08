@@ -328,6 +328,26 @@
 
 ;;---------------------------------------------------------------
 
+(defn from-angle ((angle single-float)) vec2
+  (declare (optimize (speed 3) (safety 1) (debug 1)))
+  (make (sin angle)
+        (cos angle)))
+
+;;---------------------------------------------------------------
+
+(defn angle-from ((vec-from vec2)
+                  (vec-to vec2))
+    single-float
+  (atan (cross vec-from vec-to)
+        (dot vec-from vec-to)))
+
+(defn angle-between ((vec-a vec2)
+                     (vec-b vec2))
+    single-float
+  (cl:abs (angle-from vec-a vec-b)))
+
+;;---------------------------------------------------------------
+
 (defmacro incf (place &optional delta)
   (let ((vec (gensym "PLACE"))
         (val (or delta (make-array 2 :element-type 'single-float

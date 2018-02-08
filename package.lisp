@@ -107,7 +107,8 @@
            :cross
            :face-foreward
            :lerp :bezier :spline
-           :from-complex
+           :from-complex :from-angle
+           :angle-from :angle-between
            :incf :decf))
 
 (uiop:define-package :rtg-math.vector3
