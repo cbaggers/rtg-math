@@ -187,10 +187,10 @@
                       sy
 
                       (cl:+ (cl:* sx sy cz) (cl:* cx sz))
-                      (cl:- (cl:* cx cz) (cl:* sx sy sz))
+                      (cl:+ (cl:- (cl:* sx sx sz)) (cl:* cx cz))
                       (cl:- (cl:* sx cy))
 
-                      (cl:- (cl:* sx sz) (cl:* cx sy cz))
+                      (cl:+ (cl:- (cl:* cx sy cz)) (cl:* sx sz))
                       (cl:+ (cl:* cx sy sz) (cl:* sx cz))
                       (cl:* cx cy)
                       mat-to-mutate))))

@@ -376,6 +376,11 @@
         (rtg-math.base-maths:spline x (mapcar #'y knots))
         (rtg-math.base-maths:spline x (mapcar #'z knots))))
 
+;;----------------------------------------------------------------
+
+(defn rotate ((vec vec3) (rotation vec3)) vec3
+  (v3-n:rotate (copy-vec3 vec) rotation))
+
 ;;---------------------------------------------------------------
 
 (defmacro incf (place &optional delta)
