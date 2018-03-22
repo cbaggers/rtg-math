@@ -43,6 +43,7 @@
 
 
 (defun 1+ (matrix-a matrix-b)
+  (warn "m:1+ is deprecated, please use +")
   (let ((len (cl:length matrix-a)))
     (assert (cl:= len (cl:length matrix-b)))
     (cond
@@ -69,6 +70,7 @@
 
 
 (defun 1- (matrix-a matrix-b)
+  (warn "m:1- is deprecated, please use -")
   (let ((len (cl:length matrix-a)))
     (assert (cl:= len (cl:length matrix-b)))
     (cond

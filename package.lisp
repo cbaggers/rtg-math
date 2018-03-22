@@ -315,7 +315,7 @@
   (:nicknames :q)
   (:shadow :lerp :/= := :+ :- :* :identity :conjugate)
   (:export :w :x :y :z :q! :0! :0p
-           :unitp :identity :identity-p
+           :make :unitp :identity :identity-p
            :from-mat3
            :from-axis-angle
            :look-at :point-at
