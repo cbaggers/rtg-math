@@ -330,8 +330,9 @@
 
 (defn from-angle ((angle single-float)) vec2
   (declare (optimize (speed 3) (safety 1) (debug 1)))
-  (make (sin angle)
-        (cos angle)))
+  (let ((a (cl:- angle)))
+    (make (sin a)
+          (cos a))))
 
 ;;---------------------------------------------------------------
 
