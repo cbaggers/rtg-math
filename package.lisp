@@ -470,10 +470,13 @@
            :closest-point))
 
 (uiop:define-package #:rtg-math
-    (:use #:cl :rtg-math.base-maths #:rtg-math.base-vectors #:glsl-symbols)
-  (:import-from :rtg-math.base-matrices :m!)
+    (:use #:cl :rtg-math.base-maths
+          #:rtg-math.base-vectors
+          #:glsl-symbols
+          #:rtg-math.base-matrices)
   (:import-from :rtg-math.quaternions :q!)
   (:import-from :rtg-math.vectors :s~)
   (:reexport :rtg-math.base-maths)
   (:reexport :rtg-math.base-vectors)
-  (:export :m! :q! :s~))
+  (:reexport :rtg-math.base-matrices)
+  (:export :q! :s~))
