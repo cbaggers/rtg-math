@@ -16,6 +16,20 @@
           (aref q 3) z)
     q))
 
+(defn make ((w single-float) (x single-float) (y single-float) (z single-float))
+    quaternion
+  "This takes 4 floats and give back a vector4, this is just an
+   array but it specifies the array type and populates it.
+   For speed reasons it will not accept integers so make sure
+   you hand it floats."
+  (declare (optimize (speed 3) (safety 1) (debug 1)))
+  (let ((q (make-array 4 :element-type `single-float)))
+    (setf (aref q 0) w
+          (aref q 1) x
+          (aref q 2) y
+          (aref q 3) z)
+    q))
+
 (defn-inline 0! () quaternion
   (declare (optimize (speed 3) (safety 1) (debug 1)))
   (make-array 4 :element-type 'single-float :initial-element 0f0))
@@ -75,12 +89,12 @@
 (defn to-direction ((quat quaternion)) vec3
   (declare (optimize (speed 3) (safety 1) (debug 1)))
   (let ((v (v3:make 0f0 0f0 -1f0)))
-    (m3:*v (to-mat3 quat) v)))
+    (rotate v quat)))
 
 (defn to-direction-vec4 ((quat quaternion)) vec4
   (declare (optimize (speed 3) (safety 1) (debug 1)))
   (let ((v (v4:make 0f0 0f0 -1f0 0f0)))
-    (m4:*v (to-mat4 quat) v)))
+    (rotate-v4 v quat)))
 
 (defn from-fixed-angles ((x-rot single-float) (y-rot single-float)
                          (z-rot single-float)) quaternion
@@ -320,6 +334,31 @@
                          (cl:- (cl:* (x quat) (aref vec3 1))
                                (cl:* (y quat) (aref vec3 0))))))))
 
+(defn rotate-v4 ((vec4 vec4) (quat quaternion)) vec4
+  "Rotate vec4 by quaternion. Assumes quaternion is normalized."
+  (declare (optimize (speed 3) (safety 1) (debug 1)))
+  (let* ((v-mult (cl:* 2.0 (cl:+ (cl:* (x quat) (aref vec4 0))
+                                 (cl:* (y quat) (aref vec4 1))
+                                 (cl:* (z quat) (aref vec4 2)))))
+         (cross-mult (cl:* 2.0 (w quat)))
+         (p-mult (cl:- (cl:* cross-mult (w quat)) 1.0)))
+    (v4:make (cl:+ (cl:* p-mult (aref vec4 0))
+                   (cl:* v-mult (x quat))
+                   (cl:* cross-mult
+                         (cl:- (cl:* (y quat) (aref vec4 2))
+                               (cl:* (z quat) (aref vec4 1)))))
+             (cl:+ (cl:* p-mult (aref vec4 1))
+                   (cl:* v-mult (y quat))
+                   (cl:* cross-mult
+                         (cl:- (cl:* (z quat) (aref vec4 0))
+                               (cl:* (x quat) (aref vec4 2)))))
+             (cl:+ (cl:* p-mult (aref vec4 2))
+                   (cl:* v-mult (z quat))
+                   (cl:* cross-mult
+                         (cl:- (cl:* (x quat) (aref vec4 1))
+                               (cl:* (y quat) (aref vec4 0)))))
+             (aref vec4 3))))
+
 ;;----------------------------------------------------------------
 
 (defn lerp ((start-quat quaternion) (end-quat quaternion) (pos single-float))
@@ -341,7 +380,7 @@
    will always take the shortest path."
   ;;(declare (optimize (speed 3) (safety 1) (debug 1)))
   ;; get cos of 'angle' between quaternions
-  (destructuring-bind (start-mult end-mult)
+  (multiple-value-bind (start-mult end-mult)
       (let ((cos-angle (dot start-quat end-quat)))
         ;; if angle between quaternions is less than 90 degrees
         (if (> cos-angle 0f0)
@@ -349,23 +388,23 @@
             (if (> (cl:- 1.0 cos-angle) 0f0)
                 (let* ((angle (acos cos-angle))
                        (recip-sin-angle (/ 1.0 (sin angle))))
-                  (list (cl:* (sin (cl:* (cl:- 1.0 pos) angle))
+                  (values (cl:* (sin (cl:* (cl:- 1.0 pos) angle))
                               recip-sin-angle)
-                        (cl:* (sin (cl:* pos angle))
-                              recip-sin-angle)))
+                          (cl:* (sin (cl:* pos angle))
+                                recip-sin-angle)))
                 ;; angle is close to zero
-                (list (cl:- 1.0 pos) pos))
+                (values (cl:- 1.0 pos) pos))
             ;; we take the shorter route
             ;; if angle is less that 180 degrees
             (if (> (cl:+ 1.0 cos-angle) 0f0)
                 (let* ((angle (acos (cl:- cos-angle)))
                        (recip-sin-angle (/ 1.0 (sin angle))))
-                  (list (cl:* (sin (cl:* (cl:- pos 1.0) angle))
+                  (values (cl:* (sin (cl:* (cl:- pos 1.0) angle))
                               recip-sin-angle)
                         (cl:* (sin (cl:* pos angle))
                               recip-sin-angle)))
                 ;; angle is close to 180 degrees
-                (list (cl:- pos 1.0) pos))))
+                (values (cl:- pos 1.0) pos))))
     (+ (*s start-quat start-mult)
        (*s end-quat end-mult))))
 
