@@ -138,6 +138,31 @@
 
 ;;---------------------------------------------------------------
 
+(defn rotate ((vec vec3) (rotation vec3)) vec3
+  ;; this was based on rotation-from-euler, so this rotates clockwise
+  ;; which is ass
+  (let* ((x (x vec))
+         (y (y vec))
+         (z (z vec))
+         (rx (x rotation))
+         (ry (y rotation))
+         (rz (z rotation))
+         (sx (sin rx)) (cx (cos rx))
+         (sy (sin ry)) (cy (cos ry))
+         (sz (sin rz)) (cz (cos rz)))
+    (v3-n:set-components (cl:+ (cl:* x (cl:* cy cz))
+                               (cl:* y (cl:- (cl:* cy sz)))
+                               (cl:* z sy))
+                         (cl:+ (cl:* x (cl:+ (cl:* sx sy cz) (cl:* cx sz)))
+                               (cl:* y (cl:- (cl:* cx cz) (cl:* sx sy sz)))
+                               (cl:* z (cl:- (cl:* sx cy))))
+                         (cl:+ (cl:* x (cl:- (cl:* sx sz) (cl:* cx sy cz)))
+                               (cl:* y (cl:+ (cl:* cx sy sz) (cl:* sx cz)))
+                               (cl:* z (cl:* cx cy)))
+                         vec)))
+
+;;---------------------------------------------------------------
+
 (defn normalize ((vector-a vec3)) vec3
   "This normalizes the vector, it makes sure a zero length
    vector won't throw an error."
