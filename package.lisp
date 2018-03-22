@@ -6,11 +6,7 @@
            :ecase=
            :defn
            :defn-inline
-           :defn-inlinable
-           :parse-body+
-           :locally+
-           :defmethod+
-           :define-defn-declaration))
+           :defn-inlinable))
 
 (uiop:define-package #:rtg-math.types
     (:use #:cl #:glsl-symbols :%rtg-math)
