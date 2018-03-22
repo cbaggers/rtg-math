@@ -72,7 +72,8 @@
   (:import-from :rtg-math.base-vectors :x :y :z :w :v!)
   (:import-from :rtg-math.base-maths :inv-sqrt)
   (:shadow := :+ :- :* :/ :length :abs)
-  (:export :set-components :+s :-s :+ :- :* :*s :/s :/ :negate :normalize))
+  (:export :set-components :+s :-s :+ :- :* :*s :/s :/ :negate :normalize
+           :rotate))
 
 (uiop:define-package :rtg-math.vector3.non-consing
     (:use :cl :%rtg-math :rtg-math.types)
@@ -109,6 +110,7 @@
            :lerp :bezier :spline
            :from-complex :from-angle
            :angle-from :angle-between
+           :rotate
            :incf :decf))
 
 (uiop:define-package :rtg-math.vector3
