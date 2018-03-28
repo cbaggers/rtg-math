@@ -38,6 +38,10 @@ And more for all categories.
 
 ## CHANGELOG
 
+### 2018-03-28
+
+- Ported all the API (except regions for now) to Vari so rtg-math works on the GPU.
+
 ### 2017-09-09
 
 - WARNING: Fix to perspective matrix, will have impact on project using this lib.
