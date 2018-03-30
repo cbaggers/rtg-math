@@ -2,21 +2,21 @@
 
 ;;----------------------------------------------------------------
 
-(defn-inline set-components ((a single-float) (b single-float) (c single-float)
-                             (d single-float) (e single-float) (f single-float)
-                             (g single-float) (h single-float) (i single-float)
+(defn-inline set-components ((c00 single-float) (c01 single-float) (c02 single-float)
+                             (c10 single-float) (c11 single-float) (c12 single-float)
+                             (c20 single-float) (c21 single-float) (c22 single-float)
                              (mat3-to-mutate mat3)) mat3
   "Make a 3x3 matrix. Data must be provided in row major order"
   (declare (optimize (speed 3) (safety 1) (debug 1)))
-  (setf (melm mat3-to-mutate 0 0) a)
-  (setf (melm mat3-to-mutate 0 1) b)
-  (setf (melm mat3-to-mutate 0 2) c)
-  (setf (melm mat3-to-mutate 1 0) d)
-  (setf (melm mat3-to-mutate 1 1) e)
-  (setf (melm mat3-to-mutate 1 2) f)
-  (setf (melm mat3-to-mutate 2 0) g)
-  (setf (melm mat3-to-mutate 2 1) h)
-  (setf (melm mat3-to-mutate 2 2) i)
+  (setf (melm mat3-to-mutate 0 0) c00)
+  (setf (melm mat3-to-mutate 0 1) c01)
+  (setf (melm mat3-to-mutate 0 2) c02)
+  (setf (melm mat3-to-mutate 1 0) c10)
+  (setf (melm mat3-to-mutate 1 1) c11)
+  (setf (melm mat3-to-mutate 1 2) c12)
+  (setf (melm mat3-to-mutate 2 0) c20)
+  (setf (melm mat3-to-mutate 2 1) c21)
+  (setf (melm mat3-to-mutate 2 2) c22)
   mat3-to-mutate)
 
 ;;----------------------------------------------------------------

@@ -2,15 +2,15 @@
 
 ;;----------------------------------------------------------------
 
-(defn-inline set-components ((a single-float) (b single-float)
-                             (c single-float) (d single-float)
+(defn-inline set-components ((c00 single-float) (c01 single-float)
+                             (c10 single-float) (c11 single-float)
                              (mat2-to-mutate mat2)) mat2
   "Make a 2x2 matrix. Data must be provided in row major order"
   (declare (optimize (speed 3) (safety 1) (debug 1)))
-  (setf (melm mat2-to-mutate 0 0) a)
-  (setf (melm mat2-to-mutate 0 1) b)
-  (setf (melm mat2-to-mutate 1 0) c)
-  (setf (melm mat2-to-mutate 1 1) d)
+  (setf (melm mat2-to-mutate 0 0) c00)
+  (setf (melm mat2-to-mutate 0 1) c01)
+  (setf (melm mat2-to-mutate 1 0) c10)
+  (setf (melm mat2-to-mutate 1 1) c11)
   mat2-to-mutate)
 
 ;;----------------------------------------------------------------
