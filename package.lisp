@@ -351,6 +351,17 @@
            :blinn-newell-env-map
            :spherical-env-map))
 
+(uiop:define-package :rtg-math.projection.non-consing
+    (:use :cl :%rtg-math :rtg-math.types :rtg-math.base-maths
+          :rtg-math.base-vectors)
+  (:shadow :lerp)
+  (:export :perspective-v2-radian-fov
+           :perspective-radian-fov
+           :perspective-v2
+           :perspective
+           :orthographic-v2
+           :orthographic))
+
 (uiop:define-package :rtg-math.region.line3
     (:use :cl :%rtg-math :rtg-math.types :rtg-math.base-maths
           :rtg-math.base-vectors)
