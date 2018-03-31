@@ -128,7 +128,7 @@
 ;;----------------------------------------------------------------
 
 (defn %+ ((accum-quat quaternion) (to-add-quat quaternion)) quaternion
-  "Add two quattors and return a new quattor containing the result"
+  "Add two quaternions and return a new quattor containing the result"
   (declare (optimize (speed 3) (safety 0) (debug 0)))
   (cl:incf (aref accum-quat 0) (aref to-add-quat 0))
   (cl:incf (aref accum-quat 1) (aref to-add-quat 1))
@@ -137,7 +137,7 @@
   accum-quat)
 
 (defn + ((accum-quat quaternion) &rest (quaternions quaternion)) quaternion
-  "Add two quattors and return a new quattor containing the result"
+  "Add two quaternions and return a new quattor containing the result"
   (declare (optimize (speed 3) (safety 1) (debug 1)))
   (loop :for quat :in quaternions :do (%+ accum-quat quat))
   accum-quat)
@@ -152,7 +152,7 @@
 ;;---------------------------------------------------------------
 
 (defn %- ((accum-quat quaternion) (to-add-quat quaternion)) quaternion
-  "Add two quattors and return a new quattor containing the result"
+  "Add two quaternions and return a new quattor containing the result"
   (declare (optimize (speed 3) (safety 1) (debug 1)))
   (cl:decf (aref accum-quat 0) (aref to-add-quat 0))
   (cl:decf (aref accum-quat 1) (aref to-add-quat 1))
@@ -161,7 +161,7 @@
   accum-quat)
 
 (defn - ((accum-quat quaternion) &rest (quaternions quaternion)) quaternion
-  "Add two quattors and return a new quattor containing the result"
+  "Add two quaternions and return a new quattor containing the result"
   (declare (optimize (speed 3) (safety 1) (debug 1)))
   (loop :for quat :in quaternions :do (%- accum-quat quat))
   accum-quat)
