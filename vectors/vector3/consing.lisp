@@ -302,15 +302,7 @@
 (defn cross ((vec-a vec3) (vec-b vec3)) vec3
   "Calculates the cross-product of 2 vectors, i.e. the vector
    that lies perpendicular to them both. The resultign vector
-   will <b>NOT</b> be normalized, to maximise efficiency
-   The returned vector will be on the side from which the arc
-   from u to v is anticlockwise.
-   This is because CEPL uses a right-handed coordinate system.
-   Another note on the cross product is that if vec-a and
-   vec-b are normalized the length of the resulting vector
-   will be sin(a) where a is the angle between the two vectors.
-   The fact that we don't normalize may be useful in our
-   quaternion functions later on."
+   will not be normalized."
   (declare (optimize (speed 3) (safety 1) (debug 1)))
   (make
    (cl:- (cl:* (y vec-a) (z vec-b)) (cl:* (z vec-a) (y vec-b)))

@@ -560,7 +560,6 @@
   (m4-n:*v mat-a (v4:copy-vec4 vec4)))
 
 (defn *v3 ((mat-a mat4) (vec3 vec3)) vec3
-  "Returns the transform of a matrix"
   (declare (optimize (speed 3) (safety 1) (debug 1)))
   (m4-n:*v3 mat-a (v3:copy-vec3 vec3)))
 

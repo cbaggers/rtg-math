@@ -96,12 +96,29 @@
 
 (defun elt (matrix row col)
   (declare (simple-array matrix))
-  (let ((len (if (cl:= (cl:length matrix) 16) 4 3)))
-    (aref matrix (cl:+ row (cl:* col len)))))
+  (warn "DEPRECATED: Please use m:melm")
+  (let ((len (cl:length matrix)))
+    (case len
+      (4 (m2:melm matrix row col))
+      (9 (m3:melm matrix row col))
+      (16 (m4:melm matrix row col)))))
 
 (defun elm (matrix row col)
-  (let ((len (if (cl:= (cl:length matrix) 16) 4 3)))
-    (aref matrix (cl:+ row (cl:* col len)))))
+  (declare (simple-array matrix))
+  (warn "DEPRECATED: Please use m:melm")
+  (let ((len (cl:length matrix)))
+    (case len
+      (4 (m2:melm matrix row col))
+      (9 (m3:melm matrix row col))
+      (16 (m4:melm matrix row col)))))
+
+(defun melm (matrix row col)
+  (declare (simple-array matrix))
+  (let ((len (cl:length matrix)))
+    (case len
+      (4 (m2:melm matrix row col))
+      (9 (m3:melm matrix row col))
+      (16 (m4:melm matrix row col)))))
 
 ;;----------------------------------------------------------------
 

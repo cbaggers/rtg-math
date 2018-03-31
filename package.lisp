@@ -195,6 +195,7 @@
   (:shadow :identity :trace :+ := :/= :- :* :/)
   (:import-from :rtg-math.base-vectors :x :y :z :w :v!)
   (:export :0! :0p
+           :melm
            :make :copy-mat2
            :identity :identityp
            :from-rows :from-columns

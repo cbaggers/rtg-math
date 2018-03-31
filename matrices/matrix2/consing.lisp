@@ -42,7 +42,7 @@
 ;;----------------------------------------------------------------
 
 (defn from-rows ((row-1 vec2) (row-2 vec2)) mat2
-  "Make a 2x2 matrix using the data in the 3 vector3s provided
+  "Make a 2x2 matrix using the data in the 2 vector2s provided
    to populate the rows"
   (declare (optimize (speed 3) (safety 1) (debug 1)))
   (make (x row-1) (y row-1)
@@ -51,7 +51,7 @@
 ;;----------------------------------------------------------------
 
 (defn get-rows ((mat-a mat2)) list
-  "Return the rows of the matrix a 3 vector3s"
+  "Return the rows of the matrix a 2 vector2s"
   (declare (optimize (speed 3) (safety 1) (debug 1)))
   (list (v2:make (melm mat-a 0 0)
                  (melm mat-a 0 1))
@@ -61,7 +61,7 @@
 ;;----------------------------------------------------------------
 
 (defn get-row ((mat-a mat2) (row-num (integer 0 1))) vec2
-  "Return the specified row of the matrix a vector3"
+  "Return the specified row of the matrix a vector2"
   (declare (optimize (speed 3) (safety 1) (debug 1)))
   (v2:make (melm mat-a row-num 0)
            (melm mat-a row-num 1)))
@@ -69,7 +69,7 @@
 ;;----------------------------------------------------------------
 
 (defn from-columns ((col-1 vec2) (col-2 vec2)) mat2
-  "Make a 2x2 matrix using the data in the 3 vector3s provided
+  "Make a 2x2 matrix using the data in the 2 vector2s provided
    to populate the columns"
   (declare (optimize (speed 3) (safety 1) (debug 1)))
   (make (x col-1) (x col-2)
@@ -78,7 +78,7 @@
 ;;----------------------------------------------------------------
 
 (defn get-columns ((mat-a mat2)) list
-  "Return the columns of the matrix as 3 vector3s"
+  "Return the columns of the matrix as 2 vector2s"
   (declare (optimize (speed 3) (safety 1) (debug 1)))
   (list (v! (melm mat-a 0 0)
             (melm mat-a 1 0))
@@ -88,7 +88,7 @@
 ;;----------------------------------------------------------------
 
 (defn get-column ((mat-a mat2) (col-num (integer 0 1))) vec2
-  "Return the specified column of the matrix a vector3"
+  "Return the specified column of the matrix a vector2"
   (declare (optimize (speed 3) (safety 1) (debug 1)))
   (v2:make (melm mat-a 0 col-num)
            (melm mat-a 1 col-num)))
@@ -198,8 +198,8 @@
 ;;----------------------------------------------------------------
 
 (defn *v ((mat-a mat2) (vec-a vec2)) vec2
-  "Multiplies the vector3 by the matrix and returns the result
-   as a new vector3"
+  "Multiplies the vector2 by the matrix and returns the result
+   as a new vector2"
   (declare (optimize (speed 3) (safety 1) (debug 1)))
   (m2-n:*v mat-a (v2:copy-vec2 vec-a)))
 

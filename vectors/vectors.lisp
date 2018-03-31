@@ -8,7 +8,7 @@
              (len (cl:length name))
              (arr (gensym "arr")))
         (if (or (> len 4) (< len 2))
-            (error "Vectors: swizzle: Cepl vectors cannot have a length less that 2 or greater than 4")
+            (error "Vectors: swizzle: Rtg-Math vectors cannot have a length less that 2 or greater than 4")
             `(cl:let ((,arr ,vec))
                (cl:make-array
                 ,len :element-type 'single-float :initial-contents
@@ -22,7 +22,7 @@
          (len (cl:length name))
          (result (cl:make-array (cl:length name) :element-type 'single-float)))
     (if (or (> len 4) (< len 2))
-        (error "Vectors: swizzle: Cepl vectors cannot have a length less that 2 or greater than 4")
+        (error "Vectors: swizzle: Rtg-Math vectors cannot have a length less that 2 or greater than 4")
         (loop :for char :across name :for i :from 0 :do
            (setf (aref result i)
                  (aref vec (or (position char "XYZW")
@@ -33,7 +33,7 @@
   (let* ((name (cl:symbol-name pattern))
          (len (cl:length name)))
     (if (or (> len 4) (< len 2))
-        (error "Vectors: swizzle: Cepl vectors cannot have a length less that 2 or greater than 4")
+        (error "Vectors: swizzle: rtg-math vectors cannot have a length less that 2 or greater than 4")
         (loop :for char :across name :for i :from 0 :do
            (setf (aref vec (position char "XYZW"))
                  (aref value i))))
@@ -49,7 +49,7 @@
                (val (gensym "val"))
                (dst (gensym "vec")))
           (if (or (> len 4) (< len 2))
-              (error "Vectors: swizzle: Cepl vectors cannot have a length less that 2 or greater than 4")
+              (error "Vectors: swizzle: rtg-math vectors cannot have a length less that 2 or greater than 4")
               `(let ((,dst ,vec)
                      (,val ,value))
                  ,@(loop :for char :across name :for i :from 0

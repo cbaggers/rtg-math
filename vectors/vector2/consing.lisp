@@ -308,7 +308,7 @@
 ;;----------------------------------------------------------------
 
 (defn bezier ((a1 vec2) (a2 vec2)
-               (b1 vec2) (b2 vec2) (ammount single-float)) vec2
+              (b1 vec2) (b2 vec2) (ammount single-float)) vec2
   (declare (optimize (speed 3) (safety 1) (debug 1)))
   (lerp (lerp a1 a2 ammount)
         (lerp b1 b2 ammount)
