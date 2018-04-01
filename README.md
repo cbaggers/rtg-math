@@ -2,6 +2,8 @@
 
 This system provides a selection of the math routines most commonly needed for making realtime graphics in lisp.
 
+## Feature Shortlist
+
 The library provides:
 
 - 2, 3 & 4 component vectors (vec2, vec3, vec4), including support for:
