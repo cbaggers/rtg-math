@@ -95,10 +95,6 @@ Negates the components of the `mat2`")
       "
 Multiplies the `vec2` by the `mat2` and returns the result
 as a new `vec2`")
-  (DEFUN %*
-      "
-Multiplies 2 matrices and returns the result as a new
-`mat2`")
   (DEFUN *S
       "
 Multiplies the components of the `mat2` by the scalar

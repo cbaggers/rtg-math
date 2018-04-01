@@ -21,37 +21,37 @@ whos rotation angle comes from the single-float provided.
       "
 Destructively updates of the components of the given `mat2` to the new
 `single-float`s provided.
-"))
+")
 
-(DEFUN SET-FROM-ROWS
-    "
+  (DEFUN SET-FROM-ROWS
+      "
 Destructively updates of the components of the given `mat2` using
 the 2 `vec2`s provided to populate the rows")
-(DEFUN SET-FROM-COLUMNS
-    "
+  (DEFUN SET-FROM-COLUMNS
+      "
 Destructively updates of the components of the given `mat2` using
 the 2 `vec2`s provided to populate the columns")
-(DEFUN TRANSPOSE
-    "
+  (DEFUN TRANSPOSE
+      "
 Mutates the given `mat2` to be it's own transpose")
-(DEFUN ADJOINT
-    "
+  (DEFUN ADJOINT
+      "
 Mutates the given `mat2` to be it's own adjoint")
-(DEFUN SET-FROM-SCALE
-    "
+  (DEFUN SET-FROM-SCALE
+      "
 Mutates the given `mat2` to be a which will scale by the amounts specified")
-(DEFUN +
-    "
+  (DEFUN +
+      "
 Add the second `mat2` component wise to the first and return
 the first")
-(DEFUN -
-    "
+  (DEFUN -
+      "
 Subtracts the second `mat2` component wise from the first and return
 the first")
-(DEFUN NEGATE
-    "
+  (DEFUN NEGATE
+      "
 Negates the components of the `mat2`")
-(DEFUN *V
-    "
+  (DEFUN *V
+      "
 Destructively multiplies the `vec3` by the `mat2` and returning the
-mutated `vec3`")
+mutated `vec3`"))

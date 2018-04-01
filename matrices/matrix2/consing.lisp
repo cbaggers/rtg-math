@@ -1,4 +1,4 @@
- (in-package :rtg-math.matrix2)
+(in-package :rtg-math.matrix2)
 
 ;; All matrices are stored in column-major format, but when you
 ;; write them (like in m!) then you write them in row-major format.
