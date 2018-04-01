@@ -38,7 +38,8 @@ Mutates the given `mat3` to be it's own transpose")
 Mutates the given `mat3` to be it's own adjoint")
   (DEFUN SET-FROM-SCALE
       "
-Mutates the given `mat3` to be a which will scale by the amounts specified")
+Mutates the given `mat3` to be a matrix which will scale by the amounts
+specified")
   (DEFUN +
       "
 Add the second `mat3` component wise to the first and return
@@ -76,4 +77,6 @@ specified amount")
       "
 Destructively updates of the components of the given `mat3` making
 it a matrix which will rotate a point about the axis specified by
-the angle provided"))
+the angle provided")
+  (DEFUN *S "Multiplies the components of the `mat4` by the scalar
+   provided"))
