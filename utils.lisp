@@ -87,8 +87,9 @@
                         (cons `(inline ,name) decls)
                         decls)))
         `(progn
-           (setf (gethash ',name *signatures*)
-                 '(,typed-args ,result-types))
+           ,@(when (find-package :staple)
+               `((setf (gethash ',name *signatures*)
+                        '(,typed-args ,result-types))))
            (declaim
             ,@(when inline-p `((inline ,name)))
             (ftype ,ftype ,name))

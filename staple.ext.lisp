@@ -1,20 +1,3 @@
-(defun gen-docs ()
-  (let* ((things '(staple:symb-function
-                   staple:symb-accessor))
-         (current (loop :for n :in things :collect (staple:converter n)))
-         (ignores (lambda (x y) (declare (ignore x y)))))
-    (loop
-       :for n :in things
-       :for c :in current
-       :do (when c (setf (staple:converter n) ignores)))
-    (unwind-protect
-         (staple:generate :rtg-math)
-      (loop
-         :for n :in things
-         :for c :in current
-         :do (when c (setf (staple:converter n) c))))))
-
-
 ;;------------------------------------------------------------
 
 (defvar *documented-packages*
