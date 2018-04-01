@@ -130,4 +130,42 @@ Returns a new `mat4` which represents the same rotation as the given
   (defun unitp
       "
 Returns T if this is a unit quaternion.
-"))
+")
+  (DEFUN Q!
+      "
+Make a `quaternion` from 4 `single-float`s")
+  (DEFUN MAKE
+      "
+Make a `quaternion` from 4 `single-float`s")
+  (DEFUN GET-AXIS-ANGLE
+      "
+Gets one possible axis-angle pair that will generate this `quaternion`
+
+Assumes that this is a normalized quaternion. It is critical that this
+is true as otherwise you will at best get a runtime error, and most likely a
+silently incorrect result.")
+  (defun -
+      "
+Takes any number of `quaternion` and performs component-wise subtraction on
+them returning a new `quaternion`")
+  (defun *S
+      "
+Component-wise multiplication of the `quaternion` by the scalar")
+  (DEFUN ROTATE
+      "
+Rotates the given `vec3` using the `quaternion`.
+
+Assumes the `quaternion` is normalized.")
+  (DEFUN ROTATE-V4
+      "
+Rotates the given `vec4` by the `quaternion`.
+
+Assumes the `quaternion` is normalized.")
+  (DEFUN LERP
+      "
+Linearaly interpolate between two quaternions. Note that this
+will always take the shortest path.")
+  (DEFUN SLERP
+      "
+Spherically interpolate between two quaternions. Note that this
+will always take the shortest path."))
