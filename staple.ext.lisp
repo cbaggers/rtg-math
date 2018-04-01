@@ -31,7 +31,8 @@
                     :rtg-math.region.axis-aligned-box.non-consing
                     :rtg-math.region.axis-aligned-box
                     :rtg-math.region
-                    :rtg-math)
+                    :rtg-math
+                    :rtg-math.types)
         :out (asdf:system-relative-pathname
               :rtg-math "docs/rtg-math-reference.html")
         :if-exists :supersede))
