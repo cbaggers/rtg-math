@@ -68,4 +68,6 @@
                (:file "projection/orthographic/docs-non-consing")
                (:file "projection/orthographic/docs-consing")
                (:file "projection/perspective/docs-non-consing")
-               (:file "projection/perspective/docs-consing")))
+               (:file "projection/perspective/docs-consing")
+               (:file "types-docs")
+               (:file "docs")))
