@@ -86,8 +86,9 @@
              (decls (if inline-p
                         (cons `(inline ,name) decls)
                         decls)))
-        (setf (gethash name *signatures*) (list typed-args result-types))
         `(progn
+           (setf (gethash ',name *signatures*)
+                 '(,typed-args ,result-types))
            (declaim
             ,@(when inline-p `((inline ,name)))
             (ftype ,ftype ,name))
