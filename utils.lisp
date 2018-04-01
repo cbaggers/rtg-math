@@ -1,5 +1,8 @@
 (in-package #:%rtg-math)
 
+(defvar *signatures*
+  (make-hash-table :test #'eq))
+
 (defmacro case= (form &body cases)
   (let ((g (gensym "val")))
     (labels ((wrap-case (c) `((= ,g ,(first c)) ,@(rest c))))
@@ -83,6 +86,7 @@
              (decls (if inline-p
                         (cons `(inline ,name) decls)
                         decls)))
+        (setf (gethash name *signatures*) (list typed-args result-types))
         `(progn
            (declaim
             ,@(when inline-p `((inline ,name)))
