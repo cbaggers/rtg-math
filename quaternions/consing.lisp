@@ -4,10 +4,6 @@
 
 (defn q! ((w single-float) (x single-float) (y single-float) (z single-float))
     quaternion
-  "This takes 4 floats and give back a vector4, this is just an
-   array but it specifies the array type and populates it.
-   For speed reasons it will not accept integers so make sure
-   you hand it floats."
   (declare (optimize (speed 3) (safety 1) (debug 1)))
   (let ((q (make-array 4 :element-type `single-float)))
     (setf (aref q 0) w
@@ -18,10 +14,6 @@
 
 (defn make ((w single-float) (x single-float) (y single-float) (z single-float))
     quaternion
-  "This takes 4 floats and give back a vector4, this is just an
-   array but it specifies the array type and populates it.
-   For speed reasons it will not accept integers so make sure
-   you hand it floats."
   (declare (optimize (speed 3) (safety 1) (debug 1)))
   (let ((q (make-array 4 :element-type `single-float)))
     (setf (aref q 0) w
@@ -134,12 +126,6 @@
   (q! (w quat) (x quat) (y quat) (z quat)))
 
 (defn get-axis-angle ((quat quaternion)) list
-  "Gets one possible axis-angle pair that will generate this
-   quaternion
-
-   Assumes that this is a normalized quaternion. It is critical that this
-   is true as otherwise you will at best get a runtime error, and most likely a
-   silently incorrect result."
   (declare (optimize (speed 3) (safety 1) (debug 1)))
   (let ((w (w quat)))
     (declare (type (single-float -1f0 1f0) w))
@@ -168,7 +154,6 @@
 
 (defn qconjugate ((quat quaternion)) quaternion
   (declare (optimize (speed 3) (safety 1) (debug 1)))
-  (warn "q:qconjugate is deprecated, please switch to q:conjugate")
   (q! (w quat) (cl:- (x quat)) (cl:- (y quat)) (cl:- (z quat))))
 
 (defn conjugate ((quat quaternion)) quaternion
@@ -189,7 +174,6 @@
 ;;----------------------------------------------------------------
 
 (defn %+ ((quat-a quaternion) (quat-b quaternion)) quaternion
-  "Add two quats and return a new quat containing the result"
   (declare (optimize (speed 3) (safety 1) (debug 1)))
   (q! (cl:+ (w quat-a) (w quat-b))
       (cl:+ (x quat-a) (x quat-b))
@@ -218,7 +202,6 @@
 ;;----------------------------------------------------------------
 
 (defn %- ((quat-a quaternion) (quat-b quaternion)) quaternion
-  "Add two quats and return a new quat containing the result"
   (declare (optimize (speed 3) (safety 1) (debug 1)))
   (q! (cl:- (w quat-a) (w quat-b))
       (cl:- (x quat-a) (x quat-b))
@@ -226,8 +209,6 @@
       (cl:- (z quat-a) (z quat-b))))
 
 (defn - ((quat quaternion) &rest (quats quaternion)) quaternion
-  "takes any number of vectors and add them all together
-   returning a new vector"
   (declare (optimize (speed 3) (safety 1) (debug 1)))
   (assert quat)
   (if quats
@@ -250,7 +231,6 @@
 ;;----------------------------------------------------------------
 
 (defn *s ((quat-a quaternion) (scalar single-float)) quaternion
-  "Multiply quat by scalar"
   (declare (optimize (speed 3) (safety 1) (debug 1)))
   (q! (cl:* (w quat-a) scalar)
       (cl:* (x quat-a) scalar)
@@ -311,7 +291,6 @@
 
 ;; [TODO] Look into assets (this should be a unit quaternion
 (defn rotate ((vec3 vec3) (quat quaternion)) vec3
-  "Rotate vec3 by quaternion. Assumes quaternion is normalized."
   (declare (optimize (speed 3) (safety 1) (debug 1)))
   (let* ((v-mult (cl:* 2.0 (cl:+ (cl:* (x quat) (aref vec3 0))
                                  (cl:* (y quat) (aref vec3 1))
@@ -335,7 +314,6 @@
                                (cl:* (y quat) (aref vec3 0))))))))
 
 (defn rotate-v4 ((vec4 vec4) (quat quaternion)) vec4
-  "Rotate vec4 by quaternion. Assumes quaternion is normalized."
   (declare (optimize (speed 3) (safety 1) (debug 1)))
   (let* ((v-mult (cl:* 2.0 (cl:+ (cl:* (x quat) (aref vec4 0))
                                  (cl:* (y quat) (aref vec4 1))
@@ -363,8 +341,6 @@
 
 (defn lerp ((start-quat quaternion) (end-quat quaternion) (pos single-float))
     quaternion
-  "Linearaly interpolate between two quaternions. Note that this
-   will always take the shortest path."
   (declare (optimize (speed 3) (safety 1) (debug 1)))
   ;; get cos of 'angle' between quaternions
   (let ((cos-angle (dot start-quat end-quat)))
@@ -376,8 +352,6 @@
 
 (defn slerp ((start-quat quaternion) (end-quat quaternion) (pos single-float))
     quaternion
-  "Spherically interpolate between two quaternions. Note that this
-   will always take the shortest path."
   ;;(declare (optimize (speed 3) (safety 1) (debug 1)))
   ;; get cos of 'angle' between quaternions
   (multiple-value-bind (start-mult end-mult)

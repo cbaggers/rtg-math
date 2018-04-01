@@ -31,11 +31,6 @@
 ;;----------------------------------------------------------------
 
 (defn from-mat3 ((quat-to-mutate quaternion) (mat3 mat3)) quaternion
-  "Creates a quaternion from a 3x3 rotation matrix
-
-   Assumes that this is a rotation matrix. It is critical that this
-   is true (and elements are between -1f0 and 1f0) as otherwise you will
-   at best get a runtime error, and most likely a silently incorrect result."
   (declare (optimize (speed 3) (safety 1) (debug 1)))
   (let ((trace (m3:trace mat3)))
     (if (> trace 0f0)
@@ -128,7 +123,6 @@
 ;;----------------------------------------------------------------
 
 (defn %+ ((accum-quat quaternion) (to-add-quat quaternion)) quaternion
-  "Add two quaternions and return a new quattor containing the result"
   (declare (optimize (speed 3) (safety 0) (debug 0)))
   (cl:incf (aref accum-quat 0) (aref to-add-quat 0))
   (cl:incf (aref accum-quat 1) (aref to-add-quat 1))
@@ -137,7 +131,6 @@
   accum-quat)
 
 (defn + ((accum-quat quaternion) &rest (quaternions quaternion)) quaternion
-  "Add two quaternions and return a new quattor containing the result"
   (declare (optimize (speed 3) (safety 1) (debug 1)))
   (loop :for quat :in quaternions :do (%+ accum-quat quat))
   accum-quat)
@@ -152,7 +145,6 @@
 ;;---------------------------------------------------------------
 
 (defn %- ((accum-quat quaternion) (to-add-quat quaternion)) quaternion
-  "Add two quaternions and return a new quattor containing the result"
   (declare (optimize (speed 3) (safety 1) (debug 1)))
   (cl:decf (aref accum-quat 0) (aref to-add-quat 0))
   (cl:decf (aref accum-quat 1) (aref to-add-quat 1))
@@ -161,7 +153,6 @@
   accum-quat)
 
 (defn - ((accum-quat quaternion) &rest (quaternions quaternion)) quaternion
-  "Add two quaternions and return a new quattor containing the result"
   (declare (optimize (speed 3) (safety 1) (debug 1)))
   (loop :for quat :in quaternions :do (%- accum-quat quat))
   accum-quat)
@@ -235,7 +226,6 @@
 ;;----------------------------------------------------------------
 
 (defn rotate ((vec3-to-mutate vec3) (quat quaternion)) vec3
-  "Rotate vec3 by quaternion. Assumes quaternion is normalized."
   (declare (optimize (speed 3) (safety 1) (debug 1)))
   (let* ((v-mult (cl:* 2.0 (cl:+ (cl:* (x quat) (aref vec3-to-mutate 0))
                                  (cl:* (y quat) (aref vec3-to-mutate 1))

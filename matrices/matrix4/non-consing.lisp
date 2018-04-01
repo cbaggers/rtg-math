@@ -8,7 +8,6 @@
      (c20 single-float) (c21 single-float) (c22 single-float) (c23 single-float)
      (c30 single-float) (c31 single-float) (c32 single-float) (c33 single-float)
      (mat4-to-mutate mat4)) mat4
-  "Make a 4x4 matrix. Data must be provided in row major order"
   (declare (optimize (speed 3) (safety 1) (debug 1)))
   ;; as you can see it is stored in column major order
   (setf (melm mat4-to-mutate 0 0) c00)
@@ -32,8 +31,6 @@
 ;;----------------------------------------------------------------
 
 (defn %* ((mat-accum mat4) (to-multiply-mat mat4)) mat4
-  "Multiplies 2 matrices and returns the result as a new
-   matrix"
   (declare (optimize (speed 3) (safety 1) (debug 1)))
   (let ((a (cl:+ (cl:* (melm mat-accum 0 0) (melm to-multiply-mat 0 0))
                  (cl:* (melm mat-accum 0 1) (melm to-multiply-mat 1 0))
@@ -118,7 +115,6 @@
     mat-accum))
 
 (defn * ((accum-mat mat4) &rest (mat4s mat4)) mat4
-  "Add two matrices and returns the mutated matrix (accum-mat)"
   (declare (optimize (speed 3) (safety 1) (debug 1)))
   (reduce #'%* mat4s :initial-value accum-mat))
 
@@ -132,9 +128,6 @@
 ;;----------------------------------------------------------------
 
 (defn set-from-mat3 ((mat-to-mutate mat4) (m-a mat3)) mat4
-  "Takes a 3x3 matrix and returns a 4x4 rotation matrix
-   with the same values. The 4th component is filled as an
-   identity matrix would be."
   (declare (optimize (speed 3) (safety 1) (debug 1)))
   (set-components
    (m3:melm m-a 0 0)  (m3:melm m-a 0 1)  (m3:melm m-a 0 2)  0f0
@@ -147,8 +140,6 @@
 
 (defn set-from-rows ((mat-to-mutate mat4)
                      (row-1 vec4) (row-2 vec4) (row-3 vec4) (row-4 vec4)) mat4
-  "Make a 4x4 matrix using the data in the 4 vector4s provided
-   to populate the rows"
   (declare (optimize (speed 3) (safety 1) (debug 1)))
   (set-components (x row-1) (y row-1) (z row-1) (w row-1)
                   (x row-2) (y row-2) (z row-2) (w row-2)
@@ -158,8 +149,6 @@
 
 (defn set-from-rows-v3 ((mat-to-mutate mat4)
                         (row-1 vec3) (row-2 vec3) (row-3 vec3)) mat4
-  "Make a 4x4 matrix using the data in the 4 vector4s provided
-   to populate the rows"
   (declare (optimize (speed 3) (safety 1) (debug 1)))
   (set-components (x row-1) (y row-1) (z row-1) 0f0
                   (x row-2) (y row-2) (z row-2) 0f0
@@ -171,8 +160,6 @@
 
 (defn set-from-columns ((mat-to-mutate mat4)
                         (col-1 vec4) (col-2 vec4) (col-3 vec4) (col-4 vec4)) mat4
-  "Make a 4x4 matrix using the data in the 4 vector4s provided
-   to populate the columns"
   (declare (optimize (speed 3) (safety 1) (debug 1)))
   (set-components (x col-1)
                   (x col-2)
@@ -194,8 +181,6 @@
 
 (defn set-from-columns-v3 ((mat-to-mutate mat4)
                            (col-1 vec3) (col-2 vec3) (col-3 vec3)) mat4
-  "Make a 4x4 matrix using the data in the 3 vector3s provided
-   to populate the columns"
   (declare (optimize (speed 3) (safety 1) (debug 1)))
   (set-components (x col-1)
                   (x col-2)
@@ -218,7 +203,6 @@
 ;;----------------------------------------------------------------
 
 (defn adjoint ((mat-to-mutate mat4)) mat4
-  "Returns the adjoint of the matrix"
   (declare (optimize (speed 3) (safety 1) (debug 1)))
   (set-components (minor mat-to-mutate 1 2 3 1 2 3)
                   (cl:- (minor mat-to-mutate 0 2 3 1 2 3))
@@ -245,7 +229,6 @@
 
 ;;this one is from 'Essential Maths'
 (defn affine-inverse ((mat-to-invert mat4)) mat4
-  "Returns the affine inverse of the matrix"
   (declare (optimize (speed 3) (safety 1) (debug 1)))
   ;;calculate upper left 3x3 matrix determinant
   (let* ((cofac-0 (cl:- (cl:* (melm mat-to-invert 1 1) (melm mat-to-invert 2 2))
@@ -302,7 +285,6 @@
 ;; {TODO} could just feed straight from array into make
 
 (defn transpose ((mat-to-transpose mat4)) mat4
-  "Returns the transpose of the provided matrix"
   (declare (optimize (speed 3) (safety 1) (debug 1)))
   (set-components
    (melm mat-to-transpose 0 0) (melm mat-to-transpose 1 0) (melm mat-to-transpose 2 0) (melm mat-to-transpose 3 0)
@@ -315,8 +297,6 @@
 
 (defn set-from-translation ((mat-to-mutate mat4)
                             (vec-a (simple-array single-float))) mat4
-  "Takes a vector3 and returns a matrix4 which will translate
-   by the specified amount"
   (declare (optimize (speed 3) (safety 1) (debug 1)))
   (set-components
    1f0  0f0  0f0  (x vec-a)
@@ -328,7 +308,6 @@
 ;;----------------------------------------------------------------
 
 (defn set-rotation-from-euler ((mat-to-mutate mat4) (vec3-a vec3)) mat4
-  "This is an unrolled contatenation of rotation matrices x y & z."
   (declare (optimize (speed 3) (safety 1) (debug 1)))
   (let ((x (x vec3-a))
         (y (y vec3-a))
@@ -358,7 +337,6 @@
 ;;----------------------------------------------------------------
 
 (defn set-from-scale ((mat-to-mutate mat4) (scale-vec3 vec3)) mat4
-  "Returns a matrix which will scale by the amounts specified"
   (declare (optimize (speed 3) (safety 1) (debug 1)))
   (set-components
    (x scale-vec3)  0f0               0f0               0f0
@@ -370,8 +348,6 @@
 ;;----------------------------------------------------------------
 
 (defn set-from-rotation-x ((mat-to-mutate mat4) (angle single-float)) mat4
-  "Returns a matrix which would rotate a point around the x axis
-   by the specified amount"
   (declare (optimize (speed 3) (safety 1) (debug 1)))
   (let ((s-a (sin angle))
         (c-a (cos angle)))
@@ -384,8 +360,6 @@
 ;;----------------------------------------------------------------
 
 (defn set-from-rotation-y ((mat-to-mutate mat4) (angle single-float)) mat4
-  "Returns a matrix which would rotate a point around the y axis
-   by the specified amount"
   (declare (optimize (speed 3) (safety 1) (debug 1)))
   (let ((s-a (sin angle))
         (c-a (cos angle)))
@@ -398,8 +372,6 @@
 ;;----------------------------------------------------------------
 
 (defn set-from-rotation-z ((mat-to-mutate mat4) (angle single-float)) mat4
-  "Returns a matrix which would rotate a point around the z axis
-   by the specified amount"
   (declare (optimize (speed 3) (safety 1) (debug 1)))
   (let ((s-a (sin angle))
         (c-a (cos angle)))
@@ -413,8 +385,6 @@
 
 (defn set-rotation-from-axis-angle ((mat-to-mutate mat4)
                                     (axis3 vec3) (angle single-float)) mat4
-  "Returns a matrix which will rotate a point about the axis
-   specified by the angle provided"
   (declare (optimize (speed 3) (safety 1) (debug 1)))
   (cond ((v3:= axis3 (v3:make 1f0 0f0 0f0))
          (set-from-rotation-x mat-to-mutate angle))
@@ -441,8 +411,6 @@
 ;;----------------------------------------------------------------
 
 (defn + ((mat-accum mat4) (mat-b mat4)) mat4
-  "Add the second matrix component wise to the first and return
-   the first"
   (declare (optimize (speed 3) (safety 1) (debug 1)))
   (loop :for i :below 16 :do
      (cl:incf (aref mat-accum i) (aref mat-b i)))
@@ -451,8 +419,6 @@
 ;;----------------------------------------------------------------
 
 (defn - ((mat-accum mat4) (mat-b mat4)) mat4
-  "Subtracts the second matrix component wise from the first and return
-   the first"
   (declare (optimize (speed 3) (safety 1) (debug 1)))
   (loop :for i :below 16 :do
      (cl:decf (aref mat-accum i) (aref mat-b i)))
@@ -461,7 +427,6 @@
 ;;----------------------------------------------------------------
 
 (defn negate ((mat-to-negate mat4)) mat4
-  "Negates the components of the matrix"
   (declare (optimize (speed 3) (safety 1) (debug 1)))
   (loop :for i :below 16 :do
      (setf (aref mat-to-negate i) (cl:- (aref mat-to-negate i))))
@@ -470,8 +435,6 @@
 ;;----------------------------------------------------------------
 
 (defn *s ((mat-to-mutate mat4) (scalar single-float)) mat4
-  "Multiplies the components of the matrix by the scalar
-   provided"
   (declare (optimize (speed 3) (safety 1) (debug 1)))
   (loop :for i :below 16 :do
      (setf (aref mat-to-mutate i) (cl:* scalar (aref mat-to-mutate i))))
@@ -480,7 +443,6 @@
 ;;----------------------------------------------------------------
 
 (defn *v ((mat-a mat4) (vec4-to-mutate vec4)) vec4
-  "Multiplies the vector3 by the matrix and returning the mutated vector4"
   (declare (optimize (speed 3) (safety 1) (debug 1)))
   (v4-n:set-components
    (cl:+ (cl:* (x vec4-to-mutate) (melm mat-a 0 0))
@@ -502,7 +464,6 @@
    vec4-to-mutate))
 
 (defn *v3 ((mat-a mat4) (vec3-to-mutate vec3)) vec3
-  "Multiplies the vector3 by the matrix and returning the mutated vector3"
   (declare (optimize (speed 3) (safety 1) (debug 1)))
   (v3-n:set-components (cl:+ (cl:* (melm mat-a 0 0) (x vec3-to-mutate))
                              (cl:* (melm mat-a 0 1) (y vec3-to-mutate))

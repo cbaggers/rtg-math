@@ -6,7 +6,6 @@
                              (c10 single-float) (c11 single-float) (c12 single-float)
                              (c20 single-float) (c21 single-float) (c22 single-float)
                              (mat3-to-mutate mat3)) mat3
-  "Make a 3x3 matrix. Data must be provided in row major order"
   (declare (optimize (speed 3) (safety 1) (debug 1)))
   (setf (melm mat3-to-mutate 0 0) c00)
   (setf (melm mat3-to-mutate 0 1) c01)
@@ -22,8 +21,6 @@
 ;;----------------------------------------------------------------
 
 (defn %* ((mat-accum mat3) (to-multiply-mat mat3)) mat3
-  "Multiplies 2 matrices and returns the result as a new
-   matrix"
   (declare (optimize (speed 3) (safety 1) (debug 1)))
   (let ((a (cl:+ (cl:* (melm mat-accum 0 0) (melm to-multiply-mat 0 0))
                  (cl:* (melm mat-accum 0 1) (melm to-multiply-mat 1 0))
@@ -77,8 +74,6 @@
 
 (defn set-from-rows ((mat-to-mutate mat3)
                      (row-1 vec3) (row-2 vec3) (row-3 vec3)) mat3
-  "Make a 3x3 matrix using the data in the 3 vector3s provided
-   to populate the rows"
   (declare (optimize (speed 3) (safety 1) (debug 1)))
   (set-components (x row-1) (y row-1) (z row-1)
                   (x row-2) (y row-2) (z row-2)
@@ -89,8 +84,6 @@
 
 (defn set-from-columns ((mat-to-mutate mat3)
                         (col-1 vec3) (col-2 vec3) (col-3 vec3)) mat3
-  "Make a 3x3 matrix using the data in the 3 vector3s provided
-   to populate the columns"
   (declare (optimize (speed 3) (safety 1) (debug 1)))
   (set-components (x col-1) (x col-2) (x col-3)
                   (y col-1) (y col-2) (y col-3)
@@ -100,7 +93,6 @@
 ;;----------------------------------------------------------------
 
 (defn affine-inverse ((mat-to-invert mat3)) mat3
-  "returns the inverse of the matrix"
   (declare (optimize (speed 3) (safety 1) (debug 1)))
   (let* ((cofactor-0 (cl:- (cl:* (melm mat-to-invert 1 1) (melm mat-to-invert 2 2))
                            (cl:* (melm mat-to-invert 2 1) (melm mat-to-invert 1 2))))
@@ -140,7 +132,6 @@
 ;;----------------------------------------------------------------
 
 (defn transpose ((mat-to-transpose mat3)) mat3
-  "Returns the transpose of the provided matrix"
   (declare (optimize (speed 3) (safety 1) (debug 1)))
   (set-components
    (melm mat-to-transpose 0 0) (melm mat-to-transpose 1 0) (melm mat-to-transpose 2 0)
@@ -151,7 +142,6 @@
 ;;----------------------------------------------------------------
 
 (defn adjoint ((mat-to-mutate mat3)) mat3
-  "Returns the adjoint of the matrix"
   (declare (optimize (speed 3) (safety 1) (debug 1)))
   (set-components
    (cl:- (cl:* (melm mat-to-mutate 1 1) (melm mat-to-mutate 2 2))
@@ -198,7 +188,6 @@
 ;;----------------------------------------------------------------
 
 (defn set-from-scale ((mat-to-mutate mat3) (scale-vec3 vec3)) mat3
-  "Returns a matrix which will scale by the amounts specified"
   (declare (optimize (speed 3) (safety 1) (debug 1)))
   (set-components (x scale-vec3)  0.0               0.0
                   0.0               (y scale-vec3)  0.0
@@ -208,8 +197,6 @@
 ;;----------------------------------------------------------------
 
 (defn set-from-rotation-x ((mat-to-mutate mat3) (angle single-float)) mat3
-  "Returns a matrix which would rotate a point around the x axis
-   by the specified amount"
   (declare (optimize (speed 3) (safety 1) (debug 1)))
   (let ((s-a (sin angle))
         (c-a (cos angle)))
@@ -221,8 +208,6 @@
 ;;----------------------------------------------------------------
 
 (defn set-from-rotation-y ((mat-to-mutate mat3) (angle single-float)) mat3
-  "Returns a matrix which would rotate a point around the y axis
-   by the specified amount"
   (declare (optimize (speed 3) (safety 1) (debug 1)))
   (let ((s-a (sin angle))
         (c-a (cos angle)))
@@ -234,8 +219,6 @@
 ;;----------------------------------------------------------------
 
 (defn set-from-rotation-z ((mat-to-mutate mat3) (angle single-float)) mat3
-  "Returns a matrix which would rotate a point around the z axis
-   by the specified amount"
   (declare (optimize (speed 3) (safety 1) (debug 1)))
   (let ((s-a (sin angle))
         (c-a (cos angle)))
@@ -248,8 +231,6 @@
 
 (defn set-rotation-from-axis-angle
     ((mat-to-mutate mat3) (axis3 vec3) (angle single-float)) mat3
-  "Returns a matrix which will rotate a point about the axis
-   specified by the angle provided"
   (declare (optimize (speed 3) (safety 1) (debug 1)))
   (cond ((v3:= axis3 (v! 1f0 0f0 0f0))
          (set-from-rotation-x mat-to-mutate angle))
@@ -275,8 +256,6 @@
 ;;----------------------------------------------------------------
 
 (defn + ((mat-accum mat3) (mat-b mat3)) mat3
-  "Add the second matrix component wise to the first and return
-   the first"
   (declare (optimize (speed 3) (safety 1) (debug 1)))
   (loop :for i :below 9 :do
      (cl:incf (aref mat-accum i) (aref mat-b i)))
@@ -285,8 +264,6 @@
 ;;----------------------------------------------------------------
 
 (defn - ((mat-accum mat3) (mat-b mat3)) mat3
-  "Subtracts the second matrix component wise from the first and return
-   the first"
   (declare (optimize (speed 3) (safety 1) (debug 1)))
   (loop :for i :below 9 :do
      (cl:decf (aref mat-accum i) (aref mat-b i)))
@@ -295,7 +272,6 @@
 ;;----------------------------------------------------------------
 
 (defn negate ((mat-to-negate mat3)) mat3
-  "Negates the components of the matrix"
   (declare (optimize (speed 3) (safety 1) (debug 1)))
   (loop :for i :below 9 :do
      (setf (aref mat-to-negate i) (cl:- (aref mat-to-negate i))))
@@ -304,7 +280,6 @@
 ;;----------------------------------------------------------------
 
 (defn *v ((mat-a mat3) (vec3-to-mutate vec3)) vec3
-  "Multiplies the vector3 by the matrix and returning the mutated vector3"
   (declare (optimize (speed 3) (safety 1) (debug 1)))
   (v3-n:set-components (cl:+ (cl:* (x vec3-to-mutate) (melm mat-a 0 0))
                              (cl:* (y vec3-to-mutate) (melm mat-a 0 1))
@@ -338,8 +313,6 @@
 
 (defn *s ((mat-to-mutate mat3) (scalar single-float)) mat3
   (declare (optimize (speed 3) (safety 1) (debug 1)))
-  "Multiplies the components of the matrix by the scalar
-   provided"
   (loop :for i :below 9 :do
      (setf (aref mat-to-mutate i) (cl:* scalar (aref mat-to-mutate i))))
   mat-to-mutate)

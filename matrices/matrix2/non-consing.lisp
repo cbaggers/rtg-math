@@ -5,7 +5,6 @@
 (defn-inline set-components ((c00 single-float) (c01 single-float)
                              (c10 single-float) (c11 single-float)
                              (mat2-to-mutate mat2)) mat2
-  "Make a 2x2 matrix. Data must be provided in row major order"
   (declare (optimize (speed 3) (safety 1) (debug 1)))
   (setf (melm mat2-to-mutate 0 0) c00)
   (setf (melm mat2-to-mutate 0 1) c01)
@@ -16,8 +15,6 @@
 ;;----------------------------------------------------------------
 
 (defn %* ((mat-accum mat2) (to-multiply-mat mat2)) mat2
-  "Multiplies 2 matrices and returns the result as a new
-   matrix"
   (declare (optimize (speed 3) (safety 1) (debug 1)))
   (let ((a (cl:+ (cl:* (melm mat-accum 0 0) (melm to-multiply-mat 0 0))
                  (cl:* (melm mat-accum 0 1) (melm to-multiply-mat 1 0))))
@@ -48,8 +45,6 @@
 (defn set-from-rows ((mat-to-mutate mat2)
                      (row-1 vec2)
                      (row-2 vec2)) mat2
-  "Make a 2x2 matrix using the data in the 2 vector2s provided
-   to populate the rows"
   (declare (optimize (speed 3) (safety 1) (debug 1)))
   (set-components (x row-1) (y row-1)
                   (x row-2) (y row-2)
@@ -60,8 +55,6 @@
 (defn set-from-columns ((mat-to-mutate mat2)
                         (col-1 vec2)
                         (col-2 vec2)) mat2
-  "Make a 2x2 matrix using the data in the 2 vector2s provided
-   to populate the columns"
   (declare (optimize (speed 3) (safety 1) (debug 1)))
   (set-components (x col-1) (x col-2)
                   (y col-1) (y col-2)
@@ -70,7 +63,6 @@
 ;;----------------------------------------------------------------
 
 (defn transpose ((mat-to-transpose mat2)) mat2
-  "Returns the transpose of the provided matrix"
   (declare (optimize (speed 3) (safety 1) (debug 1)))
   (set-components
    (melm mat-to-transpose 0 0) (melm mat-to-transpose 1 0)
@@ -83,7 +75,6 @@
 ;; [ d −c
 ;;  −b  a]
 (defn adjoint ((mat-to-mutate mat2)) mat2
-  "Returns the adjoint of the matrix"
   (declare (optimize (speed 3) (safety 1) (debug 1)))
   (set-components
    (melm mat-to-mutate 1 1)
@@ -108,7 +99,6 @@
 ;;----------------------------------------------------------------
 
 (defn set-from-scale ((mat-to-mutate mat2) (scale-vec2 vec2)) mat2
-  "Returns a matrix which will scale by the amounts specified"
   (declare (optimize (speed 3) (safety 1) (debug 1)))
   (set-components (x scale-vec2)  0.0
                   0.0             (y scale-vec2)
@@ -117,8 +107,6 @@
 ;;----------------------------------------------------------------
 
 (defn + ((mat-accum mat2) (mat-b mat2)) mat2
-  "Add the second matrix component wise to the first and return
-   the first"
   (declare (optimize (speed 3) (safety 1) (debug 1)))
   (cl:incf (aref mat-accum 0) (aref mat-b 0))
   (cl:incf (aref mat-accum 1) (aref mat-b 1))
@@ -129,8 +117,6 @@
 ;;----------------------------------------------------------------
 
 (defn - ((mat-accum mat2) (mat-b mat2)) mat2
-  "Subtracts the second matrix component wise from the first and return
-   the first"
   (declare (optimize (speed 3) (safety 1) (debug 1)))
   (cl:decf (aref mat-accum 0) (aref mat-b 0))
   (cl:decf (aref mat-accum 1) (aref mat-b 1))
@@ -141,7 +127,6 @@
 ;;----------------------------------------------------------------
 
 (defn negate ((mat-to-negate mat2)) mat2
-  "Negates the components of the matrix"
   (declare (optimize (speed 3) (safety 1) (debug 1)))
   (set-components (cl:- (x mat-to-negate))
                   (cl:- (y mat-to-negate))
@@ -152,7 +137,6 @@
 ;;----------------------------------------------------------------
 
 (defn *v ((mat-a mat2) (vec2-to-mutate vec2)) vec2
-  "Multiplies the vector3 by the matrix and returning the mutated vector3"
   (declare (optimize (speed 3) (safety 1) (debug 1)))
   (v2-n:set-components (cl:+ (cl:* (x vec2-to-mutate) (melm mat-a 0 0))
                              (cl:* (y vec2-to-mutate) (melm mat-a 0 1)))
@@ -174,8 +158,6 @@
 
 (defn *s ((mat-to-mutate mat2) (scalar single-float)) mat2
   (declare (optimize (speed 3) (safety 1) (debug 1)))
-  "Multiplies the components of the matrix by the scalar
-   provided"
   (set-components
    (cl:* (melm mat-to-mutate 0 0) scalar)
    (cl:* (melm mat-to-mutate 0 1) scalar)
