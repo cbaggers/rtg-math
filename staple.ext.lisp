@@ -5,6 +5,8 @@
   (list :name "RTG-MATH"
         :template (asdf:system-relative-pathname
                    :varjo "docs/staple/template.ctml")
+        :documentation (asdf:system-relative-pathname
+                        :rtg-math "docs/header.md")
         :packages '(:rtg-math.vector2
                     :rtg-math.vector3
                     :rtg-math.vector4
