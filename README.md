@@ -36,6 +36,13 @@ The library provides:
 
 And more for all categories.
 
+## Documentation
+
+Reference docs can be found [here](http://techsnuffle.com/rtg-math/rtg-math-reference.html)
+
+All the symbols with documentation in the above reference docs als ohave identical doc-strings and
+so this can be easily queried from your editor.
+
 ## CHANGELOG
 
 ### 2018-03-28
