@@ -27,14 +27,12 @@
 ;;---------------------------------------------------------------
 
 (defn %+ ((accum-vec vec2) (to-add-vec vec2)) vec2
-  "Add two vectors and return a new vector containing the result"
   (declare (optimize (speed 3) (safety 1) (debug 1)))
   (cl:incf (aref accum-vec 0) (aref to-add-vec 0))
   (cl:incf (aref accum-vec 1) (aref to-add-vec 1))
   accum-vec)
 
 (defn + ((accum-vec vec2) &rest (vec2s vec2)) vec2
-  "Add two vectors and return a new vector containing the result"
   (declare (optimize (speed 3) (safety 1) (debug 1)))
   (loop :for vec :in vec2s :do (%+ accum-vec vec))
   accum-vec)
@@ -49,14 +47,12 @@
 ;;---------------------------------------------------------------
 
 (defn %- ((accum-vec vec2) (to-add-vec vec2)) vec2
-  "Add two vectors and return a new vector containing the result"
   (declare (optimize (speed 3) (safety 1) (debug 1)))
   (cl:decf (aref accum-vec 0) (aref to-add-vec 0))
   (cl:decf (aref accum-vec 1) (aref to-add-vec 1))
   accum-vec)
 
 (defn - ((accum-vec vec2) &rest (vec2s vec2)) vec2
-  "Add two vectors and return a new vector containing the result"
   (declare (optimize (speed 3) (safety 1) (debug 1)))
   (loop :for vec :in vec2s :do (%- accum-vec vec))
   accum-vec)
@@ -71,14 +67,12 @@
 ;;---------------------------------------------------------------
 
 (defn %* ((accum-vec vec2) (to-mult-vec vec2)) vec2
-  "Add two vectors and return a new vector containing the result"
   (declare (optimize (speed 3) (safety 1) (debug 1)))
   (cl:setf (aref accum-vec 0) (cl:* (aref accum-vec 0) (aref to-mult-vec 0)))
   (cl:setf (aref accum-vec 1) (cl:* (aref accum-vec 1) (aref to-mult-vec 1)))
   accum-vec)
 
 (defn * ((accum-vec vec2) &rest (vec2s vec2)) vec2
-  "Add two vectors and return a new vector containing the result"
   (declare (optimize (speed 3) (safety 1) (debug 1)))
   (loop :for vec :in vec2s :do (%* accum-vec vec))
   accum-vec)
@@ -93,7 +87,6 @@
 ;;---------------------------------------------------------------
 
 (defn *s ((vec2 vec2) (a single-float)) vec2
-  "Multiply vector by scalar"
   (declare (optimize (speed 3) (safety 1) (debug 1)))
   (setf (x vec2) (cl:* (x vec2) a))
   (setf (y vec2) (cl:* (y vec2) a))
@@ -102,7 +95,6 @@
 ;;---------------------------------------------------------------
 
 (defn /s ((vec2 vec2) (a single-float)) vec2
-  "Multiply vector by scalar"
   (declare (optimize (speed 3) (safety 1) (debug 1)))
   (setf (x vec2) (cl:/ (x vec2) a))
   (setf (y vec2) (cl:/ (y vec2) a))
@@ -111,7 +103,6 @@
 ;;---------------------------------------------------------------
 
 (defn / ((vec2-a vec2) (vec2-b vec2)) vec2
-  "Multiply vector by scalar"
   (declare (optimize (speed 3) (safety 1) (debug 1)))
   (setf (x vec2-a) (cl:/ (x vec2-a) (x vec2-b)))
   (setf (y vec2-a) (cl:/ (y vec2-a) (y vec2-b)))
@@ -120,7 +111,6 @@
 ;;---------------------------------------------------------------
 
 (defn negate ((vector-a vec2)) vec2
-  "Return a vector that is the negative of the vector passed in"
   (declare (optimize (speed 3) (safety 1) (debug 1)))
   (set-components (cl:- (x vector-a))
                   (cl:- (y vector-a))
@@ -141,8 +131,6 @@
 ;;---------------------------------------------------------------
 
 (defn normalize ((vector-a vec2)) vec2
-  "This normalizes the vector, it makes sure a zero length
-   vector won't throw an error."
   (declare (optimize (speed 3) (safety 1) (debug 1)))
   (let* ((x (x vector-a))
          (y (y vector-a))
