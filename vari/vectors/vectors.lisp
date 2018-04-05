@@ -316,7 +316,7 @@
 
 ;;----------------------------------------------------------------
 
-(varjo:add-equivalent-name 'vari.glsl:normalize 'normalize)
+(varjo:add-equivalent-name 'glsl-symbols:normalize 'normalize)
 
 ;;----------------------------------------------------------------
 
