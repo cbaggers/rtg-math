@@ -153,7 +153,6 @@
 (varjo:v-def-glsl-template-fun x (a) "~a.x" (:vec2) :float :v-place-index 0 :pure t)
 (varjo:v-def-glsl-template-fun x (a) "~a.x" (:vec3) :float :v-place-index 0 :pure t)
 (varjo:v-def-glsl-template-fun x (a) "~a.x" (:vec4) :float :v-place-index 0 :pure t)
-
 (varjo:v-def-glsl-template-fun y (a) "~a.y" (:bvec2) :bool :v-place-index 0 :pure t)
 (varjo:v-def-glsl-template-fun y (a) "~a.y" (:bvec3) :bool :v-place-index 0 :pure t)
 (varjo:v-def-glsl-template-fun y (a) "~a.y" (:bvec4) :bool :v-place-index 0 :pure t)
@@ -169,7 +168,6 @@
 (varjo:v-def-glsl-template-fun y (a) "~a.y" (:vec2) :float :v-place-index 0 :pure t)
 (varjo:v-def-glsl-template-fun y (a) "~a.y" (:vec3) :float :v-place-index 0 :pure t)
 (varjo:v-def-glsl-template-fun y (a) "~a.y" (:vec4) :float :v-place-index 0 :pure t)
-
 (varjo:v-def-glsl-template-fun z (a) "~a.z" (:vec3)  :float :v-place-index 0 :pure t)
 (varjo:v-def-glsl-template-fun z (a) "~a.z" (:bvec3) :bool :v-place-index 0 :pure t)
 (varjo:v-def-glsl-template-fun z (a) "~a.z" (:ivec3) :int :v-place-index 0 :pure t)
@@ -180,7 +178,6 @@
 (varjo:v-def-glsl-template-fun z (a) "~a.z" (:ivec4) :int :v-place-index 0 :pure t)
 (varjo:v-def-glsl-template-fun z (a) "~a.z" (:uvec4) :uint :v-place-index 0 :pure t)
 (varjo:v-def-glsl-template-fun z (a) "~a.z" (:dvec4) :double :v-place-index 0 :pure t)
-
 (varjo:v-def-glsl-template-fun w (a) "~a.w" (:vec4) :float :v-place-index 0 :pure t)
 (varjo:v-def-glsl-template-fun w (a) "~a.w" (:bvec4) :bool :v-place-index 0 :pure t)
 (varjo:v-def-glsl-template-fun w (a) "~a.w" (:ivec4) :int :v-place-index 0 :pure t)

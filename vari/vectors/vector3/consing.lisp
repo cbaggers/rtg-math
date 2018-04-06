@@ -31,29 +31,29 @@
 ;;---------------------------------------------------------------
 
 (varjo:v-def-glsl-template-fun + (a b c &rest c) "(~a £+£ ~a £+£ ~a ~{ £+£ ~a~})"
-                         (t t t &rest t) 0 :pure t)
+                         (t t t &rest t) :vec3 :pure t)
 
 (varjo:v-define-compiler-macro + ((a t) (b t) (c t) &rest (d t))
   `(+ ,a (+ ,b (+ ,c ,@d))))
 
-(varjo:v-def-glsl-template-fun + (a) "~a" (:vec3) 0 :pure t)
-(varjo:v-def-glsl-template-fun + (a b) "(~a + ~a)" (:vec3 :vec3) 0 :pure t)
+(varjo:v-def-glsl-template-fun + (a) "~a" (:vec3) :vec3 :pure t)
+(varjo:v-def-glsl-template-fun + (a b) "(~a + ~a)" (:vec3 :vec3) :vec3 :pure t)
 
 ;;----------------------------------------------------------------
 
 (varjo:v-def-glsl-template-fun - (a b c &rest c) "(~a £-£ ~a £-£ ~a ~{ £-£ ~a~})"
-                         (t t t &rest t) 0 :pure t)
+                         (t t t &rest t) :vec3 :pure t)
 
 (varjo:v-define-compiler-macro - ((a t) (b t) (c t) &rest (d t))
   `(- ,a (- ,b (- ,c ,@d))))
 
-(varjo:v-def-glsl-template-fun - (a) "(-~a)" (:vec3) 0 :pure t)
-(varjo:v-def-glsl-template-fun - (a b) "(~a - ~a)" (:vec3 :vec3) 0 :pure t)
+(varjo:v-def-glsl-template-fun - (a) "(-~a)" (:vec3) :vec3 :pure t)
+(varjo:v-def-glsl-template-fun - (a b) "(~a - ~a)" (:vec3 :vec3) :vec3 :pure t)
 
 ;;---------------------------------------------------------------
 
 (varjo:v-def-glsl-template-fun * (a b c &rest c) "(~a £*£ ~a £*£ ~a ~{ £*£ ~a~})"
-                         (t t t &rest t) 0 :pure t)
+                         (t t t &rest t) :vec3 :pure t)
 
 (varjo:v-define-compiler-macro * ((a t) (b t) (c t) &rest (d t))
   `(* ,a (* ,b (* ,c ,@d))))
@@ -71,18 +71,18 @@
 ;;----------------------------------------------------------------
 
 (varjo:v-def-glsl-template-fun / (a b c &rest c) "(~a £/£ ~a £/£ ~a ~{ £/£ ~a~})"
-                         (t t t &rest t) 0 :pure t)
+                         (t t t &rest t) :vec3 :pure t)
 
 (varjo:v-define-compiler-macro / ((a t) (b t) (c t) &rest (d t))
   `(/ ,a (/ ,b (/ ,c ,@d))))
 
-(varjo:v-def-glsl-template-fun / (a) "(1 / ~a)" (:vec3) 0 :pure t)
-(varjo:v-def-glsl-template-fun / (a b) "(~a / ~a)" (:vec3 :vec3) 0 :pure t)
+(varjo:v-def-glsl-template-fun / (a) "(1 / ~a)" (:vec3) :vec3 :pure t)
+(varjo:v-def-glsl-template-fun / (a b) "(~a / ~a)" (:vec3 :vec3) :vec3 :pure t)
 
 ;;---------------------------------------------------------------
 
 (varjo:v-def-glsl-template-fun
- negate (a) "(-~a)" (:vec3) 0 :pure t)
+ negate (a) "(-~a)" (:vec3) :vec3 :pure t)
 
 ;;----------------------------------------------------------------
 

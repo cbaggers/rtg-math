@@ -39,33 +39,33 @@
 ;;----------------------------------------------------------------
 
 (varjo:v-def-glsl-template-fun + (a b c &rest c) "(~a £+£ ~a £+£ ~a ~{ £+£ ~a~})"
-                               (t t t &rest t) 0 :pure t)
+                               (t t t &rest t) t :pure t)
 
 (varjo:v-define-compiler-macro + ((a t) (b t) (c t) &rest (d t))
   `(+ ,a (+ ,b (+ ,c ,@d))))
 
-(varjo:v-def-glsl-template-fun + (a) "~a" (:mat2) 0 :pure t)
-(varjo:v-def-glsl-template-fun + (a b) "(~a + ~a)" (:mat2 :mat2) 0 :pure t)
-(varjo:v-def-glsl-template-fun + (a) "~a" (:mat3) 0 :pure t)
-(varjo:v-def-glsl-template-fun + (a b) "(~a + ~a)" (:mat3 :mat3) 0 :pure t)
-(varjo:v-def-glsl-template-fun + (a) "~a" (:mat4) 0 :pure t)
-(varjo:v-def-glsl-template-fun + (a b) "(~a + ~a)" (:mat4 :mat4) 0 :pure t)
+(varjo:v-def-glsl-template-fun + (a) "~a" (:mat2) :mat2 :pure t)
+(varjo:v-def-glsl-template-fun + (a b) "(~a + ~a)" (:mat2 :mat2) :mat2 :pure t)
+(varjo:v-def-glsl-template-fun + (a) "~a" (:mat3) :mat3 :pure t)
+(varjo:v-def-glsl-template-fun + (a b) "(~a + ~a)" (:mat3 :mat3) :mat3 :pure t)
+(varjo:v-def-glsl-template-fun + (a) "~a" (:mat4) :mat4 :pure t)
+(varjo:v-def-glsl-template-fun + (a b) "(~a + ~a)" (:mat4 :mat4) :mat4 :pure t)
 
 ;;----------------------------------------------------------------
 
 
 (varjo:v-def-glsl-template-fun - (a b c &rest c) "(~a £-£ ~a £-£ ~a ~{ £-£ ~a~})"
-                               (t t t &rest t) 0 :pure t)
+                               (t t t &rest t) t :pure t)
 
 (varjo:v-define-compiler-macro - ((a t) (b t) (c t) &rest (d t))
   `(- ,a (- ,b (- ,c ,@d))))
 
-(varjo:v-def-glsl-template-fun - (a) "(-~a)" (:mat2) 0 :pure t)
-(varjo:v-def-glsl-template-fun - (a b) "(~a - ~a)" (:mat2 :mat2) 0 :pure t)
-(varjo:v-def-glsl-template-fun - (a) "(-~a)" (:mat3) 0 :pure t)
-(varjo:v-def-glsl-template-fun - (a b) "(~a - ~a)" (:mat3 :mat3) 0 :pure t)
-(varjo:v-def-glsl-template-fun - (a) "(-~a)" (:mat4) 0 :pure t)
-(varjo:v-def-glsl-template-fun - (a b) "(~a - ~a)" (:mat4 :mat4) 0 :pure t)
+(varjo:v-def-glsl-template-fun - (a) "(-~a)" (:mat2) :mat2 :pure t)
+(varjo:v-def-glsl-template-fun - (a b) "(~a - ~a)" (:mat2 :mat2) :mat2 :pure t)
+(varjo:v-def-glsl-template-fun - (a) "(-~a)" (:mat3) :mat3 :pure t)
+(varjo:v-def-glsl-template-fun - (a b) "(~a - ~a)" (:mat3 :mat3) :mat3 :pure t)
+(varjo:v-def-glsl-template-fun - (a) "(-~a)" (:mat4) :mat4 :pure t)
+(varjo:v-def-glsl-template-fun - (a b) "(~a - ~a)" (:mat4 :mat4) :mat4 :pure t)
 
 ;;----------------------------------------------------------------
 
@@ -171,20 +171,20 @@
 
 
 (varjo:v-def-glsl-template-fun
- negate (a) "(-~a)" (:mat2) 0 :pure t)
+ negate (a) "(-~a)" (:mat2) :mat2 :pure t)
 
 (varjo:v-def-glsl-template-fun
- negate (a) "(-~a)" (:mat3) 0 :pure t)
+ negate (a) "(-~a)" (:mat3) :mat3 :pure t)
 
 (varjo:v-def-glsl-template-fun
- negate (a) "(-~a)" (:mat4) 0 :pure t)
+ negate (a) "(-~a)" (:mat4) :mat4 :pure t)
 
 
 ;;----------------------------------------------------------------
 
 
 (varjo:v-def-glsl-template-fun * (a b c &rest c) "(~a £*£ ~a £*£ ~a ~{ £*£ ~a~})"
-                               (t t t &rest t) 0 :pure t)
+                               (t t t &rest t) t :pure t)
 
 (varjo:v-define-compiler-macro * ((a t) (b t) (c t) &rest (d t))
   `(* ,a (* ,b (* ,c ,@d))))
