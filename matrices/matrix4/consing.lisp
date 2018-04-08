@@ -580,8 +580,7 @@
 (defn * (&rest (matrices mat4)) mat4
   (declare (optimize (speed 3) (safety 1) (debug 1)))
   (if matrices
-      (reduce #'rtg-math.matrix4.non-consing:* matrices
-              :initial-value (identity))
+      (reduce #'m4-n::%* matrices :initial-value (identity))
       (identity)))
 
 (define-compiler-macro * (&whole whole &rest matrices)
