@@ -386,27 +386,25 @@
 (defn set-rotation-from-axis-angle ((mat-to-mutate mat4)
                                     (axis3 vec3) (angle single-float)) mat4
   (declare (optimize (speed 3) (safety 1) (debug 1)))
-  (cond ((v3:= axis3 (v3:make 1f0 0f0 0f0))
-         (set-from-rotation-x mat-to-mutate angle))
-        ((v3:= axis3 (v3:make 0f0 1f0 0f0))
-         (set-from-rotation-y mat-to-mutate angle))
-        ((v3:= axis3 (v3:make 0f0 0f0 1f0))
-         (set-from-rotation-z mat-to-mutate angle))
-        (t
-         (let ((c (cos angle))
-               (s (sin angle))
-               (g (cl:- 1f0 (cos angle))))
-           (let* ((x (x axis3))
-                  (y (y axis3))
-                  (z (z axis3))
-                  (gxx (cl:* g x x)) (gxy (cl:* g x y)) (gxz (cl:* g x z))
-                  (gyy (cl:* g y y)) (gyz (cl:* g y z)) (gzz (cl:* g z z)))
-             (set-components
-              (cl:+ gxx c)        (cl:- gxy (cl:* s z))  (cl:+ gxz (cl:* s y)) 0f0
-              (cl:+ gxy (cl:* s z))  (cl:+ gyy c)        (cl:- gyz (cl:* s x)) 0f0
-              (cl:- gxz (cl:* s y))  (cl:+ gyz (cl:* s x))  (cl:+ gzz c)       0f0
-              0f0              0f0              0f0             1f0
-              mat-to-mutate))))))
+  (let* ((c (cos angle))
+         (s (sin angle))
+         (g (cl:- 1f0 c)))
+    (let* ((naxis3 (v3:normalize axis3))
+           (x (x naxis3))
+           (y (y naxis3))
+           (z (z naxis3))
+           (gxx (cl:* g x x))
+           (gxy (cl:* g x y))
+           (gxz (cl:* g x z))
+           (gyy (cl:* g y y))
+           (gyz (cl:* g y z))
+           (gzz (cl:* g z z)))
+      (set-components
+       (cl:+ gxx c)           (cl:- gxy (cl:* s z))  (cl:+ gxz (cl:* s y))  0f0
+       (cl:+ gxy (cl:* s z))  (cl:+ gyy c)           (cl:- gyz (cl:* s x))  0f0
+       (cl:- gxz (cl:* s y))  (cl:+ gyz (cl:* s x))  (cl:+ gzz c)           0f0
+       0f0                    0f0                    0f0                    1f0
+       mat-to-mutate))))
 
 ;;----------------------------------------------------------------
 
@@ -465,19 +463,20 @@
 
 (defn *v3 ((mat-a mat4) (vec3-to-mutate vec3)) vec3
   (declare (optimize (speed 3) (safety 1) (debug 1)))
-  (v3-n:set-components (cl:+ (cl:* (melm mat-a 0 0) (x vec3-to-mutate))
-                             (cl:* (melm mat-a 0 1) (y vec3-to-mutate))
-                             (cl:* (melm mat-a 0 2) (z vec3-to-mutate))
-                             (melm mat-a 0 3))
-                       (cl:+ (cl:* (melm mat-a 1 0) (x vec3-to-mutate))
-                             (cl:* (melm mat-a 1 1) (y vec3-to-mutate))
-                             (cl:* (melm mat-a 1 2) (z vec3-to-mutate))
-                             (melm mat-a 1 3))
-                       (cl:+ (cl:* (melm mat-a 2 0) (x vec3-to-mutate))
-                             (cl:* (melm mat-a 2 1) (y vec3-to-mutate))
-                             (cl:* (melm mat-a 2 2) (z vec3-to-mutate))
-                             (melm mat-a 2 3))
-                       vec3-to-mutate))
+  (v3-n:set-components
+   (cl:+ (cl:* (melm mat-a 0 0) (x vec3-to-mutate))
+         (cl:* (melm mat-a 0 1) (y vec3-to-mutate))
+         (cl:* (melm mat-a 0 2) (z vec3-to-mutate))
+         (melm mat-a 0 3))
+   (cl:+ (cl:* (melm mat-a 1 0) (x vec3-to-mutate))
+         (cl:* (melm mat-a 1 1) (y vec3-to-mutate))
+         (cl:* (melm mat-a 1 2) (z vec3-to-mutate))
+         (melm mat-a 1 3))
+   (cl:+ (cl:* (melm mat-a 2 0) (x vec3-to-mutate))
+         (cl:* (melm mat-a 2 1) (y vec3-to-mutate))
+         (cl:* (melm mat-a 2 2) (z vec3-to-mutate))
+         (melm mat-a 2 3))
+   vec3-to-mutate))
 
 ;;----------------------------------------------------------------
 
