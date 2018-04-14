@@ -47,6 +47,10 @@ so this can be easily queried from your editor.
 
 ## CHANGELOG
 
+### 2018-04-18
+
+- WARNING: Fixes to from-direction, projection & look-at matrices. Will have import of projects using this lib
+
 ### 2018-03-28
 
 - Ported all the API (except regions for now) to Vari so rtg-math works on the GPU.
