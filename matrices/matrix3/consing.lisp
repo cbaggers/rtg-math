@@ -257,7 +257,7 @@
              (let ((axis (v! (cl:- (melm mat-a 1 2) (melm mat-a 2 1))
                              (cl:- (melm mat-a 2 0) (melm mat-a 0 2))
                              (cl:- (melm mat-a 0 1) (melm mat-a 1 0)))))
-               (v3:normalize axis)))
+               (v3-n:normalize axis)))
             (t (let* ((i (if (> (melm mat-a 1 1) (melm mat-a 0 0))
                              1
                              (if (> (melm mat-a 2 2)

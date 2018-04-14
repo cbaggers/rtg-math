@@ -426,7 +426,7 @@
       (cond ((cl:= 0f0 angle) (values (v! 1f0 0f0 0f0) angle))
             ((cl:= 0f0 (cl:- rtg-math.base-maths:+pi+ angle))
              (values
-              (v3:normalize
+              (v3-n:normalize
                (v! (cl:- (melm mat-a 2 1) (melm mat-a 1 2))
                    (cl:- (melm mat-a 0 2) (melm mat-a 2 0))
                    (cl:- (melm mat-a 1 0) (melm mat-a 0 1))))
