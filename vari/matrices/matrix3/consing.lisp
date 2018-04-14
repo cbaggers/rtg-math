@@ -336,13 +336,12 @@
 ;; makes a matrix to orient something towards a point
 
 (varjo:v-defun from-direction ((up3 :vec3) (dir3 :vec3))
-  (let* ((dir (v3:normalize dir3))
-         (w-up (v3:normalize up3))
-         (right (v3:cross dir w-up))
-         (up (v3:cross (v3:normalize right) dir)))
-    (make (v:x right) (v:x up) (cl:- (v:x dir))
-          (v:y right) (v:y up) (cl:- (v:y dir))
-          (v:z right) (v:z up) (cl:- (v:z dir)))))
+  (let* ((zaxis (v3:normalize dir3))
+         (xaxis (v3-n:normalize (v3:cross zaxis up3)))
+         (yaxis (v3:cross xaxis zaxis)))
+    (m3:make (x xaxis) (x yaxis) (cl:- (x zaxis))
+             (y xaxis) (y yaxis) (cl:- (y zaxis))
+             (z xaxis) (z yaxis) (cl:- (z zaxis)))))
 
 ;;----------------------------------------------------------------
 ;; makes a matrix to orient something at a point towards another point
@@ -354,12 +353,11 @@
 ;; Makes the rotation portion of a world->view look-at matrix
 
 (varjo:v-defun look-at ((up3 :vec3) (from3 :vec3) (to3 :vec3))
-  (let* ((dir (v3:normalize (v3:- to3 from3)))
-         (w-up (v3:normalize up3))
-         (right (v3:cross dir w-up))
-         (up (v3:cross (v3:normalize right) dir)))
-    (make (v:x right)       (v:y right)       (v:z right)
-          (v:x up)          (v:y up)          (v:z up)
-          (cl:- (v:x dir))  (cl:- (v:y dir))  (cl:- (v:z dir)))))
+  (let* ((zaxis (v3-n:normalize (v3:- to3 from3)))
+         (xaxis (v3-n:normalize (v3:cross zaxis up3)))
+         (yaxis (v3:cross xaxis zaxis)))
+    (m3:make (x xaxis) (y xaxis) (z xaxis)
+             (x yaxis) (y yaxis) (z yaxis)
+             (cl:- (x zaxis)) (cl:- (y zaxis)) (cl:- (z zaxis)))))
 
 ;;----------------------------------------------------------------

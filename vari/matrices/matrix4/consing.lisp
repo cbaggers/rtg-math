@@ -485,14 +485,13 @@
 ;; makes a matrix to orient something towards a point
 
 (varjo:v-defun from-direction ((up3 :vec3) (dir3 :vec3))
-  (let* ((dir (v3:normalize dir3))
-         (w-up (v3:normalize up3))
-         (right (v3:cross dir w-up))
-         (up (v3:cross (v3:normalize right) dir)))
-    (make (v:x right) (v:x up) (cl:- (v:x dir)) 0f0
-          (v:y right) (v:y up) (cl:- (v:y dir)) 0f0
-          (v:z right) (v:z up) (cl:- (v:z dir)) 0f0
-          0f0         0f0      0f0              1f0)))
+  (let* ((zaxis (v3:normalize dir3))
+         (xaxis (v3-n:normalize (v3:cross zaxis up3)))
+         (yaxis (v3:cross xaxis zaxis)))
+    (m4:make (x xaxis) (x yaxis) (cl:- (x zaxis)) 0f0
+             (y xaxis) (y yaxis) (cl:- (y zaxis)) 0f0
+             (z xaxis) (z yaxis) (cl:- (z zaxis)) 0f0
+             0f0       0f0       0f0              1f0)))
 
 ;;----------------------------------------------------------------
 ;; makes a matrix to orient something at a point towards another point
@@ -504,14 +503,12 @@
 ;; Makes a world->view look-at matrix
 
 (varjo:v-defun look-at ((up3 :vec3) (from3 :vec3) (to3 :vec3))
-  (let* ((dir (v3:normalize (v3:- to3 from3)))
-         (w-up (v3:normalize up3))
-         (right (v3:cross dir w-up))
-         (up (v3:cross (v3:normalize right) dir)))
-    (m4:* (m4:translation (v3:negate from3))
-          (m4:make (v:x right) (v:y right) (v:z right) 0f0
-                   (v:x up) (v:y up) (v:z up) 0f0
-                   (cl:- (v:x dir)) (cl:- (v:y dir)) (cl:- (v:z dir)) 0f0
-                   0f0 0f0 0f0 1f0))))
+  (let* ((zaxis (v3-n:normalize (v3:- to3 from3)))
+         (xaxis (v3-n:normalize (v3:cross zaxis up3)))
+         (yaxis (v3:cross xaxis zaxis)))
+    (m4:make (x xaxis) (y xaxis) (z xaxis) (cl:- (v3:dot xaxis from3))
+             (x yaxis) (y yaxis) (z yaxis) (cl:- (v3:dot yaxis from3))
+             (cl:- (x zaxis)) (cl:- (y zaxis)) (cl:- (z zaxis)) (v3:dot zaxis from3)
+             0f0 0f0 0f0 1f0)))
 
 ;;----------------------------------------------------------------

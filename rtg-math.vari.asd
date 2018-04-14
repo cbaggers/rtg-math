@@ -31,5 +31,6 @@
                (:file "vari/polar-coords/polar")
                (:file "vari/spherical-coords/spherical")
 
-               (:file "vari/projection/camera")
+               (:file "vari/projection/perspective/consing")
+               (:file "vari/projection/orthographic/consing")
                (:file "vari/projection/environment")))
