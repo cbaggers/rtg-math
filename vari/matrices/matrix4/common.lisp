@@ -2,13 +2,14 @@
 
 ;;----------------------------------------------------------------
 
-(varjo:v-def-glsl-template-fun
- melm (m r c) "~a[~a, ~a]" (:mat4 :int :int)
- :float :v-place-index 0 :pure t)
+;; {BUG} GLSL is column-row, not row-column
+;; (varjo:v-def-glsl-template-fun
+;;  melm (m r c) "~a[~a, ~a]" (:mat4 :int :int)
+;;  :float :v-place-index 0 :pure t)
 
-(varjo:v-def-glsl-template-fun
- melm (m r c) "~a[~a, ~a]" (:dmat4 :int :int)
- :double :v-place-index 0 :pure t)
+;; (varjo:v-def-glsl-template-fun
+;;  melm (m r c) "~a[~a, ~a]" (:dmat4 :int :int)
+;;  :double :v-place-index 0 :pure t)
 
 ;;----------------------------------------------------------------
 
