@@ -339,9 +339,9 @@
 (defn set-from-scale ((mat-to-mutate mat4) (scale-vec3 vec3)) mat4
   (declare (optimize (speed 3) (safety 1) (debug 1)))
   (set-components
-   (x scale-vec3)  0f0               0f0               0f0
-   0f0               (y scale-vec3)  0f0               0f0
-   0f0               0f0               (z scale-vec3)  0f0
+   (x scale-vec3)    0f0               0f0               0f0
+   0f0               (y scale-vec3)    0f0               0f0
+   0f0               0f0               (z scale-vec3)    0f0
    0f0               0f0               0f0               1f0
    mat-to-mutate))
 
@@ -351,10 +351,10 @@
   (declare (optimize (speed 3) (safety 1) (debug 1)))
   (let ((s-a (sin angle))
         (c-a (cos angle)))
-    (set-components 1f0  0f0  0f0     0f0
+    (set-components 1f0  0f0  0f0        0f0
                     0f0  c-a  (cl:- s-a) 0f0
-                    0f0  s-a  c-a     0f0
-                    0f0  0f0  0f0     1f0
+                    0f0  s-a  c-a        0f0
+                    0f0  0f0  0f0        1f0
                     mat-to-mutate)))
 
 ;;----------------------------------------------------------------
@@ -363,10 +363,10 @@
   (declare (optimize (speed 3) (safety 1) (debug 1)))
   (let ((s-a (sin angle))
         (c-a (cos angle)))
-    (set-components c-a      0f0  s-a  0f0
-                    0f0      1f0  0f0  0f0
+    (set-components c-a         0f0  s-a  0f0
+                    0f0         1f0  0f0  0f0
                     (cl:- s-a)  0f0  c-a  0f0
-                    0f0      0f0  0f0  1f0
+                    0f0         0f0  0f0  1f0
                     mat-to-mutate)))
 
 ;;----------------------------------------------------------------
@@ -376,9 +376,9 @@
   (let ((s-a (sin angle))
         (c-a (cos angle)))
     (set-components c-a  (cl:- s-a)  0f0  0f0
-                    s-a  c-a      0f0  0f0
-                    0f0  0f0      1f0  0f0
-                    0f0  0f0      0f0  1f0
+                    s-a  c-a         0f0  0f0
+                    0f0  0f0         1f0  0f0
+                    0f0  0f0         0f0  1f0
                     mat-to-mutate)))
 
 ;;----------------------------------------------------------------
