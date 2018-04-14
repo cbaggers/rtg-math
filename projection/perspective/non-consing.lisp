@@ -26,10 +26,10 @@
      0f0
      0f0
      (- (/ (+ far near) (- far near)))
-     -1f0
-     0f0
-     0f0
      (- (/ (* 2f0 far near) (- far near)))
+     0f0
+     0f0
+     -1f0
      0f0
      mat-to-mutate)
     result))

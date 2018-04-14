@@ -15,11 +15,9 @@
          (result (m4:0!)))
     (setf (m4:melm result 0 0) (/ 1f0 (* aspect tan-half-fov))
           (m4:melm result 1 1) (/ 1f0 tan-half-fov)
-          (m4:melm result 2 3) -1f0
-          ;; (m4:melm result 2 2) (/ far (- near far))
-          ;; (m4:melm result 3 2) (- (/ (* far near) (- far near)))
           (m4:melm result 2 2) (- (/ (+ far near) (- far near)))
-          (m4:melm result 3 2) (- (/ (* 2f0 far near) (- far near))))
+          (m4:melm result 2 3) (- (/ (* 2f0 far near) (- far near)))
+          (m4:melm result 3 2) -1f0)
     result))
 
 
