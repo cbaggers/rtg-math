@@ -172,7 +172,7 @@
     (:use :cl :%rtg-math :rtg-math.types)
   (:shadow :identity :trace :+ := :/= :- :* :/)
   (:import-from :rtg-math.base-vectors :x :y :z :w :v!)
-  (:export :melm))
+  (:export :melm :mref))
 
 (uiop:define-package :rtg-math.matrix2.non-consing
     (:use :cl :%rtg-math :rtg-math.types :%rtg-math.matrix2.common)
@@ -195,7 +195,7 @@
   (:shadow :identity :trace :+ := :/= :- :* :/)
   (:import-from :rtg-math.base-vectors :x :y :z :w :v!)
   (:export :0! :0p
-           :melm
+           :melm :mref
            :make :copy-mat2
            :identity :identityp
            :from-rows :from-columns
@@ -210,7 +210,7 @@
     (:use :cl :%rtg-math :rtg-math.types)
   (:shadow :identity :trace :+ := :/= :- :* :/)
   (:import-from :rtg-math.base-vectors :x :y :z :w :v!)
-  (:export :melm))
+  (:export :melm :mref))
 
 (uiop:define-package :rtg-math.matrix3.non-consing
     (:use :cl :%rtg-math :rtg-math.types :%rtg-math.matrix3.common
@@ -233,7 +233,7 @@
   (:export :0p :identityp
            :make :0! :identity :copy-mat3
            := :+ :- :* :*s :*v :mrow*vec3 :negate
-           :melm
+           :melm :mref
            :from-rows :from-columns :get-rows :get-columns :get-row :get-column
            :transpose :adjoint :determinant :trace
            :rotation-from-euler :rotation-from-axis-angle
@@ -247,7 +247,7 @@
     (:use :cl :%rtg-math :rtg-math.types)
   (:shadow :identity :trace :+ := :/= :- :* :/)
   (:import-from :rtg-math.base-vectors :x :y :z :w :v!)
-  (:export :melm :minor))
+  (:export :melm :mref :minor))
 
 (uiop:define-package :rtg-math.matrix4.non-consing
     (:use :cl :%rtg-math :rtg-math.types :%rtg-math.matrix4.common
@@ -271,7 +271,7 @@
   (:export :0p :identityp
            :make :0! :identity :from-mat3 :copy-mat4
            := :+ :- :* :*s :*v :*v3 :negate :mrow*vec4
-           :melm :to-mat3
+           :melm :mref :to-mat3
            :from-rows :from-columns :get-rows :get-columns :get-row :get-column
            :from-rows-v3 :from-columns-v3
            :transpose :adjoint :determinant :minor :trace

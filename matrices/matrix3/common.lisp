@@ -32,3 +32,28 @@
         (t `(aref ,mat-a (cl:+ ,row (cl:* ,col 3))))))
 
 ;;----------------------------------------------------------------
+
+(defn-inline mref ((mat-a mat3)
+                   (col (integer 0 2))
+                   (row (integer 0 2)))
+    single-float
+  "Provides access to data in the matrix by row
+   and column number. The actual data is stored in a 1d list in
+   column major order, but this abstraction means we only have
+   to think in row major order which is how most mathematical
+   texts and online tutorials choose to show matrices"
+  (aref mat-a (cl:+ row (cl:* col 3))))
+
+(defn-inline (setf mref) ((value single-float)
+                          (mat-a mat3)
+                          (col (integer 0 2))
+                          (row (integer 0 2)))
+    single-float
+  "Provides access to data in the matrix by row
+   and column number. The actual data is stored in a 1d list in
+   column major order, but this abstraction means we only have
+   to think in row major order which is how most mathematical
+   texts and online tutorials choose to show matrices"
+  (setf (aref mat-a (cl:+ row (cl:* col 3))) value))
+
+;;----------------------------------------------------------------
