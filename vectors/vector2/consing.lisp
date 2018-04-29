@@ -2,7 +2,7 @@
 
 ;;----------------------------------------------------------------
 
-(defn make ((x single-float) (y single-float)) vec2
+(defn-inline make ((x single-float) (y single-float)) vec2
   (declare (optimize (speed 3) (safety 1) (debug 1)))
   (v2-n:set-components x y (make-array 2 :element-type `single-float)))
 

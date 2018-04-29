@@ -2,8 +2,8 @@
 
 ;;----------------------------------------------------------------
 
-(defn make ((x single-float) (y single-float)
-            (z single-float) (w single-float)) vec4
+(defn-inline make ((x single-float) (y single-float)
+                   (z single-float) (w single-float)) vec4
   "This takes 4 floats and give back a vector4, this is just an
    array but it specifies the array type and populates it.
    For speed reasons it will not accept integers so make sure
