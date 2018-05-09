@@ -38,10 +38,10 @@
 
 (defn perspective-v2-radian-fov ((frame-size-v2 vec2)
                                  (near single-float) (far single-float)
-                                 (fov-degrees single-float))
+                                 (fov-radians single-float))
     mat4
   (declare (optimize (speed 3) (safety 1) (debug 1)))
   (perspective-radian-fov (x frame-size-v2) (y frame-size-v2) near far
-                          fov-degrees))
+                          fov-radians))
 
 ;;------------------------------------------------------------
