@@ -24,15 +24,8 @@
  degrees-f (x) "degrees(~a)" (:float) :float)
 
 ;;----------------------------------------------------------------
-
-(varjo:v-defun lerp ((start :float)
-                     (end :float)
-                     (amount :float))
-    :float
-  (let ((amount (saturate amount)))
-    (+ (* start (- 1f0 amount))
-       (* end amount))))
-
+(varjo:v-def-glsl-template-fun
+ lerp (a b x) "mix(~a, ~a, ~a)" (:float :float :float) :float)
 
 ;; (defvar *coef*
 ;;   (make-array 16 :element-type ':float
