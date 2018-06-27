@@ -139,8 +139,8 @@
 
 ;;----------------------------------------------------------------
 
-(varjo:v-def-glsl-template-fun
- cross (a b) "cross(~a, ~a)" (:vec2 :vec2) :vec2 :pure t)
+(varjo:v-defun cross ((vec-a :vec2) (vec-b :vec2))
+  (perp-dot vec-a vec-b))
 
 ;;----------------------------------------------------------------
 
@@ -183,13 +183,13 @@
 
 (varjo:v-defun angle-from ((vec-from :vec2)
                            (vec-to :vec2))
-  (atan (cross vec-from vec-to)
+  (atan (perp-dot vec-from vec-to)
         (dot vec-from vec-to)))
 
 
 (varjo:v-defun angle-between ((vec-a :vec2)
                               (vec-b :vec2))
-  (cl:abs (angle-from vec-a vec-b)))
+  (cl:acos (dot vec-a vec-b)))
 
 ;;---------------------------------------------------------------
 
