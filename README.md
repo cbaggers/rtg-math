@@ -7,32 +7,32 @@ This system provides a selection of the math routines most commonly needed for m
 The library provides:
 
 - 2, 3 & 4 component vectors (vec2, vec3, vec4), including support for:
- - unit, zero & equality predicates
- - addition, subtraction, multiplication & divising of vectors against each other
- - addition, subtraction, multiplication & divising of scalars against vectors
- - length, length-squared, distance, distance-squared
- - dot, absolute-dot & cross products
- - normalize
- - lerp, bezier & spline
- - Consing and non-consing apis
- - Optional generic API
+  - unit, zero & equality predicates
+  - addition, subtraction, multiplication & divising of vectors against each other
+  - addition, subtraction, multiplication & divising of scalars against vectors
+  - length, length-squared, distance, distance-squared
+  - dot, absolute-dot & cross products
+  - normalize
+  - lerp, bezier & spline
+  - Consing and non-consing apis
+  - Optional generic API
 
 - 3x3 & 4x4 matrices (`mat3`, `mat4`), including support for:
- - identity, zero & equality predicates
- - component-wise addition & subtraction of matrices
- - multiplication of matrices with matrices and matrices with vectors
- - transpose, adjoint, determinate, trace
- - construction from angle (seperately or as a vec3), axis-angle, scale, or induvidual components
- - inverse & affine-inverse
- - extraction of rows or columns as vectors
- - Consing and non-consing apis
- - Optional generic API
+  - identity, zero & equality predicates
+  - component-wise addition & subtraction of matrices
+  - multiplication of matrices with matrices and matrices with vectors
+  - transpose, adjoint, determinate, trace
+  - construction from angle (seperately or as a vec3), axis-angle, scale, or individual components
+  - inverse & affine-inverse
+  - extraction of rows or columns as vectors
+  - Consing and non-consing apis
+  - Optional generic API
 
 - Quaternions
- - addition, subtraction, multiplication & divising of quaternions against each other
- - conversion from & to 3x3 matrices, axis-angle pairs, look-at position & more
- - magnitude, norm, normalize, conjugate, inverse
- - lerp & slerp
+  - addition, subtraction, multiplication & divising of quaternions against each other
+  - conversion from & to 3x3 matrices, axis-angle pairs, look-at position & more
+  - magnitude, norm, normalize, conjugate, inverse
+  - lerp & slerp
 
 - Basic support for spherical and polar coordinates
 
