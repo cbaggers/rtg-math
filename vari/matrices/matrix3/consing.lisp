@@ -1,7 +1,6 @@
 (in-package :rtg-math.matrix3)
 
-;; All matrices are stored in column-major format, but when you
-;; write them (like in m!) then you write them in row-major format.
+;; All matrices are stored in column-major format
 
 ;;----------------------------------------------------------------
 
@@ -29,9 +28,9 @@
 ;;----------------------------------------------------------------
 
 (varjo:v-defun from-rows ((row-1 :vec3) (row-2 :vec3) (row-3 :vec3))
-  (make (x row-1) (y row-1) (z row-1)
-        (x row-2) (y row-2) (z row-2)
-        (x row-3) (y row-3) (z row-3)))
+  (make (x row-1) (x row-2) (x row-3)
+        (y row-1) (y row-2) (y row-3)
+	(z row-1) (z row-2) (z row-3)))
 
 ;;----------------------------------------------------------------
 
@@ -165,25 +164,25 @@
   (let ((s-a (sin angle))
         (c-a (cos angle)))
     (make 1.0  0.0  0.0
-          0.0  c-a  (cl:- s-a)
-          0.0  s-a  c-a)))
+          0.0  c-a  s-a
+          0.0  (cl:- s-a)  c-a)))
 
 ;;----------------------------------------------------------------
 
 (varjo:v-defun rotation-y ((angle :float))
   (let ((s-a (sin angle))
         (c-a (cos angle)))
-    (make c-a         0.0    s-a
+    (make c-a         0.0    (cl:- s-a)
           0.0         1.0    0.0
-          (cl:- s-a)  0.0    c-a)))
+          s-a  0.0    c-a)))
 
 ;;----------------------------------------------------------------
 
 (varjo:v-defun rotation-z ((angle :float))
   (let ((s-a (sin angle))
         (c-a (cos angle)))
-    (make c-a  (cl:- s-a)  0.0
-          s-a  c-a         0.0
+    (make c-a  s-a  0.0
+          (cl:- s-a)  c-a         0.0
           0.0  0.0         1.0)))
 
 ;;----------------------------------------------------------------
@@ -205,9 +204,9 @@
            (gyz (cl:* g y z))
            (gzz (cl:* g z z)))
       (make
-       (cl:+ gxx c)        (cl:- gxy (cl:* s z))  (cl:+ gxz (cl:* s y))
-       (cl:+ gxy (cl:* s z))  (cl:+ gyy c)        (cl:- gyz (cl:* s x))
-       (cl:- gxz (cl:* s y))  (cl:+ gyz (cl:* s x))  (cl:+ gzz c)))))
+       (cl:+ gxx c)        (cl:+ gxy (cl:* s z))  (cl:- gxz (cl:* s y))
+       (cl:- gxy (cl:* s z))  (cl:+ gyy c)        (cl:+ gyz (cl:* s x))
+       (cl:+ gxz (cl:* s y))  (cl:- gyz (cl:* s x))  (cl:+ gzz c)))))
 
 ;;----------------------------------------------------------------
 

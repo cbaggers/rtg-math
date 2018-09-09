@@ -1,7 +1,6 @@
 (in-package :rtg-math.matrix2)
 
-;; All matrices are stored in column-major format, but when you
-;; write them (like in m!) then you write them in row-major format.
+;; All matrices are stored in column-major format.
 
 ;;----------------------------------------------------------------
 
@@ -29,8 +28,8 @@
 ;;----------------------------------------------------------------
 
 (varjo:v-defun from-rows ((row-1 :vec2) (row-2 :vec2))
-  (make (x row-1) (y row-1)
-        (x row-2) (y row-2)))
+  (make (x row-1) (x row-2)
+        (y row-1) (y row-2)))
 
 ;;----------------------------------------------------------------
 
