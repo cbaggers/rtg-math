@@ -35,7 +35,8 @@
     (if (or (> len 4) (< len 2))
         (error "Vectors: swizzle: rtg-math vectors cannot have a length less that 2 or greater than 4")
         (loop :for char :across name :for i :from 0 :do
-           (setf (aref vec (position char "XYZW"))
+             (setf (aref vec (or (position char "XYZW")
+                                 (error "Vectors: swizzle: Pattern component was not X, Y, Z or W: ~a" char)))
                  (aref value i))))
     vec))
 
