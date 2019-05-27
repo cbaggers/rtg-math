@@ -92,8 +92,8 @@
   (declare (optimize (speed 3) (safety 1) (debug 1)))
   (let ((sa (sin angle))
         (ca (cos angle)))
-    (set-components ca sa
-                    (cl:- sa) ca
+    (set-components ca (cl:- sa)
+                    sa ca
                     mat-to-mutate)))
 
 ;;----------------------------------------------------------------
