@@ -12,6 +12,15 @@
 
 ;;----------------------------------------------------------------
 
+(defn-inline copy-components ((vec vec3) (copy-from vec3)) vec3
+  (declare (optimize (speed 3) (safety 1) (debug 1)))
+  (setf (x vec) (x copy-from)
+        (y vec) (y copy-from)
+        (z vec) (z copy-from))
+  vec)
+
+;;----------------------------------------------------------------
+
 (defn +s ((vec3 vec3) (scalar single-float)) vec3
   (declare (optimize (speed 3) (safety 1) (debug 1)))
   (cl:incf (x vec3) scalar)

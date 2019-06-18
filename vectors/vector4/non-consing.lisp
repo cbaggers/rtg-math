@@ -14,6 +14,16 @@
 
 ;;----------------------------------------------------------------
 
+(defn-inline copy-components ((vec vec4) (copy-from vec4)) vec4
+  (declare (optimize (speed 3) (safety 1) (debug 1)))
+  (setf (x vec) (x copy-from)
+        (y vec) (y copy-from)
+        (z vec) (z copy-from)
+        (w vec) (w copy-from))
+  vec)
+
+;;----------------------------------------------------------------
+
 (defn +s ((vec4 vec4) (scalar single-float)) vec4
   (declare (optimize (speed 3) (safety 1) (debug 1)))
   (cl:incf (x vec4) scalar)

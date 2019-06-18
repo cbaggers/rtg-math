@@ -14,6 +14,16 @@
 
 ;;----------------------------------------------------------------
 
+(defn-inline copy-components ((mat mat2) (copy-from mat2)) mat2
+  (declare (optimize (speed 3) (safety 1) (debug 1)))
+  (setf (melm mat 0 0) (melm copy-from 0 0))
+  (setf (melm mat 0 1) (melm copy-from 0 1))
+  (setf (melm mat 1 0) (melm copy-from 1 0))
+  (setf (melm mat 1 1) (melm copy-from 1 1))
+  mat)
+
+;;----------------------------------------------------------------
+
 (defn %* ((mat-accum mat2) (to-multiply-mat mat2)) mat2
   (declare (optimize (speed 3) (safety 1) (debug 1)))
   (let ((a (cl:+ (cl:* (melm mat-accum 0 0) (melm to-multiply-mat 0 0))
