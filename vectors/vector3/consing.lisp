@@ -275,7 +275,7 @@
   (declare (optimize (speed 3) (safety 1) (debug 1)))
   (make (cl:abs (x vector-a))
         (cl:abs (y vector-a))
-        (cl:abs (y vector-a))))
+        (cl:abs (z vector-a))))
 
 ;;---------------------------------------------------------------
 
