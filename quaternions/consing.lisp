@@ -1,6 +1,6 @@
 (in-package #:rtg-math.quaternions)
 
-;;----------------------------------------------------------------;;
+;;----------------------------------------------------------------
 
 (defn q! ((w single-float) (x single-float) (y single-float) (z single-float))
     quaternion
@@ -21,6 +21,58 @@
           (aref q 2) y
           (aref q 3) z)
     q))
+
+;;----------------------------------------------------------------
+
+;; [TODO] Look into assets (this should be a unit quaternion
+(defn rotate ((vec3 vec3) (quat quaternion)) vec3
+  (declare (optimize (speed 3) (safety 1) (debug 1)))
+  (let* ((v-mult (cl:* 2.0 (cl:+ (cl:* (x quat) (aref vec3 0))
+                                 (cl:* (y quat) (aref vec3 1))
+                                 (cl:* (z quat) (aref vec3 2)))))
+         (cross-mult (cl:* 2.0 (w quat)))
+         (p-mult (cl:- (cl:* cross-mult (w quat)) 1.0)))
+    (v3:make (cl:+ (cl:* p-mult (aref vec3 0))
+                   (cl:* v-mult (x quat))
+                   (cl:* cross-mult
+                         (cl:- (cl:* (y quat) (aref vec3 2))
+                               (cl:* (z quat) (aref vec3 1)))))
+             (cl:+ (cl:* p-mult (aref vec3 1))
+                   (cl:* v-mult (y quat))
+                   (cl:* cross-mult
+                         (cl:- (cl:* (z quat) (aref vec3 0))
+                               (cl:* (x quat) (aref vec3 2)))))
+             (cl:+ (cl:* p-mult (aref vec3 2))
+                   (cl:* v-mult (z quat))
+                   (cl:* cross-mult
+                         (cl:- (cl:* (x quat) (aref vec3 1))
+                               (cl:* (y quat) (aref vec3 0))))))))
+
+(defn rotate-v4 ((vec4 vec4) (quat quaternion)) vec4
+  (declare (optimize (speed 3) (safety 1) (debug 1)))
+  (let* ((v-mult (cl:* 2.0 (cl:+ (cl:* (x quat) (aref vec4 0))
+                                 (cl:* (y quat) (aref vec4 1))
+                                 (cl:* (z quat) (aref vec4 2)))))
+         (cross-mult (cl:* 2.0 (w quat)))
+         (p-mult (cl:- (cl:* cross-mult (w quat)) 1.0)))
+    (v4:make (cl:+ (cl:* p-mult (aref vec4 0))
+                   (cl:* v-mult (x quat))
+                   (cl:* cross-mult
+                         (cl:- (cl:* (y quat) (aref vec4 2))
+                               (cl:* (z quat) (aref vec4 1)))))
+             (cl:+ (cl:* p-mult (aref vec4 1))
+                   (cl:* v-mult (y quat))
+                   (cl:* cross-mult
+                         (cl:- (cl:* (z quat) (aref vec4 0))
+                               (cl:* (x quat) (aref vec4 2)))))
+             (cl:+ (cl:* p-mult (aref vec4 2))
+                   (cl:* v-mult (z quat))
+                   (cl:* cross-mult
+                         (cl:- (cl:* (x quat) (aref vec4 1))
+                               (cl:* (y quat) (aref vec4 0)))))
+             (aref vec4 3))))
+
+;;----------------------------------------------------------------;;
 
 (defn-inline 0! () quaternion
   (declare (optimize (speed 3) (safety 1) (debug 1)))
@@ -286,56 +338,6 @@
          (cl:+ xy wz)             (cl:- 1.0 (cl:+ xx zz)) (cl:- yz wx)             0.0
          (cl:- xz wy)             (cl:+ yz wx)            (cl:- 1.0 (cl:+ xx yy))  0.0
          0.0                      0.0                     0.0                      1.0)))))
-
-;;----------------------------------------------------------------
-
-;; [TODO] Look into assets (this should be a unit quaternion
-(defn rotate ((vec3 vec3) (quat quaternion)) vec3
-  (declare (optimize (speed 3) (safety 1) (debug 1)))
-  (let* ((v-mult (cl:* 2.0 (cl:+ (cl:* (x quat) (aref vec3 0))
-                                 (cl:* (y quat) (aref vec3 1))
-                                 (cl:* (z quat) (aref vec3 2)))))
-         (cross-mult (cl:* 2.0 (w quat)))
-         (p-mult (cl:- (cl:* cross-mult (w quat)) 1.0)))
-    (v3:make (cl:+ (cl:* p-mult (aref vec3 0))
-                   (cl:* v-mult (x quat))
-                   (cl:* cross-mult
-                         (cl:- (cl:* (y quat) (aref vec3 2))
-                               (cl:* (z quat) (aref vec3 1)))))
-             (cl:+ (cl:* p-mult (aref vec3 1))
-                   (cl:* v-mult (y quat))
-                   (cl:* cross-mult
-                         (cl:- (cl:* (z quat) (aref vec3 0))
-                               (cl:* (x quat) (aref vec3 2)))))
-             (cl:+ (cl:* p-mult (aref vec3 2))
-                   (cl:* v-mult (z quat))
-                   (cl:* cross-mult
-                         (cl:- (cl:* (x quat) (aref vec3 1))
-                               (cl:* (y quat) (aref vec3 0))))))))
-
-(defn rotate-v4 ((vec4 vec4) (quat quaternion)) vec4
-  (declare (optimize (speed 3) (safety 1) (debug 1)))
-  (let* ((v-mult (cl:* 2.0 (cl:+ (cl:* (x quat) (aref vec4 0))
-                                 (cl:* (y quat) (aref vec4 1))
-                                 (cl:* (z quat) (aref vec4 2)))))
-         (cross-mult (cl:* 2.0 (w quat)))
-         (p-mult (cl:- (cl:* cross-mult (w quat)) 1.0)))
-    (v4:make (cl:+ (cl:* p-mult (aref vec4 0))
-                   (cl:* v-mult (x quat))
-                   (cl:* cross-mult
-                         (cl:- (cl:* (y quat) (aref vec4 2))
-                               (cl:* (z quat) (aref vec4 1)))))
-             (cl:+ (cl:* p-mult (aref vec4 1))
-                   (cl:* v-mult (y quat))
-                   (cl:* cross-mult
-                         (cl:- (cl:* (z quat) (aref vec4 0))
-                               (cl:* (x quat) (aref vec4 2)))))
-             (cl:+ (cl:* p-mult (aref vec4 2))
-                   (cl:* v-mult (z quat))
-                   (cl:* cross-mult
-                         (cl:- (cl:* (x quat) (aref vec4 1))
-                               (cl:* (y quat) (aref vec4 0)))))
-             (aref vec4 3))))
 
 ;;----------------------------------------------------------------
 
