@@ -40,15 +40,15 @@
                           (row-2 :vec4)
                           (row-3 :vec4)
                           (row-4 :vec4))
-  (make (x row-1) (y row-1) (z row-1) (w row-1)
-        (x row-2) (y row-2) (z row-2) (w row-2)
-        (x row-3) (y row-3) (z row-3) (w row-3)
-        (x row-4) (y row-4) (z row-4) (w row-4)))
+  (make (x row-1) (x row-2) (x row-3) (x row-4)
+	(y row-1) (y row-2) (y row-3) (y row-4)
+	(z row-1) (z row-2) (z row-3) (z row-4)
+	(w row-1) (w row-2) (w row-3) (w row-4)))
 
 (varjo:v-defun from-rows-v3 ((row-1 :vec3) (row-2 :vec3) (row-3 :vec3))
-  (make (x row-1) (y row-1) (z row-1) 0f0
-        (x row-2) (y row-2) (z row-2) 0f0
-        (x row-3) (y row-3) (z row-3) 0f0
+  (make (x row-1) (x row-2) (x row-3) 0f0
+        (y row-1) (y row-2) (y row-3) 0f0
+	(z row-1) (z row-2) (z row-3) 0f0
         0f0       0f0       0f0       1f0))
 
 ;;----------------------------------------------------------------
@@ -229,25 +229,25 @@
 
 (varjo:v-defun translation ((vec-a :vec3))
   (make
-   1f0  0f0  0f0  (x vec-a)
-   0f0  1f0  0f0  (y vec-a)
-   0f0  0f0  1f0  (z vec-a)
-   0f0  0f0  0f0  1f0))
+   1f0  0f0  0f0  0.0
+   0f0  1f0  0f0  0.0
+   0f0  0f0  1f0  0.0
+   (x vec-a) (y vec-a) (z vec-a) 1f0))
 
 (varjo:v-defun translation ((vec-a :vec4))
   (make
-   1f0  0f0  0f0  (x vec-a)
-   0f0  1f0  0f0  (y vec-a)
-   0f0  0f0  1f0  (z vec-a)
-   0f0  0f0  0f0  1f0))
+   1f0  0f0  0f0  0.0
+   0f0  1f0  0f0  0.0
+   0f0  0f0  1f0  0.0
+   (x vec-a) (y vec-a) (z vec-a) 1f0))
 
 ;;----------------------------------------------------------------
 
 (varjo:v-defun rotation-from-mat3 ((m-a :mat3))
   (make
-   (m3:melm m-a 0 0)  (m3:melm m-a 0 1)  (m3:melm m-a 0 2)  0f0
-   (m3:melm m-a 1 0)  (m3:melm m-a 1 1)  (m3:melm m-a 1 2)  0f0
-   (m3:melm m-a 2 0)  (m3:melm m-a 2 1)  (m3:melm m-a 2 2)  0f0
+   (m3:melm m-a 0 0)  (m3:melm m-a 1 0)  (m3:melm m-a 2 0)  0f0
+   (m3:melm m-a 0 1)  (m3:melm m-a 1 1)  (m3:melm m-a 2 1)  0f0
+   (m3:melm m-a 0 2)  (m3:melm m-a 1 2)  (m3:melm m-a 2 2)  0f0
    0f0                0f0                0f0                1f0))
 
 ;;----------------------------------------------------------------
@@ -292,8 +292,8 @@
   (let ((s-a (sin angle))
         (c-a (cos angle)))
     (make 1f0  0f0  0f0     0f0
-          0f0  c-a  (cl:- s-a) 0f0
-          0f0  s-a  c-a     0f0
+          0f0  c-a  s-a 0f0
+          0f0  (cl:- s-a)  c-a     0f0
           0f0  0f0  0f0     1f0)))
 
 ;;----------------------------------------------------------------
@@ -301,9 +301,9 @@
 (varjo:v-defun rotation-y ((angle :float))
   (let ((s-a (sin angle))
         (c-a (cos angle)))
-    (make c-a         0f0  s-a  0f0
+    (make c-a         0f0  (cl:- s-a)  0f0
           0f0         1f0  0f0  0f0
-          (cl:- s-a)  0f0  c-a  0f0
+          s-a  0f0  c-a  0f0
           0f0         0f0  0f0  1f0)))
 
 ;;----------------------------------------------------------------
@@ -311,8 +311,8 @@
 (varjo:v-defun rotation-z ((angle :float))
   (let ((s-a (sin angle))
         (c-a (cos angle)))
-    (make c-a  (cl:- s-a)  0f0  0f0
-          s-a  c-a      0f0  0f0
+    (make c-a  s-a  0f0  0f0
+          (cl:- s-a)  c-a      0f0  0f0
           0f0  0f0      1f0  0f0
           0f0  0f0      0f0  1f0)))
 
@@ -332,9 +332,9 @@
            (gyz (cl:* g y z))
            (gzz (cl:* g z z)))
       (make
-       (cl:+ gxx c)        (cl:- gxy (cl:* s z))  (cl:+ gxz (cl:* s y)) 0f0
-       (cl:+ gxy (cl:* s z))  (cl:+ gyy c)        (cl:- gyz (cl:* s x)) 0f0
-       (cl:- gxz (cl:* s y))  (cl:+ gyz (cl:* s x))  (cl:+ gzz c)       0f0
+       (cl:+ gxx c)        (cl:+ gxy (cl:* s z))  (cl:- gxz (cl:* s y)) 0f0
+       (cl:- gxy (cl:* s z))  (cl:+ gyy c)        (cl:+ gyz (cl:* s x)) 0f0
+       (cl:+ gxz (cl:* s y))  (cl:- gyz (cl:* s x))  (cl:+ gzz c)       0f0
        0f0              0f0              0f0             1f0))))
 
 ;;----------------------------------------------------------------
